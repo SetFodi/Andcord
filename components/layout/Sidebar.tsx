@@ -70,6 +70,13 @@ export default function Sidebar() {
     const pathname = usePathname();
     const { profile, signOut } = useAuth();
 
+    // Debug logging for sidebar render
+    if (!profile) {
+        console.log('Sidebar: rendering with NO PROFILE (loading fallback state)');
+    } else {
+        console.log('Sidebar: rendering with profile:', profile.username);
+    }
+
     return (
         <aside className="sidebar">
             <div className="sidebar-header">

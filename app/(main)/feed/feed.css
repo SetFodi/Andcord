@@ -11,8 +11,8 @@
 }
 
 .post-wrapper {
-    animation: fadeInUp var(--transition-slow) ease forwards;
-    opacity: 0;
+    /* animation: fadeInUp var(--transition-slow) ease forwards; */
+    /* opacity: 0; */
 }
 
 /* Loading Skeleton */

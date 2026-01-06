@@ -17,12 +17,16 @@ export default function FeedPage() {
     const [hasMore, setHasMore] = useState(true);
     const loadMoreRef = useRef<HTMLDivElement>(null);
 
-    const { profile } = useAuth();
+    const { user } = useAuth();
     const supabase = createClient();
 
     const fetchPosts = useCallback(async (offset = 0) => {
-        if (!profile) return [];
+        // We can fetch posts even if we just have the user (for RLS/likes check)
+        // If no user, RLS will return public posts anyway (or empty if protected)
+        // But for our logic we prefer to wait for user to be robust
+        if (!user) return [];
 
+        console.log('📰 Fetching posts...');
         const { data, error } = await supabase
             .from('posts')
             .select(`
@@ -42,13 +46,15 @@ export default function FeedPage() {
             return [];
         }
 
+        console.log(`✅ Fetched ${data.length} posts`);
+
         // Check if user has liked each post
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const postIds = (data as any[]).map(p => p.id);
         const { data: userLikes } = await supabase
             .from('likes')
             .select('post_id')
-            .eq('user_id', profile.id)
+            .eq('user_id', user.id)
             .in('post_id', postIds);
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -60,7 +66,7 @@ export default function FeedPage() {
             likes_count: post.likes?.[0]?.count || 0,
             is_liked: likedPostIds.has(post.id),
         }));
-    }, [profile, supabase]);
+    }, [user, supabase]);
 
     // Initial load
     useEffect(() => {
@@ -72,20 +78,20 @@ export default function FeedPage() {
             setLoading(false);
         };
 
-        if (profile) {
+        if (user) {
             loadInitialPosts();
         }
 
-        // Timeout fallback - if no profile after 6 seconds, stop loading
+        // Timeout fallback - if no user after 6 seconds, stop loading
         const timeout = setTimeout(() => {
-            if (loading && !profile) {
-                console.log('Feed: No profile after timeout, stopping loading');
+            if (loading && !user) {
+                console.log('Feed: No user after timeout, stopping loading');
                 setLoading(false);
             }
         }, 6000);
 
         return () => clearTimeout(timeout);
-    }, [fetchPosts, profile]);
+    }, [fetchPosts, user]);
 
     // Infinite scroll
     useEffect(() => {

@@ -79,9 +79,11 @@ export default function RegisterPage() {
         }
 
         setSuccess(true);
+        // We redirect to login after a delay so they can read the message
+        // Pre-filling the email in the login page helps the user
         setTimeout(() => {
-            router.push('/feed');
-        }, 2000);
+            router.push(`/login?email=${encodeURIComponent(email)}`);
+        }, 5000); // Give them 5 seconds to read the confirmation message
     };
 
     if (success) {
@@ -113,8 +115,13 @@ export default function RegisterPage() {
                                     <polyline points="20 6 9 17 4 12" />
                                 </svg>
                             </div>
-                            <h2>Account created!</h2>
-                            <p>Welcome to Andcord. Redirecting you to the feed...</p>
+                            <h2>Verify your email</h2>
+                            <p>
+                                We&apos;ve sent a confirmation link to <strong>{email}</strong>.
+                                <br />
+                                Please check your inbox to activate your account.
+                            </p>
+                            <div className="auth-redirect-hint">Redirecting to login...</div>
                         </div>
                     </div>
                 </div>
