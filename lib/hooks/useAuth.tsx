@@ -1,0 +1,194 @@
+'use client';
+
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { User, Session } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase/client';
+import type { Profile } from '@/types/database';
+
+interface AuthContextType {
+    user: User | null;
+    profile: Profile | null;
+    session: Session | null;
+    loading: boolean;
+    signUp: (email: string, password: string, username: string) => Promise<{ error: Error | null }>;
+    signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
+    signOut: () => Promise<void>;
+    updateProfile: (updates: Partial<Profile>) => Promise<{ error: Error | null }>;
+    refreshProfile: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+    const [user, setUser] = useState<User | null>(null);
+    const [profile, setProfile] = useState<Profile | null>(null);
+    const [session, setSession] = useState<Session | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    const supabase = createClient();
+
+    // Fetch user profile
+    const fetchProfile = async (userId: string) => {
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', userId)
+            .single();
+
+        if (error) {
+            console.error('Error fetching profile:', error);
+            return null;
+        }
+
+        return data;
+    };
+
+    // Refresh profile data
+    const refreshProfile = async () => {
+        if (user) {
+            const profileData = await fetchProfile(user.id);
+            setProfile(profileData);
+        }
+    };
+
+    useEffect(() => {
+        // Get initial session
+        const initAuth = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            setSession(session);
+            setUser(session?.user ?? null);
+
+            if (session?.user) {
+                const profileData = await fetchProfile(session.user.id);
+                setProfile(profileData);
+            }
+
+            setLoading(false);
+        };
+
+        initAuth();
+
+        // Listen for auth changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+            async (event, session) => {
+                setSession(session);
+                setUser(session?.user ?? null);
+
+                if (session?.user) {
+                    const profileData = await fetchProfile(session.user.id);
+                    setProfile(profileData);
+                } else {
+                    setProfile(null);
+                }
+
+                setLoading(false);
+            }
+        );
+
+        return () => {
+            subscription.unsubscribe();
+        };
+    }, []);
+
+    // Sign up with email and password
+    const signUp = async (email: string, password: string, username: string) => {
+        try {
+            // First, sign up the user
+            const { data: authData, error: authError } = await supabase.auth.signUp({
+                email,
+                password,
+            });
+
+            if (authError) throw authError;
+            if (!authData.user) throw new Error('No user returned');
+
+            // Create the profile
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const { error: profileError } = await (supabase as any)
+                .from('profiles')
+                .insert({
+                    id: authData.user.id,
+                    username,
+                    display_name: username,
+                });
+
+            if (profileError) throw profileError;
+
+            return { error: null };
+        } catch (error) {
+            return { error: error as Error };
+        }
+    };
+
+    // Sign in with email and password
+    const signIn = async (email: string, password: string) => {
+        try {
+            const { error } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            });
+
+            if (error) throw error;
+
+            return { error: null };
+        } catch (error) {
+            return { error: error as Error };
+        }
+    };
+
+    // Sign out
+    const signOut = async () => {
+        await supabase.auth.signOut();
+        setUser(null);
+        setProfile(null);
+        setSession(null);
+    };
+
+    // Update profile
+    const updateProfile = async (updates: Partial<Profile>) => {
+        try {
+            if (!user) throw new Error('No user logged in');
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const { error } = await (supabase as any)
+                .from('profiles')
+                .update(updates)
+                .eq('id', user.id);
+
+            if (error) throw error;
+
+            // Refresh profile data
+            await refreshProfile();
+
+            return { error: null };
+        } catch (error) {
+            return { error: error as Error };
+        }
+    };
+
+    return (
+        <AuthContext.Provider
+            value={{
+                user,
+                profile,
+                session,
+                loading,
+                signUp,
+                signIn,
+                signOut,
+                updateProfile,
+                refreshProfile,
+            }}
+        >
+            {children}
+        </AuthContext.Provider>
+    );
+}
+
+export function useAuth() {
+    const context = useContext(AuthContext);
+    if (context === undefined) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
+}

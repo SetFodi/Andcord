@@ -1,0 +1,251 @@
+.groups-layout {
+    display: flex;
+    height: calc(100vh - var(--header-height, 0px));
+    overflow: hidden;
+}
+
+/* Groups Sidebar */
+.groups-sidebar {
+    width: 280px;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.groups-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-lg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.groups-header h2 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+}
+
+.groups-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-sm);
+}
+
+.group-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    width: 100%;
+    padding: var(--space-md);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    text-align: left;
+    transition: all var(--transition-fast);
+}
+
+.group-item:hover {
+    background: var(--glass-hover);
+}
+
+.group-item.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+}
+
+.group-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.group-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.group-item.active .group-name {
+    color: white;
+}
+
+.group-members {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+}
+
+.group-item.active .group-members {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.group-skeleton {
+    display: flex;
+    gap: var(--space-md);
+    padding: var(--space-md);
+}
+
+.skeleton-members {
+    width: 60px;
+    height: 12px;
+}
+
+.empty-groups {
+    padding: var(--space-xl);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.empty-groups p {
+    color: var(--text-muted);
+}
+
+/* Group Chat Area */
+.group-chat-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.group-empty {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.group-chat-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.group-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.group-title {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.group-member-count {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+}
+
+/* Group Messages */
+.group-messages-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-lg);
+}
+
+.group-messages-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.group-message {
+    display: flex;
+    gap: var(--space-sm);
+    max-width: 70%;
+}
+
+.group-message.own {
+    margin-left: auto;
+    flex-direction: row-reverse;
+}
+
+.group-message.other {
+    margin-right: auto;
+}
+
+.group-message:not(.with-avatar) .avatar {
+    visibility: hidden;
+}
+
+.group-message-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.message-sender {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--accent-light);
+    margin-left: var(--space-sm);
+}
+
+.group-message .message-bubble {
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-xl);
+}
+
+.group-message.own .message-bubble {
+    background: var(--accent);
+    color: white;
+    border-bottom-right-radius: var(--radius-sm);
+}
+
+.group-message.other .message-bubble {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-bottom-left-radius: var(--radius-sm);
+}
+
+.group-message .message-bubble p {
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+}
+
+.group-message .message-time {
+    font-size: 10px;
+    opacity: 0.7;
+    margin-top: 2px;
+    display: block;
+    text-align: right;
+}
+
+/* Group Message Form */
+.group-message-form {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-lg);
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .groups-sidebar {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        z-index: var(--z-modal);
+    }
+
+    .group-message {
+        max-width: 85%;
+    }
+}

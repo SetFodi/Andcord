@@ -1,0 +1,127 @@
+.post-composer {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: var(--space-lg);
+    transition: all var(--transition-base);
+}
+
+.post-composer.expanded {
+    box-shadow: 0 0 0 1px var(--accent), var(--shadow-glow);
+}
+
+.composer-header {
+    display: flex;
+    gap: var(--space-md);
+}
+
+.composer-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-size: var(--text-base);
+    font-family: inherit;
+    resize: none;
+    line-height: var(--leading-relaxed);
+    min-height: 24px;
+    max-height: 200px;
+}
+
+.composer-input::placeholder {
+    color: var(--text-muted);
+}
+
+.composer-error {
+    margin-top: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(239, 68, 68, 0.1);
+    border-radius: var(--radius-md);
+    color: var(--error);
+    font-size: var(--text-sm);
+}
+
+.composer-previews {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.preview-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--bg-tertiary);
+}
+
+.preview-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.preview-remove {
+    position: absolute;
+    top: var(--space-xs);
+    right: var(--space-xs);
+    width: 24px;
+    height: 24px;
+    background: rgba(0, 0, 0, 0.7);
+    border: none;
+    border-radius: var(--radius-full);
+    color: white;
+    font-size: var(--text-xs);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.preview-remove:hover {
+    background: var(--error);
+}
+
+.preview-badge {
+    position: absolute;
+    bottom: var(--space-xs);
+    left: var(--space-xs);
+    padding: 2px var(--space-xs);
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: var(--radius-sm);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.composer-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border-color);
+}
+
+.composer-tools {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.tool-btn {
+    font-size: var(--text-lg);
+    cursor: pointer;
+}
+
+.tool-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.composer-submit {
+    display: flex;
+    gap: var(--space-sm);
+}
