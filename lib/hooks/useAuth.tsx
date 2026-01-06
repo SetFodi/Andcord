@@ -36,6 +36,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             .single();
 
         if (error) {
+            // If profile not found, it might be a user created before the trigger
+            // Try to create the profile
+            if (error.code === 'PGRST116') {
+                console.log('Profile not found, attempting to create one...');
+
+                // Get user metadata for username
+                const { data: userData } = await supabase.auth.getUser();
+                const username = userData?.user?.user_metadata?.username
+                    || 'user_' + userId.slice(0, 8);
+
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const { data: newProfile, error: insertError } = await (supabase as any)
+                    .from('profiles')
+                    .insert({
+                        id: userId,
+                        username,
+                        display_name: username,
+                    })
+                    .select()
+                    .single();
+
+                if (insertError) {
+                    console.error('Error creating profile:', insertError);
+                    return null;
+                }
+
+                return newProfile;
+            }
+
             console.error('Error fetching profile:', error);
             return null;
         }
