@@ -1,72 +1,80 @@
+/* ========================================
+   MAIN LAYOUT 2.0 - Premium Design
+   ======================================== */
+
 .app-container {
     display: flex;
     min-height: 100vh;
+    position: relative;
+    z-index: 1;
 }
 
 .main-content {
     flex: 1;
     margin-left: var(--sidebar-width);
     min-height: 100vh;
-    background: var(--bg-primary);
-    transition: margin-left var(--transition-slow);
-    animation: pageEnter 0.4s ease-out;
+    display: flex;
+    flex-direction: column;
+    transition: margin-left var(--duration-slow) var(--ease-out);
+    animation: pageEnter 0.4s var(--ease-out);
 }
 
 @keyframes pageEnter {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(6px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-/* Page header */
+/* Page Header */
 .page-header {
     position: sticky;
     top: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-md);
-    padding: var(--space-lg) var(--space-xl);
-    background: rgba(10, 10, 15, 0.8);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border-color);
+    gap: var(--space-4);
+    padding: var(--space-4) var(--space-6);
+    background: rgba(12, 10, 20, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-subtle);
     z-index: var(--z-sticky);
 }
 
 .page-title {
-    font-size: var(--text-xl);
+    font-size: var(--text-lg);
     font-weight: 600;
     color: var(--text-primary);
+    letter-spacing: -0.01em;
 }
 
 .page-actions {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
+    gap: var(--space-2);
 }
 
-/* Page content */
+/* Page Content */
 .page-content {
-    padding: var(--space-xl);
-    max-width: calc(var(--max-content-width) + var(--space-xl) * 2);
+    flex: 1;
+    padding: var(--space-6) var(--space-8);
+    padding-left: var(--space-10);
+    max-width: calc(var(--max-content-width) + var(--space-10) + var(--space-8));
+    width: 100%;
     margin: 0 auto;
 }
 
 .page-content-wide {
-    padding: var(--space-xl);
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width: 960px;
 }
 
 .page-content-full {
-    padding: var(--space-xl);
+    max-width: none;
 }
 
 /* Responsive */
@@ -82,12 +90,20 @@
     }
 
     .page-header {
-        padding: var(--space-md);
+        padding: var(--space-4);
     }
 
-    .page-content,
-    .page-content-wide,
-    .page-content-full {
-        padding: var(--space-md);
+    .page-content {
+        padding: var(--space-4);
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header {
+        padding: var(--space-3);
+    }
+
+    .page-content {
+        padding: var(--space-3);
     }
 }
