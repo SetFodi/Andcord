@@ -16,12 +16,16 @@ interface AuthContextType {
     signOut: () => Promise<void>;
     updateProfile: (updates: Partial<Profile>) => Promise<{ error: Error | null }>;
     refreshProfile: () => Promise<void>;
+    deleteAccount: () => Promise<{ error: Error | null }>;
+    compactMode: boolean;
+    setCompactMode: (enabled: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const PROFILE_CACHE_KEY = 'andcord-profile-cache';
 const SESSION_CACHE_KEY = 'andcord-session-cache';
+const COMPACT_MODE_KEY = 'andcord-compact-mode';
 
 // Get cached profile from localStorage (runs synchronously on mount)
 const getCachedProfile = (): Profile | null => {
@@ -89,6 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Initialize profile from cache for instant load
     const [profile, setProfile] = useState<Profile | null>(() => getCachedProfile());
     const [session, setSession] = useState<Session | null>(null);
+    const [compactMode, setCompactModeState] = useState(false);
     // Start with loading=true for server/client consistency (prevents hydration error)
     const [loading, setLoading] = useState(true);
 
@@ -336,6 +341,51 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     };
 
+    // Compact Mode logic
+    useEffect(() => {
+        const saved = localStorage.getItem(COMPACT_MODE_KEY);
+        if (saved === 'true') {
+            setCompactModeState(true);
+            document.documentElement.setAttribute('data-compact', 'true');
+        }
+    }, []);
+
+    const setCompactMode = (enabled: boolean) => {
+        setCompactModeState(enabled);
+        localStorage.setItem(COMPACT_MODE_KEY, enabled.toString());
+        if (enabled) {
+            document.documentElement.setAttribute('data-compact', 'true');
+        } else {
+            document.documentElement.removeAttribute('data-compact');
+        }
+    };
+
+    // Delete account
+    const deleteAccount = async () => {
+        try {
+            if (!user) throw new Error('No user logged in');
+
+            // 1. Delete user from auth.users via RPC
+            // This function needs to be created in Supabase
+            const { error: rpcError } = await supabase.rpc('delete_user_data');
+
+            if (rpcError) {
+                console.error('RPC Error:', rpcError);
+                // Fallback: If RPC fails or isn't there, we might just try to sign out 
+                // but for a real "delete account" we want the RPC to work.
+                throw rpcError;
+            }
+
+            // 2. Sign out
+            await signOut();
+
+            return { error: null };
+        } catch (error) {
+            console.error('Delete account error:', error);
+            return { error: error as Error };
+        }
+    };
+
     return (
         <AuthContext.Provider
             value={{
@@ -348,6 +398,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 signOut,
                 updateProfile,
                 refreshProfile,
+                deleteAccount,
+                compactMode,
+                setCompactMode,
             }}
         >
             {children}
