@@ -134,7 +134,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             try {
                 const profileData = await fetchProfile(currentSession.user.id);
                 if (mounting) {
-                    setProfile(profileData);
+                    // Only update if we got data back. 
+                    // If fetchProfile returns null (due to timeout/error), keep the existing profile
+                    // to prevent UI flickering or fallback to 'no profile' state.
+                    if (profileData) {
+                        setProfile(profileData);
+                    } else {
+                        console.warn('⚠️ syncProfile: No profile data returned (timeout?), keeping existing state.');
+                    }
                 }
             } catch (err) {
                 console.error('❌ Profile sync error:', err);
@@ -156,9 +163,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     setSession(initialSession);
                     setUser(initialSession.user);
                     userIdRef.current = initialSession.user.id; // Sync ref immediately
+
+                    // Unblock loading immediately so app can render (profile will pop in later)
+                    if (mounting) setLoading(false);
+
                     await syncProfile(initialSession);
                 } else {
                     console.log('🤷 No initial session found via getSession');
+                    // No session, but we are done checking
+                    if (mounting) setLoading(false);
                 }
             } catch (e) {
                 console.error('💥 Init auth exception:', e);

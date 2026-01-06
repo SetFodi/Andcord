@@ -71,11 +71,29 @@ export default function FeedPage() {
     // Initial load
     useEffect(() => {
         const loadInitialPosts = async () => {
-            setLoading(true);
+            // Try to load from cache first
+            const cached = sessionStorage.getItem('feed-cache');
+            if (cached) {
+                try {
+                    const parsed = JSON.parse(cached);
+                    setPosts(parsed);
+                    setLoading(false); // Show cached immediately
+                    console.log('📦 Loaded posts from cache');
+                } catch (e) {
+                    console.error('Cache parse error', e);
+                }
+            } else {
+                setLoading(true);
+            }
+
+            // Fetch fresh data
             const initialPosts = await fetchPosts(0);
             setPosts(initialPosts);
             setHasMore(initialPosts.length === POSTS_PER_PAGE);
             setLoading(false);
+
+            // Update cache
+            sessionStorage.setItem('feed-cache', JSON.stringify(initialPosts));
         };
 
         if (user) {
