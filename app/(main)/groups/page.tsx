@@ -87,6 +87,13 @@ export default function GroupsPage() {
         if (profile) {
             fetchGroups();
         }
+
+        // Timeout fallback
+        const timeout = setTimeout(() => {
+            setLoading(false);
+        }, 6000);
+
+        return () => clearTimeout(timeout);
     }, [fetchGroups, profile]);
 
     // Real-time subscription for group messages

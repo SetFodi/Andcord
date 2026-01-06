@@ -44,6 +44,13 @@ export default function NotificationsPage() {
         };
 
         fetchNotifications();
+
+        // Timeout fallback
+        const timeout = setTimeout(() => {
+            setLoading(false);
+        }, 6000);
+
+        return () => clearTimeout(timeout);
     }, [profile, supabase]);
 
     // Real-time subscription for new notifications

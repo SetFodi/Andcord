@@ -100,6 +100,13 @@ export default function MessagesPage() {
         if (profile) {
             fetchConversations();
         }
+
+        // Timeout fallback
+        const timeout = setTimeout(() => {
+            setLoading(false);
+        }, 6000);
+
+        return () => clearTimeout(timeout);
     }, [fetchConversations, profile]);
 
     // Handle URL-based conversation selection

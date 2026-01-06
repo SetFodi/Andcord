@@ -68,6 +68,13 @@ export default function FriendsPage() {
         };
 
         fetchFriendships();
+
+        // Timeout fallback
+        const timeout = setTimeout(() => {
+            setLoading(false);
+        }, 6000);
+
+        return () => clearTimeout(timeout);
     }, [profile, supabase]);
 
     // Search users
