@@ -36,9 +36,10 @@ export default function LoginPage() {
         <div className="auth-container">
             <div className="auth-card">
                 <div className="auth-header">
-                    <div className="auth-logo">Andcord</div>
+                    <div className="auth-logo">✦ Andcord</div>
+                    <p className="auth-tagline">Your universe of connections</p>
                     <h1 className="auth-title">Welcome back</h1>
-                    <p className="auth-subtitle">Sign in to continue to Andcord</p>
+                    <p className="auth-subtitle">Sign in to explore your galaxy</p>
                 </div>
 
                 <form className="auth-form" onSubmit={handleSubmit}>

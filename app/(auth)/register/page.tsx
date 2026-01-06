@@ -79,9 +79,10 @@ export default function RegisterPage() {
         <div className="auth-container">
             <div className="auth-card">
                 <div className="auth-header">
-                    <div className="auth-logo">Andcord</div>
-                    <h1 className="auth-title">Create an account</h1>
-                    <p className="auth-subtitle">Join Andcord and connect with friends</p>
+                    <div className="auth-logo">✦ Andcord</div>
+                    <p className="auth-tagline">Your universe of connections</p>
+                    <h1 className="auth-title">Join the galaxy</h1>
+                    <p className="auth-subtitle">Create your account and start exploring</p>
                 </div>
 
                 <form className="auth-form" onSubmit={handleSubmit}>

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/hooks/useAuth";
 
-const plusJakarta = Plus_Jakarta_Sans({
+const geist = Geist({
   variable: "--font-primary",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={plusJakarta.variable} suppressHydrationWarning>
+      <body className={geist.variable} suppressHydrationWarning>
         <AuthProvider>
           {children}
         </AuthProvider>
