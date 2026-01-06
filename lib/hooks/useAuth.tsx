@@ -178,12 +178,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
                 // Handle Profile Sync based on event
                 if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') {
-                    // Only start loading if we don't have a profile or if users switched
-                    // This prevents 'flash of loading' if unnecessary, 
-                    // and avoids infinite loops if we are just refreshing token
-                    setLoading(true);
+                    // Only show loading state if we're switching users or don't have a session yet
+                    const isSameUser = user?.id === currentSession?.user?.id;
+
+                    if (!isSameUser) {
+                        setLoading(true);
+                    }
+
+                    // Sync profile in background if same user, or foreground if new
                     await syncProfile(currentSession);
-                    if (mounting) setLoading(false);
+
+                    if (mounting && !isSameUser) {
+                        setLoading(false);
+                    }
                 } else if (event === 'SIGNED_OUT') {
                     setProfile(null);
                     setLoading(false);

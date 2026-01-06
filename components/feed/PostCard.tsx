@@ -195,7 +195,8 @@ export default function PostCard({ post, onUpdate }: PostCardProps) {
         setLoadingEdit(true);
 
         try {
-            const { error } = await supabase
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const { error } = await (supabase as any)
                 .from('posts')
                 .update({ content: editContent.trim() })
                 .eq('id', post.id);
@@ -229,7 +230,12 @@ export default function PostCard({ post, onUpdate }: PostCardProps) {
                     </div>
                     <div className="author-info">
                         <span className="author-name">{author?.display_name || 'Unknown'}</span>
-                        <span className="post-time">@{author?.username} · {formatRelativeTime(post.created_at)}</span>
+                        <span className="post-time">
+                            @{author?.username} ·{' '}
+                            <Link href={`/post/${post.id}`} className="hover:underline">
+                                {formatRelativeTime(post.created_at)}
+                            </Link>
+                        </span>
                     </div>
                 </Link>
 
