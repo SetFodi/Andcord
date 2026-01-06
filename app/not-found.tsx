@@ -1,23 +1,47 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import './not-found.css';
 
+interface Star {
+    top: string;
+    left: string;
+    width: string;
+    height: string;
+    delay: string;
+    duration: string;
+}
+
 export default function NotFound() {
+    const [stars, setStars] = useState<Star[]>([]);
+
+    useEffect(() => {
+        const generatedStars = [...Array(20)].map(() => ({
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            width: `${Math.random() * 3}px`,
+            height: `${Math.random() * 3}px`,
+            delay: `${Math.random() * 5}s`,
+            duration: `${3 + Math.random() * 4}s`
+        }));
+        setStars(generatedStars);
+    }, []);
+
     return (
         <div className="not-found-wrapper">
             <div className="stars">
-                {[...Array(20)].map((_, i) => (
+                {stars.map((star, i) => (
                     <div
                         key={i}
                         className="star"
                         style={{
-                            top: `${Math.random() * 100}%`,
-                            left: `${Math.random() * 100}%`,
-                            width: `${Math.random() * 3}px`,
-                            height: `${Math.random() * 3}px`,
-                            animationDelay: `${Math.random() * 5}s`,
-                            animationDuration: `${3 + Math.random() * 4}s`
+                            top: star.top,
+                            left: star.left,
+                            width: star.width,
+                            height: star.height,
+                            animationDelay: star.delay,
+                            animationDuration: star.duration
                         }}
                     />
                 ))}
