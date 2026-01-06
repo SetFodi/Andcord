@@ -70,6 +70,7 @@ export default function FriendsPage() {
     const supabase = createClient();
 
     // Fetch friendships
+    // Fetch friendships
     useEffect(() => {
         const fetchFriendships = async () => {
             if (!profile) return;
@@ -87,6 +88,7 @@ export default function FriendsPage() {
                     f.requester_id === profile.id ? f.addressee : f.requester
                 );
                 setFriends(friendProfiles);
+                sessionStorage.setItem('friends-cache', JSON.stringify(friendProfiles));
             }
 
             // Fetch pending requests (where user is addressee)
@@ -97,7 +99,10 @@ export default function FriendsPage() {
                 .eq('status', 'pending');
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            setPendingRequests((pending as any[]) || []);
+            const pendingData = (pending as any[]) || [];
+            setPendingRequests(pendingData);
+            sessionStorage.setItem('pending-requests-cache', JSON.stringify(pendingData));
+
 
             // Fetch sent requests
             const { data: sent } = await supabase
@@ -107,9 +112,28 @@ export default function FriendsPage() {
                 .eq('status', 'pending');
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            setSentRequests((sent as any[]) || []);
+            const sentData = (sent as any[]) || [];
+            setSentRequests(sentData);
+            sessionStorage.setItem('sent-requests-cache', JSON.stringify(sentData));
+
             setLoading(false);
         };
+
+        // Try load from cache
+        const friendsCache = sessionStorage.getItem('friends-cache');
+        const pendingCache = sessionStorage.getItem('pending-requests-cache');
+        const sentCache = sessionStorage.getItem('sent-requests-cache');
+
+        if (friendsCache || pendingCache || sentCache) {
+            try {
+                if (friendsCache) setFriends(JSON.parse(friendsCache));
+                if (pendingCache) setPendingRequests(JSON.parse(pendingCache));
+                if (sentCache) setSentRequests(JSON.parse(sentCache));
+                setLoading(false);
+            } catch (e) {
+                console.error(e);
+            }
+        }
 
         fetchFriendships();
 

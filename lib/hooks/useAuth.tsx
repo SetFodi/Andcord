@@ -20,9 +20,44 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const PROFILE_CACHE_KEY = 'andcord-profile-cache';
+
+// Get cached profile from localStorage (runs synchronously on mount)
+const getCachedProfile = (): Profile | null => {
+    if (typeof window === 'undefined') return null;
+    try {
+        const cached = localStorage.getItem(PROFILE_CACHE_KEY);
+        if (cached) {
+            const parsed = JSON.parse(cached);
+            // Validate that it has required fields
+            if (parsed && parsed.id && parsed.username) {
+                return parsed as Profile;
+            }
+        }
+    } catch (e) {
+        console.warn('Failed to parse cached profile:', e);
+    }
+    return null;
+};
+
+// Save profile to localStorage
+const setCachedProfile = (profile: Profile | null) => {
+    if (typeof window === 'undefined') return;
+    try {
+        if (profile) {
+            localStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(profile));
+        } else {
+            localStorage.removeItem(PROFILE_CACHE_KEY);
+        }
+    } catch (e) {
+        console.warn('Failed to cache profile:', e);
+    }
+};
+
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
-    const [profile, setProfile] = useState<Profile | null>(null);
+    // Initialize profile from cache for instant load
+    const [profile, setProfile] = useState<Profile | null>(() => getCachedProfile());
     const [session, setSession] = useState<Session | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -77,12 +112,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     }
 
                     console.log('✅ Created new profile:', newProfile);
+                    setCachedProfile(newProfile); // Cache for instant load on refresh
                     return newProfile;
                 }
                 return null;
             }
 
             console.log('✅ Profile found:', data.username);
+            setCachedProfile(data); // Cache for instant load on refresh
             return data;
         } catch (err: any) {
             if (err.message === 'Profile fetch timeout') {
@@ -164,13 +201,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     setUser(initialSession.user);
                     userIdRef.current = initialSession.user.id; // Sync ref immediately
 
+                    // Validate cached profile belongs to current user
+                    const cachedProfile = getCachedProfile();
+                    if (cachedProfile && cachedProfile.id !== initialSession.user.id) {
+                        console.log('⚠️ Cached profile belongs to different user, clearing');
+                        setCachedProfile(null);
+                        setProfile(null);
+                    }
+
                     // Unblock loading immediately so app can render (profile will pop in later)
                     if (mounting) setLoading(false);
 
                     await syncProfile(initialSession);
                 } else {
                     console.log('🤷 No initial session found via getSession');
-                    // No session, but we are done checking
+                    // No session - clear any cached profile (user logged out elsewhere)
+                    setCachedProfile(null);
+                    setProfile(null);
                     if (mounting) setLoading(false);
                 }
             } catch (e) {
@@ -222,6 +269,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     }
                 } else if (event === 'SIGNED_OUT') {
                     setProfile(null);
+                    setCachedProfile(null); // Clear cache on logout
                     setLoading(false);
                     userIdRef.current = null;
                 } else {
@@ -278,6 +326,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setUser(null);
             setProfile(null);
             setSession(null);
+            setCachedProfile(null); // Clear cached profile on logout
             router.push('/login');
         } catch (error) {
             console.error('Logout error:', error);

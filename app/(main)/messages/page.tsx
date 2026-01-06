@@ -111,6 +111,8 @@ export default function MessagesPage() {
 
         setConversations(enrichedConversations);
         setLoading(false);
+        // Cache the enriched conversations
+        sessionStorage.setItem('conversations-cache', JSON.stringify(enrichedConversations));
     }, [profile, supabase]);
 
     // Fetch messages for active conversation
@@ -132,6 +134,18 @@ export default function MessagesPage() {
 
     // Initial load
     useEffect(() => {
+        // Try to load from cache
+        const cached = sessionStorage.getItem('conversations-cache');
+        if (cached) {
+            try {
+                const parsed = JSON.parse(cached);
+                setConversations(parsed);
+                setLoading(false);
+            } catch (e) {
+                console.error('Cache parse error', e);
+            }
+        }
+
         if (profile) {
             fetchConversations();
         }

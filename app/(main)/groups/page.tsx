@@ -83,6 +83,7 @@ export default function GroupsPage() {
         if (!memberOf || memberOf.length === 0) {
             setGroups([]);
             setLoading(false);
+            sessionStorage.removeItem('groups-cache'); // Clear cache if no groups
             return;
         }
 
@@ -104,6 +105,7 @@ export default function GroupsPage() {
                 member_count: g.members?.length || 0,
             }));
             setGroups(enriched);
+            sessionStorage.setItem('groups-cache', JSON.stringify(enriched));
         }
 
         setLoading(false);
@@ -122,6 +124,18 @@ export default function GroupsPage() {
     }, [supabase, scrollToBottom]);
 
     useEffect(() => {
+        // Try to load from cache
+        const cached = sessionStorage.getItem('groups-cache');
+        if (cached) {
+            try {
+                const parsed = JSON.parse(cached);
+                setGroups(parsed);
+                setLoading(false);
+            } catch (e) {
+                console.error('Cache parse error', e);
+            }
+        }
+
         if (profile) {
             fetchGroups();
         }
