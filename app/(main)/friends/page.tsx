@@ -7,6 +7,50 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import type { Friendship, Profile } from '@/types/database';
 import './friends.css';
 
+// Icons
+const SearchIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+);
+
+const MailIcon = () => (
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="4" width="20" height="16" rx="2" />
+        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+    </svg>
+);
+
+const HandshakeIcon = () => (
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="m11 17 2 2a1 1 0 1 0 3-3" />
+        <path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-1.42-1.42l4.88-4.88a3 3 0 0 0 0-4.24l2.12-2.12a2 2 0 0 1 2.83 0l7.25 7.25a2 2 0 0 1 0 2.83l-3.75 3.75a2 2 0 0 1-2.83 0" />
+        <path d="m5.9 18.37 2.83 2.83a2 2 0 0 0 2.83 0l6.5-6.5" />
+        <path d="M12 9a2 2 0 0 0-3-3l-2.12 2.12a2 2 0 0 0 0 2.83 1 1 0 0 0-1.41-1.41 1 1 0 0 0 0 1.41l-2.12 2.12a2 2 0 0 0 0 2.83l3.75 3.75a2 2 0 0 0 2.83 0" />
+    </svg>
+);
+
+const LoaderIcon = () => (
+    <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" y1="2" x2="12" y2="6" />
+        <line x1="12" y1="18" x2="12" y2="22" />
+        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76" />
+        <line x1="16.24" y1="16.24" x2="19.07" y2="19.07" />
+        <line x1="2" y1="12" x2="6" y2="12" />
+        <line x1="18" y1="12" x2="22" y2="12" />
+        <line x1="4.93" y1="19.07" x2="7.76" y2="16.24" />
+        <line x1="16.24" y1="7.76" x2="19.07" y2="4.93" />
+    </svg>
+);
+
+const UserSearchIcon = () => (
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+);
+
 type FriendshipWithProfiles = Friendship & {
     requester: Profile;
     addressee: Profile;
@@ -265,7 +309,7 @@ export default function FriendsPage() {
                             </>
                         ) : friends.length === 0 ? (
                             <div className="empty-state full-width">
-                                <div className="empty-state-icon">🤝</div>
+                                <div className="empty-state-icon"><HandshakeIcon /></div>
                                 <h3 className="empty-state-title">No friends yet</h3>
                                 <p className="empty-state-description">
                                     Search for people to add as friends!
@@ -388,7 +432,7 @@ export default function FriendsPage() {
 
                         {pendingRequests.length === 0 && sentRequests.length === 0 && (
                             <div className="empty-state">
-                                <div className="empty-state-icon">📬</div>
+                                <div className="empty-state-icon"><MailIcon /></div>
                                 <h3 className="empty-state-title">No pending requests</h3>
                                 <p className="empty-state-description">
                                     Friend requests you receive or send will appear here
@@ -409,7 +453,7 @@ export default function FriendsPage() {
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
-                            {searching && <span className="search-spinner">⏳</span>}
+                            {searching && <span className="search-spinner"><LoaderIcon /></span>}
                         </div>
 
                         {searchResults.length > 0 ? (
@@ -451,7 +495,7 @@ export default function FriendsPage() {
                             </div>
                         ) : (
                             <div className="empty-state">
-                                <div className="empty-state-icon">🔍</div>
+                                <div className="empty-state-icon"><UserSearchIcon /></div>
                                 <h3 className="empty-state-title">Find friends</h3>
                                 <p className="empty-state-description">
                                     Search for people by their username or display name

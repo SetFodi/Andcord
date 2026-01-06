@@ -8,6 +8,44 @@ import { formatMessageTime } from '@/lib/utils/formatDate';
 import type { Group, GroupMessage, GroupMember, Profile } from '@/types/database';
 import './groups.css';
 
+// Icons
+const PlusIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19" />
+        <line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+);
+
+const SettingsIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="3" />
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+    </svg>
+);
+
+const GroupIcon = () => (
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+);
+
+const CloseIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+);
+
+const SendIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13" />
+        <polygon points="22 2 15 22 11 13 2 9 22 2" />
+    </svg>
+);
+
 type GroupWithDetails = Group & {
     members: (GroupMember & { user: Profile })[];
     member_count: number;
@@ -203,10 +241,10 @@ export default function GroupsPage() {
                 <div className="groups-header">
                     <h2>Groups</h2>
                     <button
-                        className="btn btn-primary btn-sm"
+                        className="btn btn-primary"
                         onClick={() => setShowCreateModal(true)}
                     >
-                        + New
+                        <span className="flex items-center gap-xs"><PlusIcon /> New</span>
                     </button>
                 </div>
 
@@ -227,7 +265,7 @@ export default function GroupsPage() {
                         <div className="empty-groups">
                             <p>No groups yet</p>
                             <button
-                                className="btn btn-primary btn-sm"
+                                className="btn btn-primary"
                                 onClick={() => setShowCreateModal(true)}
                             >
                                 Create a Group
@@ -281,7 +319,7 @@ export default function GroupsPage() {
                                 </span>
                             </div>
                             <button className="btn btn-ghost btn-icon" title="Group settings">
-                                ⚙️
+                                <SettingsIcon />
                             </button>
                         </header>
 
@@ -335,14 +373,14 @@ export default function GroupsPage() {
                                 className="btn btn-primary btn-icon"
                                 disabled={!newMessage.trim() || sending}
                             >
-                                {sending ? '...' : '➤'}
+                                {sending ? '...' : <SendIcon />}
                             </button>
                         </form>
                     </>
                 ) : (
                     <div className="group-empty">
                         <div className="empty-state">
-                            <div className="empty-state-icon">👥</div>
+                            <div className="empty-state-icon"><GroupIcon /></div>
                             <h3 className="empty-state-title">Select a group</h3>
                             <p className="empty-state-description">
                                 Choose a group from the sidebar or create a new one
@@ -362,7 +400,7 @@ export default function GroupsPage() {
                                 className="btn btn-ghost btn-icon"
                                 onClick={() => setShowCreateModal(false)}
                             >
-                                ✕
+                                <CloseIcon />
                             </button>
                         </div>
                         <form onSubmit={handleCreateGroup}>

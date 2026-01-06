@@ -1,17 +1,25 @@
+/* Messages Layout */
 .messages-layout {
     display: flex;
-    height: calc(100vh - var(--header-height, 0px));
+    height: 100dvh;
+    /* Use dynamic viewport height for mobile/desktop accuracy */
     overflow: hidden;
+    position: relative;
 }
 
 /* Conversations Sidebar */
 .conversations-sidebar {
     width: 320px;
-    background: var(--bg-secondary);
-    border-right: 1px solid var(--border-color);
+    background: rgba(15, 23, 42, 0.2);
+    /* Lighter glass */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
+    height: 100%;
+    z-index: 10;
 }
 
 .conversations-header {
@@ -30,7 +38,24 @@
 .conversations-list {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: var(--space-sm);
+    /* Custom Scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.conversations-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.conversations-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.conversations-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
 }
 
 .conversation-item {
@@ -133,9 +158,16 @@
 }
 
 .empty-conversations {
-    padding: var(--space-xl);
+    padding: var(--space-2xl);
     text-align: center;
     color: var(--text-muted);
+    font-size: var(--text-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    opacity: 0.7;
 }
 
 /* Chat Area */

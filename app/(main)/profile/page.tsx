@@ -100,8 +100,12 @@ export default function ProfilePage() {
                 )}
             </header>
 
-            <div className="page-content">
-                <div className="profile-card animate-fadeIn">
+            <div className="profile-banner">
+                <div className="banner-overlay"></div>
+            </div>
+
+            <div className="page-content profile-content-container">
+                <div className="profile-card glass animate-fadeIn">
                     {error && <div className="profile-error">{error}</div>}
 
                     {/* Avatar */}
@@ -130,7 +134,7 @@ export default function ProfilePage() {
                                 className="hidden"
                             />
                         </button>
-                        <p className="avatar-hint">Click to change</p>
+                        <p className="avatar-hint">Click to change (GIFs supported)</p>
                     </div>
 
                     {/* Profile Info */}

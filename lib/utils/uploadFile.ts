@@ -8,7 +8,7 @@ interface UploadResult {
 }
 
 const MAX_FILE_SIZE = {
-    image: 5 * 1024 * 1024,  // 5MB for images
+    image: 15 * 1024 * 1024, // 15MB for images (allows larger GIFs)
     video: 20 * 1024 * 1024, // 20MB for videos
 };
 

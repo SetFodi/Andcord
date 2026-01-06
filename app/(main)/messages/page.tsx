@@ -9,6 +9,41 @@ import { formatMessageTime, formatConversationDate } from '@/lib/utils/formatDat
 import type { Conversation, Message, Profile } from '@/types/database';
 import './messages.css';
 
+// Icons
+const EditIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+    </svg>
+);
+
+const MoreIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="1" />
+        <circle cx="19" cy="12" r="1" />
+        <circle cx="5" cy="12" r="1" />
+    </svg>
+);
+
+const AttachmentIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+    </svg>
+);
+
+const SendIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13" />
+        <polygon points="22 2 15 22 11 13 2 9 22 2" />
+    </svg>
+);
+
+const MessageIcon = () => (
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+);
+
 export default function MessagesPage() {
     const [conversations, setConversations] = useState<Conversation[]>([]);
     const [activeConversation, setActiveConversation] = useState<Conversation | null>(null);
@@ -220,7 +255,7 @@ export default function MessagesPage() {
                 <div className="conversations-header">
                     <h2>Messages</h2>
                     <button className="btn btn-ghost btn-icon" title="New message">
-                        ✏️
+                        <EditIcon />
                     </button>
                 </div>
 
@@ -308,7 +343,7 @@ export default function MessagesPage() {
                             </Link>
                             <div className="chat-actions">
                                 <button className="btn btn-ghost btn-icon" title="More options">
-                                    ⋯
+                                    <MoreIcon />
                                 </button>
                             </div>
                         </header>
@@ -349,7 +384,7 @@ export default function MessagesPage() {
                         {/* Message Input */}
                         <form className="message-form" onSubmit={handleSendMessage}>
                             <button type="button" className="btn btn-ghost btn-icon" title="Add attachment">
-                                📎
+                                <AttachmentIcon />
                             </button>
                             <input
                                 type="text"
@@ -364,14 +399,14 @@ export default function MessagesPage() {
                                 disabled={!newMessage.trim() || sending}
                                 title="Send message"
                             >
-                                {sending ? '...' : '➤'}
+                                {sending ? '...' : <SendIcon />}
                             </button>
                         </form>
                     </>
                 ) : (
                     <div className="chat-empty">
                         <div className="empty-state">
-                            <div className="empty-state-icon">💬</div>
+                            <div className="empty-state-icon"><MessageIcon /></div>
                             <h3 className="empty-state-title">Select a conversation</h3>
                             <p className="empty-state-description">
                                 Choose a conversation from the sidebar to start messaging

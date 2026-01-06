@@ -1,13 +1,19 @@
 .post-card {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
+    background: rgba(15, 23, 42, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: var(--radius-xl);
     padding: var(--space-lg);
     transition: all var(--transition-base);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .post-card:hover {
-    border-color: var(--border-focus);
+    border-color: rgba(139, 92, 246, 0.2);
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3), 0 0 20px rgba(139, 92, 246, 0.05);
+    background: rgba(15, 23, 42, 0.5);
+    transform: translateY(-2px);
 }
 
 /* Post Header */
@@ -127,8 +133,8 @@
     display: flex;
     gap: var(--space-md);
     padding: var(--space-md);
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border-color);
+    background: rgba(30, 27, 75, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: var(--radius-lg);
     text-decoration: none;
     margin-bottom: var(--space-md);
@@ -137,7 +143,8 @@
 
 .link-preview:hover {
     border-color: var(--accent);
-    background: var(--bg-elevated);
+    background: rgba(46, 16, 101, 0.4);
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.1);
 }
 
 .link-image {
@@ -168,6 +175,7 @@
     color: var(--text-secondary);
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
