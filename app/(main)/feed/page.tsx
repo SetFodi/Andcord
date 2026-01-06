@@ -75,6 +75,16 @@ export default function FeedPage() {
         if (profile) {
             loadInitialPosts();
         }
+
+        // Timeout fallback - if no profile after 6 seconds, stop loading
+        const timeout = setTimeout(() => {
+            if (loading && !profile) {
+                console.log('Feed: No profile after timeout, stopping loading');
+                setLoading(false);
+            }
+        }, 6000);
+
+        return () => clearTimeout(timeout);
     }, [fetchPosts, profile]);
 
     // Infinite scroll
