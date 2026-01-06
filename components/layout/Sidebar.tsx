@@ -5,12 +5,65 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import './sidebar.css';
 
+// Professional SVG Icons
+const HomeIcon = () => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+        <polyline points="9 22 9 12 15 12 15 22" />
+    </svg>
+);
+
+const MessageIcon = () => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+);
+
+const UsersIcon = () => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+);
+
+const FriendsIcon = () => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+);
+
+const BellIcon = () => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    </svg>
+);
+
+const LogoutIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+        <polyline points="16 17 21 12 16 7" />
+        <line x1="21" y1="12" x2="9" y2="12" />
+    </svg>
+);
+
+const SparkleIcon = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2L13.09 8.26L18 6L14.74 10.91L21 12L14.74 13.09L18 18L13.09 15.74L12 22L10.91 15.74L6 18L9.26 13.09L3 12L9.26 10.91L6 6L10.91 8.26L12 2Z" />
+    </svg>
+);
+
 const navItems = [
-    { href: '/feed', label: 'Feed', icon: '🏠' },
-    { href: '/messages', label: 'Messages', icon: '💬' },
-    { href: '/groups', label: 'Groups', icon: '👥' },
-    { href: '/friends', label: 'Friends', icon: '🤝' },
-    { href: '/notifications', label: 'Notifications', icon: '🔔' },
+    { href: '/feed', label: 'Feed', icon: <HomeIcon /> },
+    { href: '/messages', label: 'Messages', icon: <MessageIcon /> },
+    { href: '/groups', label: 'Groups', icon: <UsersIcon /> },
+    { href: '/friends', label: 'Friends', icon: <FriendsIcon /> },
+    { href: '/notifications', label: 'Notifications', icon: <BellIcon /> },
 ];
 
 export default function Sidebar() {
@@ -21,7 +74,7 @@ export default function Sidebar() {
         <aside className="sidebar">
             <div className="sidebar-header">
                 <Link href="/feed" className="sidebar-logo">
-                    <span className="logo-icon">⚡</span>
+                    <span className="logo-icon"><SparkleIcon /></span>
                     <span className="logo-text">Andcord</span>
                 </Link>
             </div>
@@ -58,7 +111,7 @@ export default function Sidebar() {
                     </div>
                 </Link>
                 <button className="btn btn-ghost btn-icon logout-btn" onClick={signOut} title="Sign out">
-                    🚪
+                    <LogoutIcon />
                 </button>
             </div>
         </aside>

@@ -95,17 +95,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setLoading(false);
         };
 
-        initAuth();
+        // Add timeout to prevent infinite loading
+        const timeout = setTimeout(() => {
+            if (loading) {
+                console.warn('Auth loading timeout - forcing loading to false');
+                setLoading(false);
+            }
+        }, 5000); // 5 second timeout
+
+        initAuth().catch((err) => {
+            console.error('Auth init error:', err);
+            setLoading(false);
+        });
 
         // Listen for auth changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             async (event, session) => {
+                console.log('Auth state changed:', event);
                 setSession(session);
                 setUser(session?.user ?? null);
 
                 if (session?.user) {
-                    const profileData = await fetchProfile(session.user.id);
-                    setProfile(profileData);
+                    try {
+                        const profileData = await fetchProfile(session.user.id);
+                        setProfile(profileData);
+                    } catch (err) {
+                        console.error('Error in auth state change profile fetch:', err);
+                    }
                 } else {
                     setProfile(null);
                 }
@@ -115,6 +131,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         );
 
         return () => {
+            clearTimeout(timeout);
             subscription.unsubscribe();
         };
     }, []);
