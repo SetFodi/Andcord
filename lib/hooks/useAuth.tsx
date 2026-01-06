@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, useRef, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
@@ -102,6 +102,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     };
 
+    // Track user ID in ref to avoid stale closure in event listener
+    const userIdRef = useRef<string | null>(null);
+
+    useEffect(() => {
+        if (user?.id) userIdRef.current = user.id;
+        else userIdRef.current = null;
+    }, [user]);
+
     useEffect(() => {
         let mounting = true;
         console.log('🏁 AuthProvider mounted');
@@ -147,6 +155,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     console.log('🔑 Initial session found for:', initialSession.user.email);
                     setSession(initialSession);
                     setUser(initialSession.user);
+                    userIdRef.current = initialSession.user.id; // Sync ref immediately
                     await syncProfile(initialSession);
                 } else {
                     console.log('🤷 No initial session found via getSession');
@@ -175,14 +184,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 // Update basic state
                 setSession(currentSession);
                 setUser(currentSession?.user ?? null);
+                // Ref update happens in effect, but we can't wait for it here,
+                // so we use the ref's current value which represents the PREVIOUS state.
+                // If ref is null, it means we weren't logged in before.
 
                 // Handle Profile Sync based on event
                 if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') {
                     // Only show loading state if we're switching users or don't have a session yet
-                    const isSameUser = user?.id === currentSession?.user?.id;
+                    // Use ref to check against previous user ID
+                    const isSameUser = userIdRef.current === currentSession?.user?.id;
 
                     if (!isSameUser) {
+                        console.log('🔄 User changed or fresh session, setting loading=true');
                         setLoading(true);
+                    } else {
+                        console.log('✅ Same user, skipping loading spinner');
                     }
 
                     // Sync profile in background if same user, or foreground if new
@@ -194,6 +210,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 } else if (event === 'SIGNED_OUT') {
                     setProfile(null);
                     setLoading(false);
+                    userIdRef.current = null;
                 } else {
                     // Other events
                     setLoading(false);

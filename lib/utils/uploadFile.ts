@@ -57,14 +57,17 @@ export async function uploadFile(
     const filePath = folder ? `${folder}/${fileName}` : fileName;
 
     try {
-        const { error: uploadError } = await supabase.storage
+        const { data, error: uploadError } = await supabase.storage
             .from(bucket)
             .upload(filePath, file, {
                 cacheControl: '3600',
                 upsert: false,
             });
 
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+            console.error('Supabase Upload Error Details:', uploadError);
+            throw uploadError;
+        }
 
         // Get public URL
         const { data: { publicUrl } } = supabase.storage

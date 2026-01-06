@@ -219,17 +219,21 @@ export default function PostCard({ post, onUpdate }: PostCardProps) {
         <article className="post-card animate-fadeInUp">
             {/* Post Header */}
             <header className="post-header">
-                <Link href={`/profile/${author?.id}`} className="post-author">
-                    <div className="avatar avatar-md">
-                        {author?.avatar_url ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={author.avatar_url} alt={author.display_name || 'Avatar'} />
-                        ) : (
-                            <span>{author?.display_name?.[0]?.toUpperCase() || '?'}</span>
-                        )}
-                    </div>
+                <div className="post-author">
+                    <Link href={`/profile/${author?.id}`}>
+                        <div className="avatar avatar-md">
+                            {author?.avatar_url ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img src={author.avatar_url} alt={author.display_name || 'Avatar'} />
+                            ) : (
+                                <span>{author?.display_name?.[0]?.toUpperCase() || '?'}</span>
+                            )}
+                        </div>
+                    </Link>
                     <div className="author-info">
-                        <span className="author-name">{author?.display_name || 'Unknown'}</span>
+                        <Link href={`/profile/${author?.id}`} className="author-name" style={{ textDecoration: 'none' }}>
+                            {author?.display_name || 'Unknown'}
+                        </Link>
                         <span className="post-time">
                             @{author?.username} ·{' '}
                             <Link href={`/post/${post.id}`} className="hover:underline">
@@ -237,7 +241,7 @@ export default function PostCard({ post, onUpdate }: PostCardProps) {
                             </Link>
                         </span>
                     </div>
-                </Link>
+                </div>
 
                 {isAuthor && (
                     <div className="post-menu-container" style={{ position: 'relative' }}>

@@ -36,6 +36,10 @@ export default function ProfilePage() {
         const { url, error: uploadError } = await uploadFile(file, 'avatars', profile?.id);
 
         if (uploadError || !url) {
+            console.error('Upload failed:', uploadError);
+            if (uploadError && (uploadError as any).statusCode === '400') {
+                alert('Upload failed: 400 Bad Request. Please check if GIFs are allowed in your Supabase Storage settings and if the file size is under the limit.');
+            }
             setError('Failed to upload image');
             setUploading(false);
             return;
