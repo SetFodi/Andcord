@@ -93,26 +93,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Sign up with email and password
     const signUp = async (email: string, password: string, username: string) => {
         try {
-            // First, sign up the user
-            const { data: authData, error: authError } = await supabase.auth.signUp({
+            // Sign up the user with username in metadata
+            // The database trigger will automatically create the profile
+            const { error: authError } = await supabase.auth.signUp({
                 email,
                 password,
+                options: {
+                    data: {
+                        username: username,
+                    },
+                },
             });
 
             if (authError) throw authError;
-            if (!authData.user) throw new Error('No user returned');
-
-            // Create the profile
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const { error: profileError } = await (supabase as any)
-                .from('profiles')
-                .insert({
-                    id: authData.user.id,
-                    username,
-                    display_name: username,
-                });
-
-            if (profileError) throw profileError;
 
             return { error: null };
         } catch (error) {
