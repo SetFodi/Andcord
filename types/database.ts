@@ -75,6 +75,8 @@ export interface Message {
   conversation_id: string;
   sender_id: string;
   content: string;
+  media_url?: string;
+  media_type?: string;
   created_at: string;
   // Joined data
   sender?: Profile;

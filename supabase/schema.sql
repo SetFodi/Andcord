@@ -90,7 +90,9 @@ CREATE TABLE IF NOT EXISTS messages (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   conversation_id UUID REFERENCES conversations(id) ON DELETE CASCADE,
   sender_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
-  content TEXT NOT NULL,
+  content TEXT,
+  media_url TEXT,
+  media_type TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
