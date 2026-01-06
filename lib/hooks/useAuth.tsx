@@ -21,6 +21,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const PROFILE_CACHE_KEY = 'andcord-profile-cache';
+const SESSION_CACHE_KEY = 'andcord-session-cache';
 
 // Get cached profile from localStorage (runs synchronously on mount)
 const getCachedProfile = (): Profile | null => {
@@ -29,13 +30,12 @@ const getCachedProfile = (): Profile | null => {
         const cached = localStorage.getItem(PROFILE_CACHE_KEY);
         if (cached) {
             const parsed = JSON.parse(cached);
-            // Validate that it has required fields
             if (parsed && parsed.id && parsed.username) {
                 return parsed as Profile;
             }
         }
-    } catch (e) {
-        console.warn('Failed to parse cached profile:', e);
+    } catch {
+        // Silent fail
     }
     return null;
 };
@@ -49,9 +49,39 @@ const setCachedProfile = (profile: Profile | null) => {
         } else {
             localStorage.removeItem(PROFILE_CACHE_KEY);
         }
-    } catch (e) {
-        console.warn('Failed to cache profile:', e);
+    } catch {
+        // Silent fail
     }
+};
+
+// Cache session state (user ID) for instant loading decision
+const getCachedSessionUserId = (): string | null => {
+    if (typeof window === 'undefined') return null;
+    try {
+        return localStorage.getItem(SESSION_CACHE_KEY);
+    } catch {
+        return null;
+    }
+};
+
+const setCachedSessionUserId = (userId: string | null) => {
+    if (typeof window === 'undefined') return;
+    try {
+        if (userId) {
+            localStorage.setItem(SESSION_CACHE_KEY, userId);
+        } else {
+            localStorage.removeItem(SESSION_CACHE_KEY);
+        }
+    } catch {
+        // Silent fail
+    }
+};
+
+// Check if we have valid cached auth state (profile matches cached session)
+const hasValidCache = (): boolean => {
+    const cachedProfile = getCachedProfile();
+    const cachedUserId = getCachedSessionUserId();
+    return !!(cachedProfile && cachedUserId && cachedProfile.id === cachedUserId);
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -59,18 +89,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Initialize profile from cache for instant load
     const [profile, setProfile] = useState<Profile | null>(() => getCachedProfile());
     const [session, setSession] = useState<Session | null>(null);
-    const [loading, setLoading] = useState(true);
+    // Start with loading=false if we have valid cache (instant render)
+    const [loading, setLoading] = useState(() => !hasValidCache());
 
     const supabase = createClient();
     const router = useRouter();
 
     // Fetch user profile
     const fetchProfile = async (userId: string) => {
-        console.log(`🔍 fetching profile for ${userId}`);
-
         try {
-            // Create a promise that rejects after 8 seconds to prevent hanging
-            // Increased to 8s to prevent false positives on slower networks
             const fetchPromise = supabase
                 .from('profiles')
                 .select('*')
@@ -78,20 +105,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 .single();
 
             const timeoutPromise = new Promise((_, reject) =>
-                setTimeout(() => reject(new Error('Profile fetch timeout')), 8000)
+                setTimeout(() => reject(new Error('Profile fetch timeout')), 4000)
             );
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const { data, error } = await Promise.race([fetchPromise, timeoutPromise]) as any;
 
             if (error) {
-                console.error('❌ fetchProfile error:', error);
-                // If profile not found, it might be a user created before the trigger
-                // Try to create the profile
+                // If profile not found, try to create one
                 if (error.code === 'PGRST116') {
-                    console.log('⚠️ Profile not found, attempting to create one...');
-
-                    // Get user metadata for username
                     const { data: userData } = await supabase.auth.getUser();
                     const username = userData?.user?.user_metadata?.username
                         || 'user_' + userId.slice(0, 8);
@@ -106,27 +128,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                         .select()
                         .single();
 
-                    if (insertError) {
-                        console.error('❌ Error creating profile:', insertError);
-                        return null;
-                    }
+                    if (insertError) return null;
 
-                    console.log('✅ Created new profile:', newProfile);
-                    setCachedProfile(newProfile); // Cache for instant load on refresh
+                    setCachedProfile(newProfile);
                     return newProfile;
                 }
                 return null;
             }
 
-            console.log('✅ Profile found:', data.username);
-            setCachedProfile(data); // Cache for instant load on refresh
+            setCachedProfile(data);
             return data;
-        } catch (err: any) {
-            if (err.message === 'Profile fetch timeout') {
-                console.warn('⚠️ Profile fetch timed out, skipping profile sync for now to allow app to load.');
-                return null;
-            }
-            console.error('💥 fetchProfile exception:', err);
+        } catch {
             return null;
         }
     };
@@ -149,138 +161,106 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         let mounting = true;
-        console.log('🏁 AuthProvider mounted');
 
-        // Safety timeout to ensure we don't spin forever
+        // Safety timeout - reduced to 3s since we have cache fallback
         const safetyTimeout = setTimeout(() => {
             if (mounting && loading) {
-                console.warn('🕒 Auth safety timeout reached. Forcing loading to false.');
                 setLoading(false);
             }
-        }, 6000);
+        }, 3000);
 
         const syncProfile = async (currentSession: Session | null) => {
             if (!currentSession?.user) {
-                if (mounting) {
-                    setProfile(null);
-                    console.log('👤 No user, profile cleared');
-                }
+                if (mounting) setProfile(null);
                 return;
             }
 
             try {
                 const profileData = await fetchProfile(currentSession.user.id);
-                if (mounting) {
-                    // Only update if we got data back. 
-                    // If fetchProfile returns null (due to timeout/error), keep the existing profile
-                    // to prevent UI flickering or fallback to 'no profile' state.
-                    if (profileData) {
-                        setProfile(profileData);
-                    } else {
-                        console.warn('⚠️ syncProfile: No profile data returned (timeout?), keeping existing state.');
-                    }
+                if (mounting && profileData) {
+                    setProfile(profileData);
                 }
-            } catch (err) {
-                console.error('❌ Profile sync error:', err);
+            } catch {
+                // Keep existing profile on error
             }
         };
 
-        // 1. Initial Session Check (Standard Pattern)
         const initAuth = async () => {
             try {
-                console.log('🚀 Checking initial session (getSession)...');
-                const { data: { session: initialSession }, error } = await supabase.auth.getSession();
-
-                if (error) {
-                    console.error('❌ getSession error:', error);
-                }
+                const { data: { session: initialSession } } = await supabase.auth.getSession();
 
                 if (initialSession && mounting) {
-                    console.log('🔑 Initial session found for:', initialSession.user.email);
                     setSession(initialSession);
                     setUser(initialSession.user);
-                    userIdRef.current = initialSession.user.id; // Sync ref immediately
+                    userIdRef.current = initialSession.user.id;
+
+                    // Cache session user ID for future instant loads
+                    setCachedSessionUserId(initialSession.user.id);
 
                     // Validate cached profile belongs to current user
                     const cachedProfile = getCachedProfile();
                     if (cachedProfile && cachedProfile.id !== initialSession.user.id) {
-                        console.log('⚠️ Cached profile belongs to different user, clearing');
                         setCachedProfile(null);
+                        setCachedSessionUserId(null);
                         setProfile(null);
                     }
 
-                    // Unblock loading immediately so app can render (profile will pop in later)
+                    // Unblock UI immediately
                     if (mounting) setLoading(false);
 
-                    await syncProfile(initialSession);
-                } else {
-                    console.log('🤷 No initial session found via getSession');
-                    // No session - clear any cached profile (user logged out elsewhere)
+                    // Sync fresh profile in background
+                    syncProfile(initialSession);
+                } else if (mounting) {
+                    // No session - clear cache
                     setCachedProfile(null);
+                    setCachedSessionUserId(null);
                     setProfile(null);
-                    if (mounting) setLoading(false);
-                }
-            } catch (e) {
-                console.error('💥 Init auth exception:', e);
-            } finally {
-                if (mounting) {
-                    console.log('⏳ Init done, setting loading=false (unless listener overrides)');
-                    // We rely on getSession for the definitive "loading done" signal initially.
-                    // If onAuthStateChange triggers a reload immediately after, it can set loading=true again.
                     setLoading(false);
                 }
+            } catch {
+                if (mounting) setLoading(false);
             }
         };
 
         initAuth();
 
-        // 2. Realtime Listener
+        // Realtime auth state listener
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             async (event, currentSession) => {
-                console.log(`📣 Auth State Change: ${event}`, currentSession?.user?.email);
-
                 if (!mounting) return;
 
-                // Update basic state
                 setSession(currentSession);
                 setUser(currentSession?.user ?? null);
-                // Ref update happens in effect, but we can't wait for it here,
-                // so we use the ref's current value which represents the PREVIOUS state.
-                // If ref is null, it means we weren't logged in before.
 
-                // Handle Profile Sync based on event
                 if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') {
-                    // Only show loading state if we're switching users or don't have a session yet
-                    // Use ref to check against previous user ID
                     const isSameUser = userIdRef.current === currentSession?.user?.id;
 
-                    if (!isSameUser) {
-                        console.log('🔄 User changed or fresh session, setting loading=true');
-                        setLoading(true);
-                    } else {
-                        console.log('✅ Same user, skipping loading spinner');
+                    if (currentSession?.user) {
+                        setCachedSessionUserId(currentSession.user.id);
                     }
 
-                    // Sync profile in background if same user, or foreground if new
-                    await syncProfile(currentSession);
-
-                    if (mounting && !isSameUser) {
-                        setLoading(false);
+                    // Only show loading if switching users
+                    if (!isSameUser) {
+                        setLoading(true);
+                        await syncProfile(currentSession);
+                        if (mounting) setLoading(false);
+                    } else {
+                        // Same user - sync in background, no loading
+                        syncProfile(currentSession);
                     }
                 } else if (event === 'SIGNED_OUT') {
                     setProfile(null);
-                    setCachedProfile(null); // Clear cache on logout
+                    setCachedProfile(null);
+                    setCachedSessionUserId(null);
                     setLoading(false);
                     userIdRef.current = null;
                 } else {
-                    // Other events
                     setLoading(false);
                 }
             }
         );
 
         return () => {
-            console.log('🔌 AuthProvider unmounting');
             mounting = false;
             clearTimeout(safetyTimeout);
             subscription.unsubscribe();
@@ -321,15 +301,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Sign out
     const signOut = async () => {
         try {
-            console.log('👋 Signing out...');
             await supabase.auth.signOut();
             setUser(null);
             setProfile(null);
             setSession(null);
-            setCachedProfile(null); // Clear cached profile on logout
+            setCachedProfile(null);
+            setCachedSessionUserId(null);
             router.push('/login');
-        } catch (error) {
-            console.error('Logout error:', error);
+        } catch {
+            // Silent fail on logout
         }
     };
 
