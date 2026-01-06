@@ -17,8 +17,15 @@ export default function FeedPage() {
     const [hasMore, setHasMore] = useState(true);
     const loadMoreRef = useRef<HTMLDivElement>(null);
 
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
     const supabase = createClient();
+
+    const getGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour < 12) return 'Good Morning';
+        if (hour < 18) return 'Good Afternoon';
+        return 'Good Evening';
+    };
 
     const fetchPosts = useCallback(async (offset = 0) => {
         // We can fetch posts even if we just have the user (for RLS/likes check)
@@ -184,7 +191,7 @@ export default function FeedPage() {
     return (
         <>
             <header className="page-header">
-                <h1 className="page-title">Feed</h1>
+                <p className="page-greeting">{getGreeting()}, {profile?.display_name?.split(' ')[0] || 'Explorer'}</p>
             </header>
 
             <div className="page-content">

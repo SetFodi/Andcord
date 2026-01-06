@@ -2,8 +2,46 @@
    FRIENDS PAGE 2.0 - Premium Design
    ======================================== */
 
+.page-content-wide {
+    padding: var(--space-8) var(--space-8);
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+}
+
 .tabs-container {
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-8);
+    display: flex;
+    justify-content: center;
+}
+
+.tabs {
+    background: var(--bg-tertiary);
+    padding: var(--space-1);
+    border-radius: var(--radius-xl);
+    display: flex;
+    gap: var(--space-1);
+}
+
+.tab {
+    padding: var(--space-2) var(--space-6);
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    transition: all var(--duration-normal) var(--ease-out);
+    background: transparent;
+    border: none;
+    color: var(--text-tertiary);
+    cursor: pointer;
+}
+
+.tab:hover {
+    color: var(--text-secondary);
+}
+
+.tab.active {
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-sm);
 }
 
 /* Friends Grid */

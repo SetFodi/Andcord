@@ -1,5 +1,7 @@
 .notifications-container {
-    max-width: 600px;
+    max-width: 740px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .notifications-list {

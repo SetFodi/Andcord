@@ -244,9 +244,9 @@ export default function PostCard({ post, onUpdate }: PostCardProps) {
                 </div>
 
                 {isAuthor && (
-                    <div className="post-menu-container" style={{ position: 'relative' }}>
+                    <div className="post-menu-container">
                         <button
-                            className="btn btn-ghost btn-icon post-menu"
+                            className="btn btn-ghost btn-icon post-menu-trigger"
                             title="More options"
                             onClick={() => setShowMenu(!showMenu)}
                         >
@@ -254,60 +254,23 @@ export default function PostCard({ post, onUpdate }: PostCardProps) {
                         </button>
 
                         {showMenu && (
-                            <div className="menu-dropdown animate-fadeIn" style={{
-                                position: 'absolute',
-                                top: '100%',
-                                right: 0,
-                                background: 'var(--bg-card)',
-                                border: '1px solid var(--border-color)',
-                                borderRadius: 'var(--radius-lg)',
-                                padding: 'var(--space-xs)',
-                                zIndex: 50,
-                                minWidth: '150px',
-                                boxShadow: 'var(--shadow-lg)'
-                            }}>
+                            <div className="menu-dropdown animate-scaleIn">
                                 <button
                                     className="menu-item"
                                     onClick={() => {
                                         setIsEditing(true);
                                         setShowMenu(false);
                                     }}
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 'var(--space-sm)',
-                                        width: '100%',
-                                        padding: 'var(--space-sm) var(--space-md)',
-                                        border: 'none',
-                                        background: 'transparent',
-                                        color: 'var(--text-primary)',
-                                        cursor: 'pointer',
-                                        borderRadius: 'var(--radius-md)',
-                                        textAlign: 'left',
-                                        fontSize: 'var(--text-sm)'
-                                    }}
                                 >
-                                    <EditIcon /> Edit Post
+                                    <span className="menu-icon"><EditIcon /></span>
+                                    <span>Edit Post</span>
                                 </button>
                                 <button
-                                    className="menu-item"
+                                    className="menu-item delete"
                                     onClick={handleDelete}
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 'var(--space-sm)',
-                                        width: '100%',
-                                        padding: 'var(--space-sm) var(--space-md)',
-                                        border: 'none',
-                                        background: 'transparent',
-                                        color: '#ef4444',
-                                        cursor: 'pointer',
-                                        borderRadius: 'var(--radius-md)',
-                                        textAlign: 'left',
-                                        fontSize: 'var(--text-sm)'
-                                    }}
                                 >
-                                    {loadingDelete ? '...' : <><TrashIcon /> Delete Post</>}
+                                    <span className="menu-icon">{loadingDelete ? '...' : <TrashIcon />}</span>
+                                    <span>Delete Post</span>
                                 </button>
                             </div>
                         )}

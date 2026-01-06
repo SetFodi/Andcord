@@ -5,16 +5,10 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/lib/hooks/useAuth';
 import type { Friendship, Profile } from '@/types/database';
+import FriendSearchModal from '@/components/friends/FriendSearchModal';
 import './friends.css';
 
 // Icons
-const SearchIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="11" cy="11" r="8" />
-        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-    </svg>
-);
-
 const MailIcon = () => (
     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="4" width="20" height="16" rx="2" />
@@ -31,26 +25,6 @@ const HandshakeIcon = () => (
     </svg>
 );
 
-const LoaderIcon = () => (
-    <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="12" y1="2" x2="12" y2="6" />
-        <line x1="12" y1="18" x2="12" y2="22" />
-        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76" />
-        <line x1="16.24" y1="16.24" x2="19.07" y2="19.07" />
-        <line x1="2" y1="12" x2="6" y2="12" />
-        <line x1="18" y1="12" x2="22" y2="12" />
-        <line x1="4.93" y1="19.07" x2="7.76" y2="16.24" />
-        <line x1="16.24" y1="7.76" x2="19.07" y2="4.93" />
-    </svg>
-);
-
-const UserSearchIcon = () => (
-    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="11" cy="11" r="8" />
-        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-    </svg>
-);
-
 type FriendshipWithProfiles = Friendship & {
     requester: Profile;
     addressee: Profile;
@@ -60,16 +34,13 @@ export default function FriendsPage() {
     const [friends, setFriends] = useState<Profile[]>([]);
     const [pendingRequests, setPendingRequests] = useState<FriendshipWithProfiles[]>([]);
     const [sentRequests, setSentRequests] = useState<FriendshipWithProfiles[]>([]);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState<Profile[]>([]);
-    const [searching, setSearching] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<'friends' | 'pending' | 'search'>('friends');
+    const [activeTab, setActiveTab] = useState<'friends' | 'pending'>('friends');
+    const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
     const { profile } = useAuth();
     const supabase = createClient();
 
-    // Fetch friendships
     // Fetch friendships
     useEffect(() => {
         const fetchFriendships = async () => {
@@ -91,18 +62,16 @@ export default function FriendsPage() {
                 sessionStorage.setItem('friends-cache', JSON.stringify(friendProfiles));
             }
 
-            // Fetch pending requests (where user is addressee)
+            // Fetch pending requests
             const { data: pending } = await supabase
                 .from('friendships')
                 .select('*, requester:profiles!requester_id(*), addressee:profiles!addressee_id(*)')
                 .eq('addressee_id', profile.id)
                 .eq('status', 'pending');
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const pendingData = (pending as any[]) || [];
             setPendingRequests(pendingData);
             sessionStorage.setItem('pending-requests-cache', JSON.stringify(pendingData));
-
 
             // Fetch sent requests
             const { data: sent } = await supabase
@@ -111,7 +80,6 @@ export default function FriendsPage() {
                 .eq('requester_id', profile.id)
                 .eq('status', 'pending');
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const sentData = (sent as any[]) || [];
             setSentRequests(sentData);
             sessionStorage.setItem('sent-requests-cache', JSON.stringify(sentData));
@@ -119,7 +87,7 @@ export default function FriendsPage() {
             setLoading(false);
         };
 
-        // Try load from cache
+        // Cache load
         const friendsCache = sessionStorage.getItem('friends-cache');
         const pendingCache = sessionStorage.getItem('pending-requests-cache');
         const sentCache = sessionStorage.getItem('sent-requests-cache');
@@ -136,41 +104,11 @@ export default function FriendsPage() {
         }
 
         fetchFriendships();
-
-        // Timeout fallback
-        const timeout = setTimeout(() => {
-            setLoading(false);
-        }, 6000);
-
+        const timeout = setTimeout(() => setLoading(false), 6000);
         return () => clearTimeout(timeout);
     }, [profile, supabase]);
 
-    // Search users
-    useEffect(() => {
-        const search = async () => {
-            if (!searchQuery.trim() || !profile) {
-                setSearchResults([]);
-                return;
-            }
-
-            setSearching(true);
-            const { data } = await supabase
-                .from('profiles')
-                .select('*')
-                .or(`username.ilike.%${searchQuery}%,display_name.ilike.%${searchQuery}%`)
-                .neq('id', profile.id)
-                .limit(10);
-
-            setSearchResults(data || []);
-            setSearching(false);
-        };
-
-        const debounce = setTimeout(search, 300);
-        return () => clearTimeout(debounce);
-    }, [searchQuery, profile, supabase]);
-
     const handleAcceptRequest = async (friendshipId: string) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { error } = await (supabase as any)
             .from('friendships')
             .update({ status: 'accepted' })
@@ -181,16 +119,11 @@ export default function FriendsPage() {
             if (request) {
                 setFriends([...friends, request.requester]);
                 setPendingRequests(pendingRequests.filter((r) => r.id !== friendshipId));
-
-                // Notify the requester
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // Notify
                 await (supabase as any).from('notifications').insert({
                     user_id: request.requester_id,
                     type: 'friend_accepted',
-                    data: {
-                        user_id: profile?.id,
-                        user_name: profile?.display_name,
-                    },
+                    data: { user_id: profile?.id, user_name: profile?.display_name },
                 });
             }
         }
@@ -203,30 +136,18 @@ export default function FriendsPage() {
 
     const handleSendRequest = async (userId: string) => {
         if (!profile) return;
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { data, error } = await (supabase as any)
             .from('friendships')
-            .insert({
-                requester_id: profile.id,
-                addressee_id: userId,
-                status: 'pending',
-            })
+            .insert({ requester_id: profile.id, addressee_id: userId, status: 'pending' })
             .select('*, requester:profiles!requester_id(*), addressee:profiles!addressee_id(*)')
             .single();
 
         if (!error && data) {
             setSentRequests([...sentRequests, data]);
-
-            // Notify the user
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             await (supabase as any).from('notifications').insert({
                 user_id: userId,
                 type: 'friend_request',
-                data: {
-                    user_id: profile.id,
-                    user_name: profile.display_name,
-                },
+                data: { user_id: profile.id, user_name: profile.display_name },
             });
         }
     };
@@ -238,45 +159,26 @@ export default function FriendsPage() {
 
     const handleRemoveFriend = async (friendId: string) => {
         if (!profile) return;
-
-        await supabase
-            .from('friendships')
-            .delete()
+        await supabase.from('friendships').delete()
             .or(`requester_id.eq.${profile.id},addressee_id.eq.${profile.id}`)
             .or(`requester_id.eq.${friendId},addressee_id.eq.${friendId}`);
-
         setFriends(friends.filter((f) => f.id !== friendId));
     };
 
     const handleStartConversation = async (friendId: string) => {
         if (!profile) return;
-
-        // Check if conversation exists
-        const { data: existing } = await supabase
-            .from('conversations')
-            .select('id')
-            .contains('participant_ids', [profile.id, friendId])
-            .single();
+        const { data: existing } = await supabase.from('conversations').select('id')
+            .contains('participant_ids', [profile.id, friendId]).single();
 
         if (existing) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             window.location.href = `/messages/${(existing as any).id}`;
             return;
         }
 
-        // Create new conversation
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { data: newConv } = await (supabase as any)
-            .from('conversations')
-            .insert({
-                participant_ids: [profile.id, friendId],
-            })
-            .select('id')
-            .single();
+        const { data: newConv } = await (supabase as any).from('conversations')
+            .insert({ participant_ids: [profile.id, friendId] }).select('id').single();
 
-        if (newConv) {
-            window.location.href = `/messages/${newConv.id}`;
-        }
+        if (newConv) window.location.href = `/messages/${newConv.id}`;
     };
 
     const isFriend = (userId: string) => friends.some((f) => f.id === userId);
@@ -294,7 +196,6 @@ export default function FriendsPage() {
             </header>
 
             <div className="page-content-wide">
-                {/* Tabs */}
                 <div className="tabs-container">
                     <div className="tabs">
                         <button
@@ -310,225 +211,130 @@ export default function FriendsPage() {
                             Requests {pendingRequests.length > 0 && `(${pendingRequests.length})`}
                         </button>
                         <button
-                            className={`tab ${activeTab === 'search' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('search')}
+                            className="tab"
+                            onClick={() => setIsSearchModalOpen(true)}
                         >
                             Add Friends
                         </button>
                     </div>
                 </div>
 
-                {/* Friends List */}
-                {activeTab === 'friends' && (
-                    <div className="friends-grid animate-fadeIn">
-                        {loading ? (
-                            <>
-                                {[1, 2, 3].map((i) => (
+                <div className="friends-content-area animate-fadeIn">
+                    {activeTab === 'friends' && (
+                        <div className="friends-grid">
+                            {loading ? (
+                                [1, 2, 3].map((i) => (
                                     <div key={i} className="friend-card skeleton-card">
                                         <div className="skeleton skeleton-avatar-lg" />
                                         <div className="skeleton skeleton-name" />
                                         <div className="skeleton skeleton-handle" />
                                     </div>
-                                ))}
-                            </>
-                        ) : friends.length === 0 ? (
-                            <div className="empty-state full-width">
-                                <div className="empty-state-icon"><HandshakeIcon /></div>
-                                <h3 className="empty-state-title">No friends yet</h3>
-                                <p className="empty-state-description">
-                                    Search for people to add as friends!
-                                </p>
-                                <button className="btn btn-primary" onClick={() => setActiveTab('search')}>
-                                    Find Friends
-                                </button>
-                            </div>
-                        ) : (
-                            friends.map((friend) => (
-                                <div key={friend.id} className="friend-card">
-                                    <Link href={`/profile/${friend.id}`} className="friend-avatar">
-                                        <div className="avatar avatar-xl">
-                                            {friend.avatar_url ? (
-                                                // eslint-disable-next-line @next/next/no-img-element
-                                                <img src={friend.avatar_url} alt="" />
-                                            ) : (
-                                                <span>{friend.display_name?.[0]?.toUpperCase() || '?'}</span>
-                                            )}
-                                        </div>
-                                    </Link>
-                                    <Link href={`/profile/${friend.id}`} className="friend-name">
-                                        {friend.display_name}
-                                    </Link>
-                                    <span className="friend-handle">@{friend.username}</span>
-                                    <div className="friend-actions">
-                                        <button
-                                            className="btn btn-primary btn-sm"
-                                            onClick={() => handleStartConversation(friend.id)}
-                                        >
-                                            Message
-                                        </button>
-                                        <button
-                                            className="btn btn-ghost btn-sm"
-                                            onClick={() => handleRemoveFriend(friend.id)}
-                                        >
-                                            Remove
-                                        </button>
-                                    </div>
+                                ))
+                            ) : friends.length === 0 ? (
+                                <div className="empty-state full-width">
+                                    <div className="empty-state-icon"><HandshakeIcon /></div>
+                                    <h3 className="empty-state-title">No friends yet</h3>
+                                    <p className="empty-state-description">Search for people to add as friends!</p>
+                                    <button className="btn btn-primary" onClick={() => setIsSearchModalOpen(true)}>
+                                        Find Friends
+                                    </button>
                                 </div>
-                            ))
-                        )}
-                    </div>
-                )}
-
-                {/* Pending Requests */}
-                {activeTab === 'pending' && (
-                    <div className="requests-section animate-fadeIn">
-                        {pendingRequests.length > 0 && (
-                            <>
-                                <h3 className="section-title">Pending Requests</h3>
-                                <div className="requests-list">
-                                    {pendingRequests.map((request) => (
-                                        <div key={request.id} className="request-item">
-                                            <Link href={`/profile/${request.requester.id}`} className="avatar avatar-lg">
-                                                {request.requester.avatar_url ? (
-                                                    // eslint-disable-next-line @next/next/no-img-element
-                                                    <img src={request.requester.avatar_url} alt="" />
+                            ) : (
+                                friends.map((friend) => (
+                                    <div key={friend.id} className="friend-card">
+                                        <Link href={`/profile/${friend.id}`} className="friend-avatar">
+                                            <div className="avatar avatar-xl">
+                                                {friend.avatar_url ? (
+                                                    <img src={friend.avatar_url} alt="" />
                                                 ) : (
-                                                    <span>{request.requester.display_name?.[0]?.toUpperCase() || '?'}</span>
+                                                    <span>{friend.display_name?.[0]?.toUpperCase() || '?'}</span>
                                                 )}
-                                            </Link>
-                                            <div className="request-info">
-                                                <Link href={`/profile/${request.requester.id}`} className="request-name">
-                                                    {request.requester.display_name}
-                                                </Link>
-                                                <span className="request-handle">@{request.requester.username}</span>
                                             </div>
-                                            <div className="request-actions">
-                                                <button
-                                                    className="btn btn-primary btn-sm"
-                                                    onClick={() => handleAcceptRequest(request.id)}
-                                                >
-                                                    Accept
-                                                </button>
-                                                <button
-                                                    className="btn btn-ghost btn-sm"
-                                                    onClick={() => handleDeclineRequest(request.id)}
-                                                >
-                                                    Decline
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </>
-                        )}
-
-                        {sentRequests.length > 0 && (
-                            <>
-                                <h3 className="section-title">Sent Requests</h3>
-                                <div className="requests-list">
-                                    {sentRequests.map((request) => (
-                                        <div key={request.id} className="request-item">
-                                            <Link href={`/profile/${request.addressee.id}`} className="avatar avatar-lg">
-                                                {request.addressee.avatar_url ? (
-                                                    // eslint-disable-next-line @next/next/no-img-element
-                                                    <img src={request.addressee.avatar_url} alt="" />
-                                                ) : (
-                                                    <span>{request.addressee.display_name?.[0]?.toUpperCase() || '?'}</span>
-                                                )}
-                                            </Link>
-                                            <div className="request-info">
-                                                <Link href={`/profile/${request.addressee.id}`} className="request-name">
-                                                    {request.addressee.display_name}
-                                                </Link>
-                                                <span className="request-handle">@{request.addressee.username}</span>
-                                            </div>
-                                            <button
-                                                className="btn btn-ghost btn-sm"
-                                                onClick={() => handleCancelRequest(request.id)}
-                                            >
-                                                Cancel
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            </>
-                        )}
-
-                        {pendingRequests.length === 0 && sentRequests.length === 0 && (
-                            <div className="empty-state">
-                                <div className="empty-state-icon"><MailIcon /></div>
-                                <h3 className="empty-state-title">No pending requests</h3>
-                                <p className="empty-state-description">
-                                    Friend requests you receive or send will appear here
-                                </p>
-                            </div>
-                        )}
-                    </div>
-                )}
-
-                {/* Search */}
-                {activeTab === 'search' && (
-                    <div className="search-section animate-fadeIn">
-                        <div className="search-input-wrapper">
-                            <input
-                                type="text"
-                                className="input search-input"
-                                placeholder="Search by username or name..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                            {searching && <span className="search-spinner"><LoaderIcon /></span>}
-                        </div>
-
-                        {searchResults.length > 0 ? (
-                            <div className="search-results">
-                                {searchResults.map((user) => (
-                                    <div key={user.id} className="search-result-item">
-                                        <Link href={`/profile/${user.id}`} className="avatar avatar-lg">
-                                            {user.avatar_url ? (
-                                                // eslint-disable-next-line @next/next/no-img-element
-                                                <img src={user.avatar_url} alt="" />
-                                            ) : (
-                                                <span>{user.display_name?.[0]?.toUpperCase() || '?'}</span>
-                                            )}
                                         </Link>
-                                        <div className="result-info">
-                                            <Link href={`/profile/${user.id}`} className="result-name">
-                                                {user.display_name}
-                                            </Link>
-                                            <span className="result-handle">@{user.username}</span>
+                                        <Link href={`/profile/${friend.id}`} className="friend-name">{friend.display_name}</Link>
+                                        <span className="friend-handle">@{friend.username}</span>
+                                        <div className="friend-actions">
+                                            <button className="btn btn-primary btn-sm" onClick={() => handleStartConversation(friend.id)}>Message</button>
+                                            <button className="btn btn-ghost btn-sm" onClick={() => handleRemoveFriend(friend.id)}>Remove</button>
                                         </div>
-                                        {isFriend(user.id) ? (
-                                            <span className="friend-badge">Friend</span>
-                                        ) : hasPendingRequest(user.id) ? (
-                                            <span className="pending-badge">Pending</span>
-                                        ) : (
-                                            <button
-                                                className="btn btn-primary btn-sm"
-                                                onClick={() => handleSendRequest(user.id)}
-                                            >
-                                                Add Friend
-                                            </button>
-                                        )}
                                     </div>
-                                ))}
-                            </div>
-                        ) : searchQuery && !searching ? (
-                            <div className="empty-state">
-                                <p className="empty-state-description">No users found</p>
-                            </div>
-                        ) : (
-                            <div className="empty-state">
-                                <div className="empty-state-icon"><UserSearchIcon /></div>
-                                <h3 className="empty-state-title">Find friends</h3>
-                                <p className="empty-state-description">
-                                    Search for people by their username or display name
-                                </p>
-                            </div>
-                        )}
-                    </div>
-                )}
+                                ))
+                            )}
+                        </div>
+                    )}
+
+                    {activeTab === 'pending' && (
+                        <div className="requests-section animate-fadeIn">
+                            {pendingRequests.length > 0 && (
+                                <>
+                                    <h3 className="section-title">Pending Requests</h3>
+                                    <div className="requests-list">
+                                        {pendingRequests.map((request) => (
+                                            <div key={request.id} className="request-item">
+                                                <Link href={`/profile/${request.requester.id}`} className="avatar avatar-lg">
+                                                    {request.requester.avatar_url ? (
+                                                        <img src={request.requester.avatar_url} alt="" />
+                                                    ) : (
+                                                        <span>{request.requester.display_name?.[0]?.toUpperCase() || '?'}</span>
+                                                    )}
+                                                </Link>
+                                                <div className="request-info">
+                                                    <Link href={`/profile/${request.requester.id}`} className="request-name">{request.requester.display_name}</Link>
+                                                    <span className="request-handle">@{request.requester.username}</span>
+                                                </div>
+                                                <div className="request-actions">
+                                                    <button className="btn btn-primary btn-sm" onClick={() => handleAcceptRequest(request.id)}>Accept</button>
+                                                    <button className="btn btn-ghost btn-sm" onClick={() => handleDeclineRequest(request.id)}>Decline</button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </>
+                            )}
+
+                            {sentRequests.length > 0 && (
+                                <>
+                                    <h3 className="section-title">Sent Requests</h3>
+                                    <div className="requests-list">
+                                        {sentRequests.map((request) => (
+                                            <div key={request.id} className="request-item">
+                                                <Link href={`/profile/${request.addressee.id}`} className="avatar avatar-lg">
+                                                    {request.addressee.avatar_url ? (
+                                                        <img src={request.addressee.avatar_url} alt="" />
+                                                    ) : (
+                                                        <span>{request.addressee.display_name?.[0]?.toUpperCase() || '?'}</span>
+                                                    )}
+                                                </Link>
+                                                <div className="request-info">
+                                                    <Link href={`/profile/${request.addressee.id}`} className="request-name">{request.addressee.display_name}</Link>
+                                                    <span className="request-handle">@{request.addressee.username}</span>
+                                                </div>
+                                                <button className="btn btn-ghost btn-sm" onClick={() => handleCancelRequest(request.id)}>Cancel</button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </>
+                            )}
+
+                            {pendingRequests.length === 0 && sentRequests.length === 0 && (
+                                <div className="empty-state">
+                                    <div className="empty-state-icon"><MailIcon /></div>
+                                    <h3 className="empty-state-title">No pending requests</h3>
+                                    <p className="empty-state-description">Friend requests you receive or send will appear here</p>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
+
+            <FriendSearchModal
+                isOpen={isSearchModalOpen}
+                onClose={() => setIsSearchModalOpen(false)}
+                onAddFriend={handleSendRequest}
+                isFriend={isFriend}
+                hasPendingRequest={hasPendingRequest}
+            />
         </>
     );
 }

@@ -89,8 +89,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Initialize profile from cache for instant load
     const [profile, setProfile] = useState<Profile | null>(() => getCachedProfile());
     const [session, setSession] = useState<Session | null>(null);
-    // Start with loading=false if we have valid cache (instant render)
-    const [loading, setLoading] = useState(() => !hasValidCache());
+    // Start with loading=true for server/client consistency (prevents hydration error)
+    const [loading, setLoading] = useState(true);
 
     const supabase = createClient();
     const router = useRouter();
@@ -161,6 +161,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         let mounting = true;
+
+        // Immediately check cache on client mount to skip loading state if possible
+        if (hasValidCache()) {
+            setLoading(false);
+        }
 
         // Safety timeout - reduced to 3s since we have cache fallback
         const safetyTimeout = setTimeout(() => {

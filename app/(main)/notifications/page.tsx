@@ -201,7 +201,7 @@ export default function NotificationsPage() {
 
     return (
         <>
-            <header className="page-header">
+            <header className="page-header" style={{ textAlign: 'center' }}>
                 <h1 className="page-title">Notifications</h1>
                 {notifications.length > 0 && (
                     <button className="btn btn-ghost btn-sm" onClick={handleClearAll}>

@@ -81,7 +81,8 @@
     text-decoration: none;
     transition: all var(--duration-fast) var(--ease-out);
     position: relative;
-    font-weight: 450;
+    font-weight: 500;
+    letter-spacing: -0.01em;
 }
 
 .nav-item:hover {
@@ -126,7 +127,7 @@
 }
 
 .nav-label {
-    font-size: var(--text-sm);
+    font-size: var(--text-md);
     font-weight: 500;
 }
 
@@ -173,7 +174,7 @@
 }
 
 .user-name {
-    font-size: var(--text-sm);
+    font-size: var(--text-base);
     font-weight: 600;
     color: var(--text-primary);
     white-space: nowrap;

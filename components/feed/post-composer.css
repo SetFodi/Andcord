@@ -6,8 +6,9 @@
     background: var(--surface-1);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-2xl);
-    padding: var(--space-5);
+    padding: var(--space-6);
     transition: all var(--duration-normal) var(--ease-out);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .post-composer:focus-within {
