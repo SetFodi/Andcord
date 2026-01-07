@@ -46,7 +46,7 @@ export function validateFile(file: File, type: FileType): { valid: boolean; erro
  */
 export async function uploadFile(
     file: File,
-    bucket: 'avatars' | 'posts',
+    bucket: 'avatars' | 'posts' | 'banners',
     folder?: string
 ): Promise<UploadResult> {
     const supabase = createClient();
@@ -85,7 +85,7 @@ export async function uploadFile(
  */
 export async function deleteFile(
     url: string,
-    bucket: 'avatars' | 'posts'
+    bucket: 'avatars' | 'posts' | 'banners'
 ): Promise<{ error: Error | null }> {
     const supabase = createClient();
 
@@ -115,7 +115,7 @@ export async function deleteFile(
  */
 export async function uploadMultipleFiles(
     files: File[],
-    bucket: 'avatars' | 'posts',
+    bucket: 'avatars' | 'posts' | 'banners',
     folder?: string
 ): Promise<{ urls: string[]; errors: Error[] }> {
     const results = await Promise.all(

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { motion } from 'framer-motion';
 import { useAuth } from '@/lib/hooks/useAuth';
 import './sidebar.css';
 
@@ -106,29 +107,51 @@ export default function Sidebar() {
                 </div>
 
                 <nav className="sidebar-nav">
-                    {mainNavItems.map((item) => {
+                    {mainNavItems.map((item, index) => {
                         const isActive = pathname.startsWith(item.href);
                         return (
-                            <Link
+                            <motion.div
                                 key={item.href}
-                                href={item.href}
-                                className={`nav-item ${isActive ? 'active' : ''}`}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{
+                                    type: 'spring',
+                                    stiffness: 300,
+                                    damping: 25,
+                                    delay: index * 0.05,
+                                }}
                             >
-                                <span className="nav-icon">{item.icon}</span>
-                                <span className="nav-label">{item.label}</span>
-                            </Link>
+                                <Link
+                                    href={item.href}
+                                    className={`nav-item ${isActive ? 'active' : ''}`}
+                                >
+                                    <span className="nav-icon">{item.icon}</span>
+                                    <span className="nav-label">{item.label}</span>
+                                </Link>
+                            </motion.div>
                         );
                     })}
 
                     <div className="sidebar-divider" />
 
-                    <Link
-                        href="/settings"
-                        className={`nav-item ${pathname.startsWith('/settings') ? 'active' : ''}`}
+                    <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{
+                            type: 'spring',
+                            stiffness: 300,
+                            damping: 25,
+                            delay: mainNavItems.length * 0.05,
+                        }}
                     >
-                        <span className="nav-icon"><SettingsIcon /></span>
-                        <span className="nav-label">Settings</span>
-                    </Link>
+                        <Link
+                            href="/settings"
+                            className={`nav-item ${pathname.startsWith('/settings') ? 'active' : ''}`}
+                        >
+                            <span className="nav-icon"><SettingsIcon /></span>
+                            <span className="nav-label">Settings</span>
+                        </Link>
+                    </motion.div>
                 </nav>
 
                 <div className="sidebar-footer">

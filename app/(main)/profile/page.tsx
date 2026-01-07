@@ -12,12 +12,18 @@ export default function ProfilePage() {
     const [bio, setBio] = useState(profile?.bio || '');
     const [saving, setSaving] = useState(false);
     const [uploading, setUploading] = useState(false);
+    const [uploadingBanner, setUploadingBanner] = useState(false);
     const [error, setError] = useState('');
 
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const bannerInputRef = useRef<HTMLInputElement>(null);
 
     const handleAvatarClick = () => {
         fileInputRef.current?.click();
+    };
+
+    const handleBannerClick = () => {
+        bannerInputRef.current?.click();
     };
 
     const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,9 +43,6 @@ export default function ProfilePage() {
 
         if (uploadError || !url) {
             console.error('Upload failed:', uploadError);
-            if (uploadError && (uploadError as any).statusCode === '400') {
-                alert('Upload failed: 400 Bad Request. Please check if GIFs are allowed in your Supabase Storage settings and if the file size is under the limit.');
-            }
             setError('Failed to upload image');
             setUploading(false);
             return;
@@ -52,11 +55,39 @@ export default function ProfilePage() {
         }
 
         setUploading(false);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+    };
 
-        // Reset input
-        if (fileInputRef.current) {
-            fileInputRef.current.value = '';
+    const handleBannerChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const validation = validateFile(file, 'image');
+        if (!validation.valid) {
+            setError(validation.error || 'Invalid file');
+            return;
         }
+
+        setUploadingBanner(true);
+        setError('');
+
+        const { url, error: uploadError } = await uploadFile(file, 'banners', profile?.id);
+
+        if (uploadError || !url) {
+            console.error('Banner upload failed:', uploadError);
+            setError('Failed to upload banner');
+            setUploadingBanner(false);
+            return;
+        }
+
+        const { error: updateError } = await updateProfile({ banner_url: url });
+
+        if (updateError) {
+            setError('Failed to update profile');
+        }
+
+        setUploadingBanner(false);
+        if (bannerInputRef.current) bannerInputRef.current.value = '';
     };
 
     const handleSave = async () => {
@@ -104,12 +135,39 @@ export default function ProfilePage() {
                 )}
             </header>
 
-            <div className="profile-banner">
-                <div className="banner-overlay"></div>
-            </div>
+            {/* Cover Banner */}
+            <button
+                className={`profile-banner ${uploadingBanner ? 'uploading' : ''}`}
+                onClick={handleBannerClick}
+                disabled={uploadingBanner}
+            >
+                {profile?.banner_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                        src={profile.banner_url}
+                        alt="Cover"
+                        className="banner-image"
+                    />
+                ) : (
+                    <div className="banner-placeholder">
+                        <span className="banner-icon">🖼️</span>
+                        <span className="banner-text">Click to add cover photo</span>
+                    </div>
+                )}
+                <div className="banner-overlay">
+                    {uploadingBanner ? '⏳ Uploading...' : '📷 Change Cover'}
+                </div>
+                <input
+                    ref={bannerInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleBannerChange}
+                    className="hidden"
+                />
+            </button>
 
             <div className="page-content profile-content-container">
-                <div className="profile-card glass animate-fadeIn">
+                <div className="profile-card">
                     {error && <div className="profile-error">{error}</div>}
 
                     {/* Avatar */}

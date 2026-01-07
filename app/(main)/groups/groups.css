@@ -1,5 +1,5 @@
 /* ========================================
-   GROUPS PAGE 2.0 - Premium Design
+   GROUPS PAGE 4.0 - Dark Aesthetic
    ======================================== */
 
 /* Groups Layout */
@@ -14,7 +14,7 @@
 .groups-sidebar {
     width: 280px;
     background: var(--bg-primary);
-    border-right: 1px solid var(--border-subtle);
+    border-right: 1px solid var(--border-default);
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
@@ -27,12 +27,13 @@
     align-items: center;
     justify-content: space-between;
     padding: var(--space-5);
-    border-bottom: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-default);
 }
 
 .groups-header h2 {
     font-size: var(--text-lg);
     font-weight: 600;
+    color: var(--text-primary);
 }
 
 .groups-list {

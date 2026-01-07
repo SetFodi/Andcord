@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/lib/hooks/useAuth';
 import type { Friendship, Profile } from '@/types/database';
@@ -240,25 +241,40 @@ export default function FriendsPage() {
                                     </button>
                                 </div>
                             ) : (
-                                friends.map((friend) => (
-                                    <div key={friend.id} className="friend-card">
-                                        <Link href={`/profile/${friend.id}`} className="friend-avatar">
-                                            <div className="avatar avatar-xl">
-                                                {friend.avatar_url ? (
-                                                    <img src={friend.avatar_url} alt="" />
-                                                ) : (
-                                                    <span>{friend.display_name?.[0]?.toUpperCase() || '?'}</span>
-                                                )}
+                                <AnimatePresence>
+                                    {friends.map((friend, index) => (
+                                        <motion.div
+                                            key={friend.id}
+                                            className="friend-card"
+                                            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.9 }}
+                                            transition={{
+                                                type: 'spring',
+                                                stiffness: 300,
+                                                damping: 25,
+                                                delay: index * 0.06,
+                                            }}
+                                            whileHover={{ y: -4, scale: 1.02 }}
+                                        >
+                                            <Link href={`/profile/${friend.id}`} className="friend-avatar">
+                                                <div className="avatar avatar-xl">
+                                                    {friend.avatar_url ? (
+                                                        <img src={friend.avatar_url} alt="" />
+                                                    ) : (
+                                                        <span>{friend.display_name?.[0]?.toUpperCase() || '?'}</span>
+                                                    )}
+                                                </div>
+                                            </Link>
+                                            <Link href={`/profile/${friend.id}`} className="friend-name">{friend.display_name}</Link>
+                                            <span className="friend-handle">@{friend.username}</span>
+                                            <div className="friend-actions">
+                                                <button className="btn btn-primary btn-sm" onClick={() => handleStartConversation(friend.id)}>Message</button>
+                                                <button className="btn btn-ghost btn-sm" onClick={() => handleRemoveFriend(friend.id)}>Remove</button>
                                             </div>
-                                        </Link>
-                                        <Link href={`/profile/${friend.id}`} className="friend-name">{friend.display_name}</Link>
-                                        <span className="friend-handle">@{friend.username}</span>
-                                        <div className="friend-actions">
-                                            <button className="btn btn-primary btn-sm" onClick={() => handleStartConversation(friend.id)}>Message</button>
-                                            <button className="btn btn-ghost btn-sm" onClick={() => handleRemoveFriend(friend.id)}>Remove</button>
-                                        </div>
-                                    </div>
-                                ))
+                                        </motion.div>
+                                    ))}
+                                </AnimatePresence>
                             )}
                         </div>
                     )}

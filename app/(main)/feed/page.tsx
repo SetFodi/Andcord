@@ -1,10 +1,12 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/lib/hooks/useAuth';
 import PostComposer from '@/components/feed/PostComposer';
 import PostCard from '@/components/feed/PostCard';
+import UserSearch from '@/components/search/UserSearch';
 import type { Post } from '@/types/database';
 import './feed.css';
 
@@ -192,6 +194,7 @@ export default function FeedPage() {
         <>
             <header className="page-header">
                 <p className="page-greeting">{getGreeting()}, {profile?.display_name?.split(' ')[0] || 'Explorer'}</p>
+                <UserSearch />
             </header>
 
             <div className="page-content">
@@ -227,29 +230,42 @@ export default function FeedPage() {
                                 </p>
                             </div>
                         ) : (
-                            <>
+                            <AnimatePresence>
                                 {posts.map((post, index) => (
-                                    <div
+                                    <motion.div
                                         key={post.id}
                                         className="post-wrapper"
-                                        style={{ animationDelay: `${Math.min(index * 50, 250)}ms` }}
+                                        initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                                        transition={{
+                                            type: 'spring',
+                                            stiffness: 300,
+                                            damping: 25,
+                                            delay: Math.min(index * 0.08, 0.4),
+                                        }}
+                                        whileHover={{ scale: 1.01 }}
                                     >
                                         <PostCard post={post} onUpdate={handlePostUpdate} />
-                                    </div>
+                                    </motion.div>
                                 ))}
 
                                 {/* Load more trigger */}
                                 <div ref={loadMoreRef} className="load-more-trigger">
                                     {loadingMore && (
-                                        <div className="loading-spinner">
+                                        <motion.div
+                                            className="loading-spinner"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                        >
                                             <div className="spinner" />
-                                        </div>
+                                        </motion.div>
                                     )}
                                     {!hasMore && posts.length > 0 && (
                                         <p className="end-of-feed">You&apos;ve reached the end!</p>
                                     )}
                                 </div>
-                            </>
+                            </AnimatePresence>
                         )}
                     </div>
                 </div>

@@ -2,7 +2,20 @@
 
 import { useAuth } from '@/lib/hooks/useAuth';
 import Sidebar from '@/components/layout/Sidebar';
+import PageTransition from '@/components/motion/PageTransition';
 import './main-layout.css';
+
+// Ambient background orbs component
+function AmbientOrbs() {
+    return (
+        <>
+            <div className="ambient-orb-1" aria-hidden="true" />
+            <div className="ambient-orb-2" aria-hidden="true" />
+            <div className="ambient-orb-3" aria-hidden="true" />
+            <div className="ambient-orb-4" aria-hidden="true" />
+        </>
+    );
+}
 
 export default function MainLayout({
     children,
@@ -14,6 +27,7 @@ export default function MainLayout({
     if (loading) {
         return (
             <div className="app-loading">
+                <AmbientOrbs />
                 <div className="spinner" />
             </div>
         );
@@ -21,9 +35,12 @@ export default function MainLayout({
 
     return (
         <div className="app-container">
+            <AmbientOrbs />
             <Sidebar />
             <main className="main-content">
-                {children}
+                <PageTransition>
+                    {children}
+                </PageTransition>
             </main>
         </div>
     );

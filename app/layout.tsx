@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/hooks/useAuth";
@@ -14,6 +14,19 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   title: "Andcord - Connect with Friends",
   description: "A modern social media app for connecting with friends",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Andcord",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({

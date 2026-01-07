@@ -1,6 +1,6 @@
 /* ========================================
-   SIDEBAR 3.0 - Ultra-Modern Design
-   Glassmorphic, Animated, Premium
+   SIDEBAR 4.0 - DARK AESTHETIC
+   Pure Black, Minimal, Clean
    ======================================== */
 
 .sidebar {
@@ -9,25 +9,23 @@
   top: 0;
   bottom: 0;
   width: var(--sidebar-width);
-  background: var(--glass-bg-strong);
-  backdrop-filter: blur(var(--glass-blur-strong));
-  -webkit-backdrop-filter: blur(var(--glass-blur-strong));
-  border-right: 1px solid var(--border-subtle);
+  background: var(--bg-primary);
+  border-right: 1px solid var(--border-default);
   display: flex;
   flex-direction: column;
   z-index: var(--z-sticky);
   transition: all var(--duration-slow) var(--ease-out);
 }
 
-/* Gradient overlay for depth */
+/* Subtle top highlight */
 .sidebar::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 200px;
-  background: linear-gradient(180deg, rgba(139, 92, 246, 0.06) 0%, transparent 100%);
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--border-strong) 50%, transparent 100%);
   pointer-events: none;
 }
 
@@ -59,16 +57,15 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: var(--gradient-primary);
+  background: var(--text-primary);
   border-radius: var(--radius-xl);
-  color: white;
-  box-shadow: var(--shadow-colored);
+  color: var(--bg-primary);
   transition: all var(--duration-normal) var(--ease-out);
 }
 
 .sidebar-logo:hover .logo-icon {
   transform: scale(1.05);
-  box-shadow: var(--shadow-glow);
+  box-shadow: var(--shadow-lg);
 }
 
 .logo-icon svg {
@@ -80,10 +77,7 @@
   font-size: var(--text-xl);
   font-weight: 700;
   letter-spacing: var(--tracking-tight);
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text-primary);
 }
 
 /* Navigation */
@@ -123,18 +117,20 @@
 .nav-item:hover {
   background: var(--bg-hover);
   color: var(--text-secondary);
+  transform: translateX(4px);
 }
 
 .nav-item:hover .nav-icon {
-  transform: scale(1.1);
+  transform: scale(1.1) rotate(-5deg);
 }
 
 .nav-item.active {
-  background: var(--accent-dim);
-  color: var(--accent);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
 }
 
-/* Active indicator bar */
+/* Active indicator bar - Clean white */
 .nav-item.active::before {
   content: '';
   position: absolute;
@@ -143,13 +139,13 @@
   transform: translateY(-50%);
   width: 3px;
   height: 20px;
-  background: var(--gradient-primary);
+  background: #ffffff;
   border-radius: 0 var(--radius-full) var(--radius-full) 0;
-  box-shadow: var(--shadow-glow-sm);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 .nav-item.active .nav-icon {
-  color: var(--accent);
+  color: var(--text-primary);
 }
 
 .nav-icon {

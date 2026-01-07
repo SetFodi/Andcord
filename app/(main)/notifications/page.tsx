@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { formatRelativeTime } from '@/lib/utils/formatDate';
@@ -241,28 +242,43 @@ export default function NotificationsPage() {
                         </div>
                     ) : (
                         <div className="notifications-list">
-                            {notifications.map((notification) => {
-                                const content = getNotificationContent(notification);
-                                return (
-                                    <Link
-                                        key={notification.id}
-                                        href={content.link}
-                                        className={`notification-item ${!notification.read ? 'unread' : ''}`}
-                                    >
-                                        <div className={`notification-icon ${content.iconClass}`}>{content.icon}</div>
-                                        <div className="notification-content">
-                                            <p className="notification-title">{content.title}</p>
-                                            {content.description && (
-                                                <p className="notification-description">{content.description}</p>
-                                            )}
-                                            <span className="notification-time">
-                                                {formatRelativeTime(notification.created_at)}
-                                            </span>
-                                        </div>
-                                        {!notification.read && <div className="notification-dot" />}
-                                    </Link>
-                                );
-                            })}
+                            <AnimatePresence>
+                                {notifications.map((notification, index) => {
+                                    const content = getNotificationContent(notification);
+                                    return (
+                                        <motion.div
+                                            key={notification.id}
+                                            initial={{ opacity: 0, x: -20, scale: 0.95 }}
+                                            animate={{ opacity: 1, x: 0, scale: 1 }}
+                                            exit={{ opacity: 0, x: 20, scale: 0.95 }}
+                                            transition={{
+                                                type: 'spring',
+                                                stiffness: 300,
+                                                damping: 25,
+                                                delay: index * 0.04,
+                                            }}
+                                            whileHover={{ x: 4 }}
+                                        >
+                                            <Link
+                                                href={content.link}
+                                                className={`notification-item ${!notification.read ? 'unread' : ''}`}
+                                            >
+                                                <div className={`notification-icon ${content.iconClass}`}>{content.icon}</div>
+                                                <div className="notification-content">
+                                                    <p className="notification-title">{content.title}</p>
+                                                    {content.description && (
+                                                        <p className="notification-description">{content.description}</p>
+                                                    )}
+                                                    <span className="notification-time">
+                                                        {formatRelativeTime(notification.created_at)}
+                                                    </span>
+                                                </div>
+                                                {!notification.read && <div className="notification-dot" />}
+                                            </Link>
+                                        </motion.div>
+                                    );
+                                })}
+                            </AnimatePresence>
                         </div>
                     )}
                 </div>
