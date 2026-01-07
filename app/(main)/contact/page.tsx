@@ -31,7 +31,7 @@ export default function ContactPage() {
     const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
     const [formData, setFormData] = useState({
         name: profile?.display_name || '',
-        email: profile?.email || '',
+        email: '',
         subject: 'bug_report',
         message: ''
     });

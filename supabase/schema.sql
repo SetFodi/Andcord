@@ -252,48 +252,43 @@ CREATE POLICY "Users can send messages in their conversations" ON messages
     )
   );
 
--- Groups policies
-CREATE POLICY "Groups are viewable by members" ON groups
-  FOR SELECT USING (
-    EXISTS (
-      SELECT 1 FROM group_members
-      WHERE group_members.group_id = groups.id
-      AND group_members.user_id = auth.uid()
-    )
+-- CENTRALIZED ACCESS FUNCTION (Recursion-proof)
+-- This function runs with SECURITY DEFINER to bypass RLS when checking membership.
+CREATE OR REPLACE FUNCTION public.has_group_access(p_group_id UUID)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.groups
+    WHERE id = p_group_id AND owner_id = auth.uid()
+  ) OR EXISTS (
+    SELECT 1 FROM public.group_members
+    WHERE group_id = p_group_id AND user_id = auth.uid()
   );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
-CREATE POLICY "Users can create groups" ON groups
+-- Groups policies
+CREATE POLICY "groups_select_policy" ON groups
+  FOR SELECT USING (auth.uid() = owner_id OR has_group_access(id));
+
+CREATE POLICY "groups_insert_policy" ON groups
   FOR INSERT WITH CHECK (auth.uid() = owner_id);
 
-CREATE POLICY "Owners can update groups" ON groups
+CREATE POLICY "groups_update_policy" ON groups
   FOR UPDATE USING (auth.uid() = owner_id);
 
-CREATE POLICY "Owners can delete groups" ON groups
+CREATE POLICY "groups_delete_policy" ON groups
   FOR DELETE USING (auth.uid() = owner_id);
 
 -- Group members policies
-CREATE POLICY "Group members are viewable by group members" ON group_members
-  FOR SELECT USING (
-    EXISTS (
-      SELECT 1 FROM group_members gm
-      WHERE gm.group_id = group_members.group_id
-      AND gm.user_id = auth.uid()
-    )
-  );
+CREATE POLICY "members_select_policy" ON group_members
+  FOR SELECT USING (has_group_access(group_id));
 
-CREATE POLICY "Owners and admins can add members" ON group_members
-  FOR INSERT WITH CHECK (
-    auth.uid() = user_id OR
-    EXISTS (
-      SELECT 1 FROM group_members gm
-      WHERE gm.group_id = group_members.group_id
-      AND gm.user_id = auth.uid()
-      AND gm.role IN ('owner', 'admin')
-    )
-  );
+CREATE POLICY "members_insert_policy" ON group_members
+  FOR INSERT WITH CHECK (auth.uid() = user_id OR has_group_access(group_id));
 
-CREATE POLICY "Members can leave groups" ON group_members
-  FOR DELETE USING (auth.uid() = user_id);
+CREATE POLICY "members_delete_policy" ON group_members
+  FOR DELETE USING (auth.uid() = user_id OR has_group_access(group_id));
 
 -- Group messages policies
 CREATE POLICY "Group messages are viewable by members" ON group_messages

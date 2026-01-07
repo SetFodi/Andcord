@@ -220,7 +220,7 @@ export default function PostCard({ post, onUpdate }: PostCardProps) {
             {/* Post Header */}
             <header className="post-header">
                 <div className="post-author">
-                    <Link href={`/profile/${author?.id}`}>
+                    <Link href={`/user/${author?.id}`}>
                         <div className="avatar avatar-md">
                             {author?.avatar_url ? (
                                 // eslint-disable-next-line @next/next/no-img-element
@@ -231,7 +231,7 @@ export default function PostCard({ post, onUpdate }: PostCardProps) {
                         </div>
                     </Link>
                     <div className="author-info">
-                        <Link href={`/profile/${author?.id}`} className="author-name" style={{ textDecoration: 'none' }}>
+                        <Link href={`/user/${author?.id}`} className="author-name" style={{ textDecoration: 'none' }}>
                             {author?.display_name || 'Unknown'}
                         </Link>
                         <span className="post-time">
@@ -385,7 +385,7 @@ export default function PostCard({ post, onUpdate }: PostCardProps) {
                         <div className="comments-list">
                             {comments.map((comment) => (
                                 <div key={comment.id} className="comment">
-                                    <Link href={`/profile/${comment.author?.id}`} className="avatar avatar-sm">
+                                    <Link href={`/user/${comment.author?.id}`} className="avatar avatar-sm">
                                         {comment.author?.avatar_url ? (
                                             // eslint-disable-next-line @next/next/no-img-element
                                             <img src={comment.author.avatar_url} alt="" />
@@ -395,7 +395,7 @@ export default function PostCard({ post, onUpdate }: PostCardProps) {
                                     </Link>
                                     <div className="comment-body">
                                         <div className="comment-header">
-                                            <Link href={`/profile/${comment.author?.id}`} className="comment-author">
+                                            <Link href={`/user/${comment.author?.id}`} className="comment-author">
                                                 {comment.author?.display_name}
                                             </Link>
                                             <span className="comment-time">{formatRelativeTime(comment.created_at)}</span>

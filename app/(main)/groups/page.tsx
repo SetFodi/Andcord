@@ -214,10 +214,13 @@ export default function GroupsPage() {
         e.preventDefault();
         if (!profile || !newGroupName.trim() || creating) return;
 
+        console.log('Starting group creation for user:', profile.id);
+        console.log('Group Name:', newGroupName.trim());
         setCreating(true);
 
         try {
             // Create group
+            console.log('Inserting into groups table...');
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const { data: newGroup, error: groupError } = await (supabase as any)
                 .from('groups')
@@ -228,21 +231,34 @@ export default function GroupsPage() {
                 .select()
                 .single();
 
-            if (groupError || !newGroup) throw groupError;
+            if (groupError) {
+                console.error('Supabase error during group insert:', groupError);
+                throw groupError;
+            }
+
+            console.log('Group created successfully:', newGroup);
+            if (!newGroup) throw new Error('Failed to create group record');
 
             // Add creator as member
+            console.log('Adding creator to group_members...');
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            await (supabase as any).from('group_members').insert({
+            const { error: memberError } = await (supabase as any).from('group_members').insert({
                 group_id: (newGroup as { id: string }).id,
                 user_id: profile.id,
                 role: 'owner',
             });
 
+            if (memberError) {
+                console.error('Supabase error during group_members insert:', memberError);
+                throw memberError;
+            }
+
+            console.log('Creator added to group_members successfully.');
             setShowCreateModal(false);
             setNewGroupName('');
             fetchGroups();
-        } catch (error) {
-            console.error('Error creating group:', error);
+        } catch (error: any) {
+            console.error('Error creating group:', error.message || error);
         } finally {
             setCreating(false);
         }

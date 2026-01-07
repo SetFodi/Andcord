@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import './sidebar.css';
 
-// Professional SVG Icons
+// SVG Icons
 const HomeIcon = () => (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -30,7 +30,10 @@ const UsersIcon = () => (
 
 const FriendsIcon = () => (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
     </svg>
 );
 
@@ -43,16 +46,8 @@ const BellIcon = () => (
 
 const SettingsIcon = () => (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
         <circle cx="12" cy="12" r="3" />
-    </svg>
-);
-
-const HelpIcon = () => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-        <path d="M12 17h.01" />
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
     </svg>
 );
 
@@ -70,14 +65,29 @@ const SparkleIcon = () => (
     </svg>
 );
 
-const navItems = [
+const ProfileIcon = () => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+    </svg>
+);
+
+// Main navigation items
+const mainNavItems = [
     { href: '/feed', label: 'Feed', icon: <HomeIcon /> },
     { href: '/messages', label: 'Messages', icon: <MessageIcon /> },
     { href: '/groups', label: 'Groups', icon: <UsersIcon /> },
     { href: '/friends', label: 'Friends', icon: <FriendsIcon /> },
     { href: '/notifications', label: 'Notifications', icon: <BellIcon /> },
-    { href: '/settings', label: 'Settings', icon: <SettingsIcon /> },
-    { href: '/contact', label: 'Contact', icon: <HelpIcon /> },
+];
+
+// Bottom navigation items for mobile
+const bottomNavItems = [
+    { href: '/feed', label: 'Feed', icon: <HomeIcon /> },
+    { href: '/messages', label: 'Messages', icon: <MessageIcon /> },
+    { href: '/friends', label: 'Friends', icon: <FriendsIcon /> },
+    { href: '/notifications', label: 'Alerts', icon: <BellIcon /> },
+    { href: '/profile', label: 'Profile', icon: <ProfileIcon /> },
 ];
 
 export default function Sidebar() {
@@ -85,49 +95,82 @@ export default function Sidebar() {
     const { profile, signOut } = useAuth();
 
     return (
-        <aside className="sidebar">
-            <div className="sidebar-header">
-                <Link href="/feed" className="sidebar-logo">
-                    <span className="logo-icon"><SparkleIcon /></span>
-                    <span className="logo-text">Andcord</span>
-                </Link>
-            </div>
+        <>
+            {/* Desktop/Tablet Sidebar */}
+            <aside className="sidebar">
+                <div className="sidebar-header">
+                    <Link href="/feed" className="sidebar-logo">
+                        <span className="logo-icon"><SparkleIcon /></span>
+                        <span className="logo-text">Andcord</span>
+                    </Link>
+                </div>
 
-            <nav className="sidebar-nav">
-                {navItems.map((item) => {
-                    const isActive = pathname.startsWith(item.href);
-                    return (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className={`nav-item ${isActive ? 'active' : ''}`}
-                        >
-                            <span className="nav-icon">{item.icon}</span>
-                            <span className="nav-label">{item.label}</span>
-                        </Link>
-                    );
-                })}
+                <nav className="sidebar-nav">
+                    {mainNavItems.map((item) => {
+                        const isActive = pathname.startsWith(item.href);
+                        return (
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                className={`nav-item ${isActive ? 'active' : ''}`}
+                            >
+                                <span className="nav-icon">{item.icon}</span>
+                                <span className="nav-label">{item.label}</span>
+                            </Link>
+                        );
+                    })}
+
+                    <div className="sidebar-divider" />
+
+                    <Link
+                        href="/settings"
+                        className={`nav-item ${pathname.startsWith('/settings') ? 'active' : ''}`}
+                    >
+                        <span className="nav-icon"><SettingsIcon /></span>
+                        <span className="nav-label">Settings</span>
+                    </Link>
+                </nav>
+
+                <div className="sidebar-footer">
+                    <Link href="/profile" className="user-profile">
+                        <div className="avatar avatar-md">
+                            {profile?.avatar_url ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img src={profile.avatar_url} alt={profile.display_name || 'Avatar'} />
+                            ) : (
+                                <span>{profile?.display_name?.[0]?.toUpperCase() || '?'}</span>
+                            )}
+                        </div>
+                        <span className="avatar-status" />
+                        <div className="user-info">
+                            <span className="user-name">{profile?.display_name || 'User'}</span>
+                            <span className="user-handle">@{profile?.username || 'username'}</span>
+                        </div>
+                    </Link>
+                    <button className="logout-btn" onClick={signOut} title="Sign out">
+                        <LogoutIcon />
+                    </button>
+                </div>
+            </aside>
+
+            {/* Mobile Bottom Navigation */}
+            <nav className="bottom-nav">
+                <div className="bottom-nav-items">
+                    {bottomNavItems.map((item) => {
+                        const isActive = pathname.startsWith(item.href);
+                        return (
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                className={`bottom-nav-item ${isActive ? 'active' : ''}`}
+                            >
+                                <span className="bottom-nav-icon">{item.icon}</span>
+                                <span className="bottom-nav-label">{item.label}</span>
+                            </Link>
+                        );
+                    })}
+                </div>
             </nav>
-
-            <div className="sidebar-footer">
-                <Link href="/profile" className="user-profile">
-                    <div className="avatar avatar-md">
-                        {profile?.avatar_url ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={profile.avatar_url} alt={profile.display_name || 'Avatar'} />
-                        ) : (
-                            <span>{profile?.display_name?.[0]?.toUpperCase() || '?'}</span>
-                        )}
-                    </div>
-                    <div className="user-info">
-                        <span className="user-name">{profile?.display_name || 'User'}</span>
-                        <span className="user-handle">@{profile?.username || 'username'}</span>
-                    </div>
-                </Link>
-                <button className="btn btn-ghost btn-icon logout-btn" onClick={signOut} title="Sign out">
-                    <LogoutIcon />
-                </button>
-            </div>
-        </aside>
+        </>
     );
 }
