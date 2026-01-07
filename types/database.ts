@@ -1,11 +1,18 @@
 // Types for the Andcord database schema
 
+export interface ImagePosition {
+  x: number;
+  y: number;
+}
+
 export interface Profile {
   id: string;
   username: string;
   display_name: string | null;
   avatar_url: string | null;
+  avatar_position: ImagePosition | null;
   banner_url: string | null;
+  banner_position: ImagePosition | null;
   bio: string | null;
   created_at: string;
 }

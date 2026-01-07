@@ -428,14 +428,36 @@ export default function UserProfilePage() {
                 {/* Cover & Avatar Section */}
                 <div className="profile-hero">
                     <div className="profile-cover">
-                        <div className="cover-gradient" />
+                        {userProfile.banner_url ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                                src={userProfile.banner_url}
+                                alt="Cover"
+                                className="cover-image"
+                                style={{
+                                    objectPosition: userProfile.banner_position
+                                        ? `${userProfile.banner_position.x}% ${userProfile.banner_position.y}%`
+                                        : '50% 50%'
+                                }}
+                            />
+                        ) : (
+                            <div className="cover-gradient" />
+                        )}
                     </div>
 
                     <div className="profile-avatar-section">
                         <div className="avatar avatar-4xl profile-avatar">
                             {userProfile.avatar_url ? (
                                 // eslint-disable-next-line @next/next/no-img-element
-                                <img src={userProfile.avatar_url} alt={userProfile.display_name || 'Avatar'} />
+                                <img
+                                    src={userProfile.avatar_url}
+                                    alt={userProfile.display_name || 'Avatar'}
+                                    style={{
+                                        objectPosition: userProfile.avatar_position
+                                            ? `${userProfile.avatar_position.x}% ${userProfile.avatar_position.y}%`
+                                            : '50% 50%'
+                                    }}
+                                />
                             ) : (
                                 <span>{userProfile.display_name?.[0]?.toUpperCase() || '?'}</span>
                             )}

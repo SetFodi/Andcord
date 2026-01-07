@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { uploadFile, validateFile } from '@/lib/utils/uploadFile';
+import ImageCropper from '@/components/cropper/ImageCropper';
 import './profile.css';
 
 export default function ProfilePage() {
@@ -15,16 +16,16 @@ export default function ProfilePage() {
     const [uploadingBanner, setUploadingBanner] = useState(false);
     const [error, setError] = useState('');
 
+    // Cropper state
+    const [cropperImage, setCropperImage] = useState<string | null>(null);
+    const [cropperType, setCropperType] = useState<'avatar' | 'banner'>('avatar');
+    const [pendingFile, setPendingFile] = useState<File | null>(null);
+
     const fileInputRef = useRef<HTMLInputElement>(null);
     const bannerInputRef = useRef<HTMLInputElement>(null);
 
-    const handleAvatarClick = () => {
-        fileInputRef.current?.click();
-    };
-
-    const handleBannerClick = () => {
-        bannerInputRef.current?.click();
-    };
+    const handleAvatarClick = () => fileInputRef.current?.click();
+    const handleBannerClick = () => bannerInputRef.current?.click();
 
     const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -36,26 +37,11 @@ export default function ProfilePage() {
             return;
         }
 
-        setUploading(true);
-        setError('');
-
-        const { url, error: uploadError } = await uploadFile(file, 'avatars', profile?.id);
-
-        if (uploadError || !url) {
-            console.error('Upload failed:', uploadError);
-            setError('Failed to upload image');
-            setUploading(false);
-            return;
-        }
-
-        const { error: updateError } = await updateProfile({ avatar_url: url });
-
-        if (updateError) {
-            setError('Failed to update profile');
-        }
-
-        setUploading(false);
-        if (fileInputRef.current) fileInputRef.current.value = '';
+        // Show cropper
+        const objectUrl = URL.createObjectURL(file);
+        setCropperImage(objectUrl);
+        setCropperType('avatar');
+        setPendingFile(file);
     };
 
     const handleBannerChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,25 +54,58 @@ export default function ProfilePage() {
             return;
         }
 
-        setUploadingBanner(true);
-        setError('');
+        // Show cropper
+        const objectUrl = URL.createObjectURL(file);
+        setCropperImage(objectUrl);
+        setCropperType('banner');
+        setPendingFile(file);
+    };
 
-        const { url, error: uploadError } = await uploadFile(file, 'banners', profile?.id);
+    const handleCropSave = async (position: { x: number; y: number }) => {
+        if (!pendingFile) return;
+
+        const isAvatar = cropperType === 'avatar';
+        const setLoading = isAvatar ? setUploading : setUploadingBanner;
+        const bucket = isAvatar ? 'avatars' : 'banners';
+
+        setLoading(true);
+        setError('');
+        setCropperImage(null);
+
+        const { url, error: uploadError } = await uploadFile(pendingFile, bucket, profile?.id);
 
         if (uploadError || !url) {
-            console.error('Banner upload failed:', uploadError);
-            setError('Failed to upload banner. Make sure the "banners" bucket exists in Supabase.');
-            setUploadingBanner(false);
+            console.error('Upload failed:', uploadError);
+            setError(`Failed to upload ${isAvatar ? 'avatar' : 'banner'}`);
+            setLoading(false);
+            setPendingFile(null);
             return;
         }
 
-        const { error: updateError } = await updateProfile({ banner_url: url });
+        // Save URL and position
+        const updateData = isAvatar
+            ? { avatar_url: url, avatar_position: position }
+            : { banner_url: url, banner_position: position };
+
+        const { error: updateError } = await updateProfile(updateData);
 
         if (updateError) {
             setError('Failed to update profile');
         }
 
-        setUploadingBanner(false);
+        setLoading(false);
+        setPendingFile(null);
+
+        // Reset input
+        if (isAvatar && fileInputRef.current) fileInputRef.current.value = '';
+        if (!isAvatar && bannerInputRef.current) bannerInputRef.current.value = '';
+    };
+
+    const handleCropCancel = () => {
+        if (cropperImage) URL.revokeObjectURL(cropperImage);
+        setCropperImage(null);
+        setPendingFile(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
         if (bannerInputRef.current) bannerInputRef.current.value = '';
     };
 
@@ -115,8 +134,22 @@ export default function ProfilePage() {
         setError('');
     };
 
+    // Get position styles
+    const avatarPosition = profile?.avatar_position || { x: 50, y: 50 };
+    const bannerPosition = profile?.banner_position || { x: 50, y: 50 };
+
     return (
         <div className="profile-page">
+            {/* Image Cropper Modal */}
+            {cropperImage && (
+                <ImageCropper
+                    imageUrl={cropperImage}
+                    aspectRatio={cropperType === 'avatar' ? 'square' : 'banner'}
+                    onSave={handleCropSave}
+                    onCancel={handleCropCancel}
+                />
+            )}
+
             {/* Cover Banner */}
             <button
                 className={`profile-banner ${uploadingBanner ? 'uploading' : ''}`}
@@ -129,6 +162,7 @@ export default function ProfilePage() {
                         src={profile.banner_url}
                         alt="Cover"
                         className="banner-image"
+                        style={{ objectPosition: `${bannerPosition.x}% ${bannerPosition.y}%` }}
                     />
                 ) : (
                     <div className="banner-placeholder">
@@ -152,7 +186,7 @@ export default function ProfilePage() {
             <div className="profile-content">
                 {error && <div className="profile-error">{error}</div>}
 
-                {/* Avatar - overlaps banner */}
+                {/* Avatar + Actions Header */}
                 <div className="profile-header">
                     <button
                         className={`profile-avatar ${uploading ? 'uploading' : ''}`}
@@ -162,7 +196,11 @@ export default function ProfilePage() {
                         <div className="avatar avatar-2xl">
                             {profile?.avatar_url ? (
                                 // eslint-disable-next-line @next/next/no-img-element
-                                <img src={profile.avatar_url} alt={profile.display_name || 'Avatar'} />
+                                <img
+                                    src={profile.avatar_url}
+                                    alt={profile.display_name || 'Avatar'}
+                                    style={{ objectPosition: `${avatarPosition.x}% ${avatarPosition.y}%` }}
+                                />
                             ) : (
                                 <span>{profile?.display_name?.[0]?.toUpperCase() || '?'}</span>
                             )}
@@ -179,7 +217,6 @@ export default function ProfilePage() {
                         />
                     </button>
 
-                    {/* Edit button - next to avatar */}
                     <div className="profile-actions">
                         {!isEditing ? (
                             <button className="btn btn-secondary btn-sm" onClick={() => setIsEditing(true)}>
