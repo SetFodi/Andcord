@@ -144,12 +144,14 @@ export default function NotificationsPage() {
             case 'like':
                 return {
                     icon: <HeartIcon />,
+                    iconClass: 'icon-like',
                     title: `${data.liker_name || 'Someone'} liked your post`,
                     link: `/feed`,
                 };
             case 'comment':
                 return {
                     icon: <MessageCircleIcon />,
+                    iconClass: 'icon-comment',
                     title: `${data.commenter_name || 'Someone'} commented on your post`,
                     description: data.comment_preview,
                     link: `/feed`,
@@ -157,18 +159,21 @@ export default function NotificationsPage() {
             case 'friend_request':
                 return {
                     icon: <HandshakeIcon />,
+                    iconClass: 'icon-friend-request',
                     title: `${data.user_name || 'Someone'} sent you a friend request`,
                     link: `/friends`,
                 };
             case 'friend_accepted':
                 return {
                     icon: <CheckCircleIcon />,
+                    iconClass: 'icon-friend-accepted',
                     title: `${data.user_name || 'Someone'} accepted your friend request`,
                     link: `/friends`,
                 };
             case 'message':
                 return {
                     icon: <MailIcon />,
+                    iconClass: 'icon-message',
                     title: `${data.sender_name || 'Someone'} sent you a message`,
                     description: data.message_preview,
                     link: `/messages/${data.conversation_id}`,
@@ -176,12 +181,14 @@ export default function NotificationsPage() {
             case 'group_invite':
                 return {
                     icon: <UsersIcon />,
+                    iconClass: 'icon-group',
                     title: `You were invited to join ${data.group_name || 'a group'}`,
                     link: `/groups`,
                 };
             default:
                 return {
                     icon: <DefaultBellIcon />,
+                    iconClass: 'icon-default',
                     title: 'New notification',
                     link: `/feed`,
                 };
@@ -242,7 +249,7 @@ export default function NotificationsPage() {
                                         href={content.link}
                                         className={`notification-item ${!notification.read ? 'unread' : ''}`}
                                     >
-                                        <div className="notification-icon">{content.icon}</div>
+                                        <div className={`notification-icon ${content.iconClass}`}>{content.icon}</div>
                                         <div className="notification-content">
                                             <p className="notification-title">{content.title}</p>
                                             {content.description && (

@@ -192,8 +192,160 @@ input:checked+.slider:before {
     border-radius: 3px;
 }
 
+/* Danger Zone */
+.danger-zone .settings-card {
+    border-color: rgba(239, 68, 68, 0.3);
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.03) 0%, transparent 100%);
+}
+
+.danger-zone .settings-card:hover {
+    border-color: rgba(239, 68, 68, 0.4);
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.1);
+}
+
+/* Delete Account Button */
+.btn-premium-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-5);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border: none;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--duration-normal) var(--ease-out);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.btn-premium-danger:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.35);
+}
+
+.btn-premium-danger:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+}
+
+/* Text error class for danger zone */
+.text-error {
+    color: #ef4444;
+}
+
+.border-error {
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
 @media (max-width: 640px) {
     .theme-options {
         grid-template-columns: 1fr;
     }
+
+    .settings-control {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-4);
+    }
+
+    .btn-premium-danger {
+        width: 100%;
+    }
+}
+
+/* Compact Mode */
+[data-compact="true"] .settings-container {
+    max-width: 600px;
+}
+
+[data-compact="true"] .settings-grid {
+    gap: var(--space-5);
+    margin-top: var(--space-6);
+}
+
+[data-compact="true"] .settings-group {
+    gap: var(--space-3);
+}
+
+[data-compact="true"] .settings-card {
+    padding: var(--space-4);
+    gap: var(--space-4);
+    border-radius: var(--radius-xl);
+}
+
+[data-compact="true"] .card-header {
+    gap: var(--space-3);
+}
+
+[data-compact="true"] .card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-lg);
+}
+
+[data-compact="true"] .card-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+[data-compact="true"] .card-title {
+    font-size: var(--text-base);
+}
+
+[data-compact="true"] .card-description {
+    font-size: var(--text-xs);
+}
+
+[data-compact="true"] .settings-control {
+    padding: var(--space-3) 0;
+    gap: var(--space-4);
+}
+
+[data-compact="true"] .control-label {
+    font-size: var(--text-sm);
+}
+
+[data-compact="true"] .control-description {
+    font-size: 11px;
+}
+
+[data-compact="true"] .switch {
+    width: 40px;
+    height: 22px;
+}
+
+[data-compact="true"] .slider:before {
+    height: 16px;
+    width: 16px;
+}
+
+[data-compact="true"] input:checked+.slider:before {
+    transform: translateX(18px);
+}
+
+[data-compact="true"] .theme-options {
+    gap: var(--space-3);
+}
+
+[data-compact="true"] .theme-option {
+    padding: var(--space-3);
+    gap: var(--space-2);
+    border-radius: var(--radius-lg);
+}
+
+[data-compact="true"] .theme-preview {
+    height: 50px;
+    border-radius: var(--radius-sm);
+}
+
+[data-compact="true"] .btn-premium-danger {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-xs);
+    border-radius: var(--radius-md);
 }

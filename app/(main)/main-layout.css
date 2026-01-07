@@ -86,3 +86,23 @@
         padding: var(--space-3);
     }
 }
+
+/* Compact Mode */
+[data-compact="true"] .main-content {
+    transition: margin-left var(--duration-normal) var(--ease-out);
+}
+
+[data-compact="true"] .page-content {
+    padding: var(--space-4) var(--space-5);
+    padding-left: var(--space-6);
+}
+
+[data-compact="true"] .page-actions {
+    gap: var(--space-1);
+}
+
+@media (max-width: 768px) {
+    [data-compact="true"] .page-content {
+        padding: var(--space-3);
+    }
+}

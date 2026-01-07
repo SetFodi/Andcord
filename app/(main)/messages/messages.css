@@ -629,3 +629,138 @@
         height: 350px;
     }
 }
+
+/* Compact Mode */
+[data-compact="true"] .conversations-sidebar {
+    width: 300px;
+}
+
+[data-compact="true"] .conversations-header {
+    padding: var(--space-3) var(--space-4);
+}
+
+[data-compact="true"] .conversations-header h2 {
+    font-size: var(--text-lg);
+}
+
+[data-compact="true"] .conversations-list {
+    padding: var(--space-1);
+}
+
+[data-compact="true"] .conversation-item {
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-lg);
+}
+
+[data-compact="true"] .conversation-item .avatar {
+    width: 36px;
+    height: 36px;
+}
+
+[data-compact="true"] .conversation-name {
+    font-size: var(--text-xs);
+}
+
+[data-compact="true"] .conversation-time {
+    font-size: 10px;
+}
+
+[data-compact="true"] .conversation-preview {
+    font-size: 11px;
+}
+
+[data-compact="true"] .chat-header {
+    padding: var(--space-2) var(--space-4);
+}
+
+[data-compact="true"] .chat-user {
+    gap: var(--space-2);
+}
+
+[data-compact="true"] .chat-user .avatar {
+    width: 36px;
+    height: 36px;
+}
+
+[data-compact="true"] .user-name {
+    font-size: var(--text-xs);
+}
+
+[data-compact="true"] .user-status {
+    font-size: 10px;
+}
+
+[data-compact="true"] .messages-container {
+    padding: var(--space-4);
+}
+
+[data-compact="true"] .messages-list {
+    gap: 2px;
+}
+
+[data-compact="true"] .message {
+    gap: var(--space-1);
+}
+
+[data-compact="true"] .message .avatar {
+    width: 28px;
+    height: 28px;
+}
+
+[data-compact="true"] .message:not(.with-avatar) .avatar {
+    width: 28px;
+}
+
+[data-compact="true"] .message.with-avatar {
+    margin-top: var(--space-2);
+}
+
+[data-compact="true"] .message-bubble {
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-xl);
+}
+
+[data-compact="true"] .message-content {
+    font-size: var(--text-xs);
+}
+
+[data-compact="true"] .message-time {
+    font-size: 9px;
+}
+
+[data-compact="true"] .message-media img,
+[data-compact="true"] .message-media video {
+    max-height: 300px;
+}
+
+[data-compact="true"] .message-form {
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+}
+
+[data-compact="true"] .message-input {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-xs);
+    border-radius: var(--radius-xl);
+}
+
+[data-compact="true"] .attachment-previews {
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+}
+
+[data-compact="true"] .attachment-preview {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-md);
+}
+
+[data-compact="true"] .empty-conversations {
+    padding: var(--space-6);
+    gap: var(--space-3);
+}
+
+[data-compact="true"] .empty-conversations-icon {
+    font-size: 40px;
+}

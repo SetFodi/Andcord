@@ -165,3 +165,58 @@
         gap: var(--space-3);
     }
 }
+
+/* Compact Mode */
+[data-compact="true"] .feed-container {
+    gap: var(--space-2);
+}
+
+[data-compact="true"] .posts-feed {
+    gap: var(--space-2);
+}
+
+[data-compact="true"] .post-skeleton {
+    padding: var(--space-4);
+    border-radius: var(--radius-xl);
+}
+
+[data-compact="true"] .skeleton-header {
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+}
+
+[data-compact="true"] .skeleton-avatar {
+    width: 36px;
+    height: 36px;
+}
+
+[data-compact="true"] .skeleton-image {
+    height: 160px;
+    margin-bottom: var(--space-3);
+}
+
+[data-compact="true"] .load-more-trigger {
+    padding: var(--space-6);
+}
+
+[data-compact="true"] .end-of-feed {
+    padding: var(--space-6);
+    font-size: var(--text-xs);
+}
+
+[data-compact="true"] .feed-empty {
+    padding: var(--space-10);
+    gap: var(--space-3);
+}
+
+[data-compact="true"] .feed-empty-icon {
+    font-size: 48px;
+}
+
+[data-compact="true"] .feed-empty-title {
+    font-size: var(--text-lg);
+}
+
+[data-compact="true"] .feed-empty-description {
+    font-size: var(--text-xs);
+}

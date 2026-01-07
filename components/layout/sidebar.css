@@ -568,3 +568,148 @@
     display: block;
   }
 }
+
+/* ========================================
+   COMPACT MODE
+   ======================================== */
+
+[data-compact="true"] .sidebar {
+  width: var(--sidebar-width);
+}
+
+[data-compact="true"] .sidebar-header {
+  padding: var(--space-3);
+}
+
+[data-compact="true"] .sidebar-logo {
+  gap: var(--space-2);
+  padding: var(--space-1);
+}
+
+[data-compact="true"] .logo-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-lg);
+}
+
+[data-compact="true"] .logo-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+[data-compact="true"] .logo-text {
+  font-size: var(--text-lg);
+}
+
+[data-compact="true"] .sidebar-nav {
+  padding: var(--space-2);
+  gap: 2px;
+}
+
+[data-compact="true"] .nav-section {
+  padding: var(--space-2) var(--space-2) var(--space-1);
+  font-size: 10px;
+}
+
+[data-compact="true"] .nav-item {
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-lg);
+}
+
+[data-compact="true"] .nav-item.active::before {
+  width: 2px;
+  height: 16px;
+}
+
+[data-compact="true"] .nav-icon {
+  width: 20px;
+  height: 20px;
+}
+
+[data-compact="true"] .nav-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+[data-compact="true"] .nav-label {
+  font-size: var(--text-sm);
+}
+
+[data-compact="true"] .nav-badge {
+  min-width: 18px;
+  height: 18px;
+  font-size: 10px;
+}
+
+[data-compact="true"] .sidebar-footer {
+  padding: var(--space-2);
+  gap: var(--space-1);
+}
+
+[data-compact="true"] .user-profile {
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-lg);
+}
+
+[data-compact="true"] .user-profile .avatar {
+  width: 32px;
+  height: 32px;
+}
+
+[data-compact="true"] .user-profile .avatar-status {
+  width: 8px;
+  height: 8px;
+  left: calc(var(--space-2) + 24px);
+}
+
+[data-compact="true"] .user-name {
+  font-size: var(--text-xs);
+}
+
+[data-compact="true"] .user-handle {
+  font-size: 11px;
+}
+
+[data-compact="true"] .logout-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+}
+
+[data-compact="true"] .sidebar-divider {
+  margin: var(--space-1) var(--space-2);
+}
+
+/* Bottom Nav - Compact */
+[data-compact="true"] .bottom-nav {
+  height: 56px;
+  padding: var(--space-1) var(--space-3);
+}
+
+[data-compact="true"] .bottom-nav-item {
+  gap: 1px;
+  padding: var(--space-1);
+  min-width: 40px;
+}
+
+[data-compact="true"] .bottom-nav-icon {
+  width: 24px;
+  height: 24px;
+}
+
+[data-compact="true"] .bottom-nav-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+[data-compact="true"] .bottom-nav-label {
+  font-size: 9px;
+}
+
+[data-compact="true"] .bottom-nav-badge {
+  min-width: 14px;
+  height: 14px;
+  font-size: 9px;
+}
