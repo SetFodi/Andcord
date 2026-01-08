@@ -61,10 +61,10 @@ export async function updateSession(request: NextRequest) {
         return NextResponse.redirect(url);
     }
 
-    // Redirect root to feed if authenticated, login if not
-    if (request.nextUrl.pathname === '/') {
+    // Redirect root to feed if authenticated (let landing page show for guests)
+    if (request.nextUrl.pathname === '/' && user) {
         const url = request.nextUrl.clone();
-        url.pathname = user ? '/feed' : '/login';
+        url.pathname = '/feed';
         return NextResponse.redirect(url);
     }
 
