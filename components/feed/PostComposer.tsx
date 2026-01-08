@@ -219,7 +219,7 @@ export default function PostComposer({ onPostCreated }: PostComposerProps) {
                                 accept="image/*,video/*"
                                 multiple
                                 onChange={handleFileSelect}
-                                className="hidden"
+                                style={{ display: 'none' }}
                                 id="file-input"
                             />
                             <label htmlFor="file-input" className="btn btn-ghost btn-icon tool-btn" title="Add photo or video">

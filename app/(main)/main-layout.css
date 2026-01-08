@@ -1,5 +1,5 @@
 /* ========================================
-   MAIN LAYOUT 2.0 - Premium Design
+   MAIN LAYOUT - COSMIC SHELL
    ======================================== */
 
 .app-container {
@@ -7,22 +7,104 @@
     min-height: 100vh;
     position: relative;
     z-index: 1;
+    /* Removed padding since sidebar is floating fixed */
 }
 
+/* Background Layers */
+.cosmic-bg-layer {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: var(--bg-void);
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.starfield {
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+        radial-gradient(1px 1px at 40px 70px, #fff, transparent),
+        radial-gradient(1px 1px at 50px 160px, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 90px 40px, rgba(255, 255, 255, 0.7), transparent);
+    background-size: 200px 200px;
+    opacity: 0.3;
+    animation: twinkle 5s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+    0% {
+        opacity: 0.2;
+    }
+
+    100% {
+        opacity: 0.4;
+    }
+}
+
+.nebula-cloud-1 {
+    position: absolute;
+    top: -20%;
+    left: -10%;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 60%);
+    filter: blur(80px);
+    opacity: 0.6;
+    animation: float 20s ease-in-out infinite;
+}
+
+.nebula-cloud-2 {
+    position: absolute;
+    bottom: -10%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 60%);
+    filter: blur(80px);
+    opacity: 0.5;
+    animation: float 25s ease-in-out infinite reverse;
+}
+
+.grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 80px 80px;
+    opacity: 0.2;
+    transform: perspective(1000px) rotateX(20deg) scale(1.5);
+    transform-origin: top;
+}
+
+
+/* Main Content Area */
 .main-content {
     flex: 1;
-    margin-left: var(--sidebar-width);
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    transition: margin-left var(--duration-slow) var(--ease-out);
-    animation: pageEnter 0.4s var(--ease-out);
+    padding-bottom: 120px;
+    /* Space for Dock */
+    width: 100%;
+
+    /* Give main content its own glass container if desired, 
+       OR keep it transparent to show background. 
+       Let's keep it transparent but prepare a container utility. */
+    position: relative;
+    border-radius: 32px;
+
+    /* Smooth entry */
+    animation: fadeIn 0.5s var(--ease-cosmic);
 }
 
-@keyframes pageEnter {
+@keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(6px);
+        transform: translateY(10px);
     }
 
     to {
@@ -31,78 +113,16 @@
     }
 }
 
-
-.page-actions {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-}
-
-/* Page Content */
-.page-content {
-    flex: 1;
-    padding: var(--space-6) var(--space-8);
-    padding-left: var(--space-10);
-    max-width: calc(var(--max-content-width) + var(--space-10) + var(--space-8));
-    width: 100%;
-    margin: 0 auto;
-}
-
-.page-content-wide {
-    max-width: 960px;
-}
-
-.page-content-full {
-    max-width: none;
-}
-
 /* Responsive */
 @media (max-width: 1024px) {
-    .main-content {
-        margin-left: var(--sidebar-collapsed);
-    }
+    /* Collapse behavior not fully implemented yet for floating dock, 
+       just doing full hide on mobile for now */
 }
 
 @media (max-width: 768px) {
     .main-content {
-        margin-left: 0;
-    }
-
-    .page-header {
-        padding: var(--space-4);
-    }
-
-    .page-content {
-        padding: var(--space-4);
-    }
-}
-
-@media (max-width: 480px) {
-    .page-header {
-        padding: var(--space-3);
-    }
-
-    .page-content {
-        padding: var(--space-3);
-    }
-}
-
-/* Compact Mode */
-[data-compact="true"] .main-content {
-    transition: margin-left var(--duration-normal) var(--ease-out);
-}
-
-[data-compact="true"] .page-content {
-    padding: var(--space-4) var(--space-5);
-    padding-left: var(--space-6);
-}
-
-[data-compact="true"] .page-actions {
-    gap: var(--space-1);
-}
-
-@media (max-width: 768px) {
-    [data-compact="true"] .page-content {
-        padding: var(--space-3);
+        margin: 0;
+        min-height: 100vh;
+        border-radius: 0;
     }
 }

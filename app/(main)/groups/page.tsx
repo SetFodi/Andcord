@@ -271,10 +271,11 @@ export default function GroupsPage() {
                 <div className="groups-header">
                     <h2>Groups</h2>
                     <button
-                        className="btn btn-primary"
+                        className="btn-new-group"
                         onClick={() => setShowCreateModal(true)}
+                        title="Create New Group"
                     >
-                        <span className="flex items-center gap-xs"><PlusIcon /> New</span>
+                        <PlusIcon />
                     </button>
                 </div>
 
@@ -293,13 +294,7 @@ export default function GroupsPage() {
                         </>
                     ) : groups.length === 0 ? (
                         <div className="empty-groups">
-                            <p>No groups yet</p>
-                            <button
-                                className="btn btn-primary"
-                                onClick={() => setShowCreateModal(true)}
-                            >
-                                Create a Group
-                            </button>
+                            <p className="text-muted text-sm text-center py-4">No groups found</p>
                         </div>
                     ) : (
                         groups.map((group) => {
@@ -310,7 +305,7 @@ export default function GroupsPage() {
                                     className={`group-item ${isActive ? 'active' : ''}`}
                                     onClick={() => handleSelectGroup(group)}
                                 >
-                                    <div className="avatar avatar-md">
+                                    <div className="avatar">
                                         {group.avatar_url ? (
                                             // eslint-disable-next-line @next/next/no-img-element
                                             <img src={group.avatar_url} alt="" />
@@ -413,8 +408,16 @@ export default function GroupsPage() {
                             <div className="empty-state-icon"><GroupIcon /></div>
                             <h3 className="empty-state-title">Select a group</h3>
                             <p className="empty-state-description">
-                                Choose a group from the sidebar or create a new one
+                                Choose a group from the sidebar or click below to start a new community.
                             </p>
+                            <button
+                                className="btn-create-large"
+                                onClick={() => setShowCreateModal(true)}
+                            >
+                                <span className="flex items-center gap-sm">
+                                    <PlusIcon /> Create Your First Group
+                                </span>
+                            </button>
                         </div>
                     </div>
                 )}
@@ -423,45 +426,37 @@ export default function GroupsPage() {
             {/* Create Group Modal */}
             {showCreateModal && (
                 <div className="modal-backdrop" onClick={() => setShowCreateModal(false)}>
-                    <div className="modal" onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h3 className="modal-title">Create Group</h3>
-                            <button
-                                className="btn btn-ghost btn-icon"
-                                onClick={() => setShowCreateModal(false)}
-                            >
-                                <CloseIcon />
-                            </button>
-                        </div>
-                        <form onSubmit={handleCreateGroup}>
-                            <div className="modal-body">
-                                <div className="input-group">
-                                    <label className="input-label">Group Name</label>
-                                    <input
-                                        type="text"
-                                        className="input"
-                                        placeholder="Enter group name"
-                                        value={newGroupName}
-                                        onChange={(e) => setNewGroupName(e.target.value)}
-                                        maxLength={50}
-                                        required
-                                    />
-                                </div>
+                    <div className="modal-glass-card" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="modal-title">Create Group</h3>
+
+                        <form onSubmit={handleCreateGroup} className="modal-form">
+                            <div className="form-group">
+                                <label className="modal-label">Group Name</label>
+                                <input
+                                    type="text"
+                                    className="modal-input-glass"
+                                    placeholder="Enter group name"
+                                    value={newGroupName}
+                                    onChange={(e) => setNewGroupName(e.target.value)}
+                                    autoFocus
+                                    maxLength={30}
+                                />
                             </div>
-                            <div className="modal-footer">
+
+                            <div className="modal-actions">
                                 <button
                                     type="button"
-                                    className="btn btn-ghost"
+                                    className="btn-modal-ghost"
                                     onClick={() => setShowCreateModal(false)}
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="btn btn-primary"
+                                    className="btn-modal-primary"
                                     disabled={!newGroupName.trim() || creating}
                                 >
-                                    {creating ? 'Creating...' : 'Create'}
+                                    {creating ? 'Creating...' : 'Create Group'}
                                 </button>
                             </div>
                         </form>

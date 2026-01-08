@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import EmojiPicker, { Theme as EmojiTheme } from 'emoji-picker-react';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -82,6 +82,7 @@ export default function MessagesPage() {
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [showGifPicker, setShowGifPicker] = useState(false);
     const [gifSearch, setGifSearch] = useState('');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [gifs, setGifs] = useState<any[]>([]);
     const [isDragging, setIsDragging] = useState(false);
 
@@ -91,6 +92,7 @@ export default function MessagesPage() {
     const { profile } = useAuth();
     const { theme } = useTheme();
     const supabase = createClient();
+    const router = useRouter();
     const params = useParams();
     const conversationId = params?.conversationId as string | undefined;
 
@@ -193,17 +195,21 @@ export default function MessagesPage() {
         return () => clearTimeout(timeout);
     }, [fetchConversations, profile]);
 
+    // Sync state with URL params
     useEffect(() => {
         if (conversationId && conversations.length > 0) {
             const conv = conversations.find((c) => c.id === conversationId);
             if (conv) {
-                setActiveConversation(conv);
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                setOtherUser((conv as any).other_user || null);
-                fetchMessages(conversationId);
+                // Only update if it's different to prevent loops/flicker
+                if (activeConversation?.id !== conv.id) {
+                    setActiveConversation(conv);
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    setOtherUser((conv as any).other_user || null);
+                    fetchMessages(conv.id);
+                }
             }
         }
-    }, [conversationId, conversations, fetchMessages]);
+    }, [conversationId, conversations, fetchMessages, activeConversation?.id]);
 
     // Handle clicks outside of pickers
     useEffect(() => {
@@ -218,7 +224,7 @@ export default function MessagesPage() {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    // GIF Search Logic - uses server proxy to protect API key
+    // GIF Search Logic
     const searchGifs = useCallback(async (query: string = '') => {
         try {
             const endpoint = query
@@ -268,11 +274,13 @@ export default function MessagesPage() {
         setPreviews(prev => prev.filter((_, i) => i !== index));
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const onEmojiClick = (emojiData: any) => {
         setNewMessage(prev => prev + emojiData.emoji);
         setShowEmojiPicker(false);
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const onGifClick = (gif: any) => {
         handleSendMedia(gif.media_formats.tinygif.url, 'gif');
         setShowGifPicker(false);
@@ -283,6 +291,7 @@ export default function MessagesPage() {
         setSending(true);
 
         try {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const { error } = await (supabase as any).from('messages').insert({
                 conversation_id: activeConversation.id,
                 sender_id: profile.id,
@@ -362,7 +371,7 @@ export default function MessagesPage() {
                     const filePath = `${profile.id}/${fileName}`;
 
                     // Note: 'messages' bucket must exist and have public access or appropriate policies
-                    const { data, error } = await supabase.storage
+                    const { error } = await supabase.storage
                         .from('messages')
                         .upload(filePath, file);
 
@@ -377,7 +386,8 @@ export default function MessagesPage() {
             }
 
             // Create messages for each attachment + one for text if any
-            const messagesToInsert = [];
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const messagesToInsert: any[] = [];
 
             if (messageContent) {
                 messagesToInsert.push({
@@ -397,6 +407,7 @@ export default function MessagesPage() {
                 });
             });
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const { error } = await (supabase as any).from('messages').insert(messagesToInsert);
 
             if (error) throw error;
@@ -408,6 +419,7 @@ export default function MessagesPage() {
                 .eq('id', activeConversation.id);
 
             // Notification for other user
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const otherId = (activeConversation as any).participant_ids?.find((id: string) => id !== profile.id);
             if (otherId) {
                 await (supabase as any).from('notifications').insert({
@@ -447,11 +459,13 @@ export default function MessagesPage() {
     };
 
     const selectConversation = (conv: Conversation) => {
+        // Optimistic update
         setActiveConversation(conv);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setOtherUser((conv as any).other_user || null);
-        fetchMessages(conv.id);
-        window.history.pushState({}, '', `/messages/${conv.id}`);
+
+        // Use router to navigate, trigger params change
+        router.push(`/messages/${conv.id}`);
     };
 
     return (
