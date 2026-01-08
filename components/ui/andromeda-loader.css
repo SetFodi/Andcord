@@ -1,0 +1,192 @@
+.andromeda-loader {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #08080f 0%, #0d0d18 50%, #08080f 100%);
+    z-index: 99999;
+    overflow: hidden;
+}
+
+/* Starfield */
+.starfield {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    animation: starFade 4s ease-in-out infinite;
+}
+
+@keyframes starFade {
+
+    0%,
+    100% {
+        opacity: 0.2;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+/* Loader orb */
+.loader-orb {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.orb-core {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, #fff 0%, #a78bfa 40%, #7c3aed 100%);
+    border-radius: 50%;
+    box-shadow:
+        0 0 20px rgba(167, 139, 250, 0.6),
+        0 0 40px rgba(167, 139, 250, 0.3);
+    animation: corePulse 2s ease-in-out infinite;
+}
+
+@keyframes corePulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow:
+            0 0 20px rgba(167, 139, 250, 0.6),
+            0 0 40px rgba(167, 139, 250, 0.3);
+    }
+
+    50% {
+        transform: scale(1.1);
+        box-shadow:
+            0 0 30px rgba(167, 139, 250, 0.8),
+            0 0 60px rgba(167, 139, 250, 0.4);
+    }
+}
+
+/* Rings */
+.orb-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    animation: ringPulse 2s ease-in-out infinite;
+}
+
+.ring-1 {
+    width: 50px;
+    height: 50px;
+    border-color: rgba(167, 139, 250, 0.4);
+    animation-delay: 0s;
+}
+
+.ring-2 {
+    width: 80px;
+    height: 80px;
+    border-color: rgba(167, 139, 250, 0.25);
+    animation-delay: 0.3s;
+}
+
+.ring-3 {
+    width: 110px;
+    height: 110px;
+    border-color: rgba(167, 139, 250, 0.15);
+    animation-delay: 0.6s;
+}
+
+@keyframes ringPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.08);
+        opacity: 0.6;
+    }
+}
+
+/* Brand text */
+.loader-text {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.brand-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: #fff;
+    opacity: 0.9;
+}
+
+/* Loading dots */
+.loading-dots {
+    display: flex;
+    gap: 6px;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    background: rgba(167, 139, 250, 0.8);
+    border-radius: 50%;
+    animation: dotPulse 1.4s ease-in-out infinite;
+}
+
+.dot:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes dotPulse {
+
+    0%,
+    80%,
+    100% {
+        transform: scale(0.8);
+        opacity: 0.4;
+    }
+
+    40% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
+
+/* Fade out */
+.andromeda-loader.fade-out {
+    animation: fadeOut 0.5s ease-out forwards;
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}

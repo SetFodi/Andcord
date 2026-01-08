@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
+import AndromedaLoader from '@/components/ui/AndromedaLoader';
 import '../auth.css';
 
 // Professional SVG icons
@@ -197,7 +198,7 @@ function LoginForm() {
 
 export default function LoginPage() {
     return (
-        <Suspense fallback={<div className="app-loading"><div className="spinner" /></div>}>
+        <Suspense fallback={<AndromedaLoader message="Loading..." />}>
             <LoginForm />
         </Suspense>
     );

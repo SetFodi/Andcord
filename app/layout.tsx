@@ -1,14 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Outfit } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/hooks/useAuth";
-
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import InitialLoader from "@/components/providers/InitialLoader";
 
-const outfit = Outfit({
+const inter = Inter({
   variable: "--font-primary",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -36,11 +36,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={outfit.variable} suppressHydrationWarning>
+      <body className={inter.variable} suppressHydrationWarning>
         <ThemeProvider>
-          <AuthProvider>
-            {children}
-          </AuthProvider>
+          <InitialLoader>
+            <AuthProvider>
+              {children}
+            </AuthProvider>
+          </InitialLoader>
         </ThemeProvider>
       </body>
     </html>
