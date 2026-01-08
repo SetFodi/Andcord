@@ -193,7 +193,10 @@ export default function FeedPage() {
     return (
         <>
             <header className="page-header">
-                <p className="page-greeting">{getGreeting()}, {profile?.display_name?.split(' ')[0] || 'Explorer'}</p>
+                <h1 className="page-greeting">
+                    <span className="greeting-text">{getGreeting()}, </span>
+                    <span className="greeting-name">{profile?.display_name?.split(' ')[0] || 'Explorer'}</span>
+                </h1>
                 <UserSearch />
             </header>
 

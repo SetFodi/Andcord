@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -158,8 +159,13 @@ export default function Sidebar() {
                     <Link href="/profile" className="user-profile">
                         <div className="avatar avatar-md">
                             {profile?.avatar_url ? (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img src={profile.avatar_url} alt={profile.display_name || 'Avatar'} />
+                                <Image
+                                    src={profile.avatar_url}
+                                    alt={profile.display_name || 'Avatar'}
+                                    width={40}
+                                    height={40}
+                                    className="avatar-image"
+                                />
                             ) : (
                                 <span>{profile?.display_name?.[0]?.toUpperCase() || '?'}</span>
                             )}

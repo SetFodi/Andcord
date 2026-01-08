@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { createClient } from '@/lib/supabase/client';
 import { formatRelativeTime } from '@/lib/utils/formatDate';
@@ -223,8 +224,13 @@ export default function PostCard({ post, onUpdate }: PostCardProps) {
                     <Link href={`/user/${author?.id}`}>
                         <div className="avatar avatar-md">
                             {author?.avatar_url ? (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img src={author.avatar_url} alt={author.display_name || 'Avatar'} />
+                                <Image
+                                    src={author.avatar_url}
+                                    alt={author.display_name || 'Avatar'}
+                                    width={44}
+                                    height={44}
+                                    className="avatar-image"
+                                />
                             ) : (
                                 <span>{author?.display_name?.[0]?.toUpperCase() || '?'}</span>
                             )}
@@ -387,8 +393,13 @@ export default function PostCard({ post, onUpdate }: PostCardProps) {
                                 <div key={comment.id} className="comment">
                                     <Link href={`/user/${comment.author?.id}`} className="avatar avatar-sm">
                                         {comment.author?.avatar_url ? (
-                                            // eslint-disable-next-line @next/next/no-img-element
-                                            <img src={comment.author.avatar_url} alt="" />
+                                            <Image
+                                                src={comment.author.avatar_url}
+                                                alt={comment.author.display_name || 'Commenter'}
+                                                width={32}
+                                                height={32}
+                                                className="avatar-image"
+                                            />
                                         ) : (
                                             <span>{comment.author?.display_name?.[0]?.toUpperCase() || '?'}</span>
                                         )}
@@ -410,8 +421,13 @@ export default function PostCard({ post, onUpdate }: PostCardProps) {
                     <form className="comment-form" onSubmit={handleComment}>
                         <div className="avatar avatar-sm">
                             {profile?.avatar_url ? (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img src={profile.avatar_url} alt="" />
+                                <Image
+                                    src={profile.avatar_url}
+                                    alt={profile.display_name || 'Your avatar'}
+                                    width={32}
+                                    height={32}
+                                    className="avatar-image"
+                                />
                             ) : (
                                 <span>{profile?.display_name?.[0]?.toUpperCase() || '?'}</span>
                             )}

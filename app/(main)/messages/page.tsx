@@ -218,12 +218,12 @@ export default function MessagesPage() {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    // GIF Search Logic
+    // GIF Search Logic - uses server proxy to protect API key
     const searchGifs = useCallback(async (query: string = '') => {
         try {
             const endpoint = query
-                ? `https://tenor.googleapis.com/v2/search?q=${query}&key=LIVDSRZULEUB&limit=12`
-                : `https://tenor.googleapis.com/v2/featured?key=LIVDSRZULEUB&limit=12`;
+                ? `/api/gif?q=${encodeURIComponent(query)}&limit=12`
+                : `/api/gif?limit=12`;
 
             const res = await fetch(endpoint);
             const data = await res.json();
