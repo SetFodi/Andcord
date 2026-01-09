@@ -854,3 +854,119 @@
     font-size: 0.85rem;
     color: rgba(255, 255, 255, 0.4);
 }
+
+/* ========================================
+   CLICKABLE MEMBER COUNT BUTTON
+   ======================================== */
+
+.group-member-count-btn {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.4);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    margin: -4px -8px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    text-align: left;
+}
+
+.group-member-count-btn:hover {
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* ========================================
+   MEMBERS MODAL
+   ======================================== */
+
+.modal-members {
+    max-width: 420px;
+}
+
+.members-list {
+    max-height: 360px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.member-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.03);
+    transition: background 0.15s;
+}
+
+.member-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.member-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.member-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.member-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.member-name {
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.member-username {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.8rem;
+}
+
+.member-badge {
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.owner-badge {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.2));
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    color: #fbbf24;
+}
+
+.admin-badge {
+    background: rgba(124, 58, 237, 0.2);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    color: #a78bfa;
+}

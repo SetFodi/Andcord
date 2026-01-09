@@ -4,233 +4,405 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import "./landing.css";
 
-// 3D Card Component for "Spotlight" effect
-function SpotlightCard({
-  children,
-  className = "",
-  size = "normal"
+// Floating Orb Component - the "soul" of the page
+function AuroraOrb() {
+  return (
+    <div className="aurora-container">
+      <div className="aurora-orb orb-1" />
+      <div className="aurora-orb orb-2" />
+      <div className="aurora-orb orb-3" />
+    </div>
+  );
+}
+
+// Animated Message Preview
+function LiveChat() {
+  const messages = [
+    { id: 1, user: "Maya", avatar: "M", text: "anyone down for raids tonight?", time: "now", self: false },
+    { id: 2, user: "You", avatar: "Y", text: "count me in! 🎮", time: "now", self: true },
+    { id: 3, user: "Alex", avatar: "A", text: "let's gooo", time: "now", self: false },
+  ];
+
+  return (
+    <div className="live-chat-demo">
+      <div className="chat-window">
+        <div className="chat-header">
+          <div className="chat-channel">
+            <span className="channel-hash">#</span>
+            <span>gaming-lounge</span>
+          </div>
+          <div className="chat-status">
+            <span className="status-dot" />
+            <span>24 online</span>
+          </div>
+        </div>
+        <div className="chat-messages">
+          {messages.map((msg, i) => (
+            <div
+              key={msg.id}
+              className={`chat-message ${msg.self ? 'self' : ''}`}
+              style={{ animationDelay: `${i * 0.15 + 0.5}s` }}
+            >
+              <div className="msg-avatar">{msg.avatar}</div>
+              <div className="msg-content">
+                <span className="msg-user">{msg.user}</span>
+                <p className="msg-text">{msg.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="chat-input-demo">
+          <span className="typing-indicator">
+            <span />
+            <span />
+            <span />
+          </span>
+          <span className="typing-text">Someone is typing...</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Feature Card with Magnetic Effect
+function FeatureCard({
+  icon,
+  title,
+  description,
+  accent,
+  delay = 0
 }: {
-  children: React.ReactNode;
-  className?: string;
-  size?: "normal" | "wide" | "tall" | "large";
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  accent: string;
+  delay?: number;
 }) {
-  const divRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [opacity, setOpacity] = useState(0);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [transform, setTransform] = useState('');
+  const [glowPos, setGlowPos] = useState({ x: 50, y: 50 });
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!divRef.current) return;
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = (y - centerY) / 20;
+    const rotateY = (centerX - x) / 20;
 
-    const rect = divRef.current.getBoundingClientRect();
-    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    setTransform(`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`);
+    setGlowPos({ x: (x / rect.width) * 100, y: (y / rect.height) * 100 });
   };
 
-  const handleMouseEnter = () => setOpacity(1);
-  const handleMouseLeave = () => setOpacity(0);
+  const handleMouseLeave = () => {
+    setTransform('');
+  };
 
   return (
     <div
-      ref={divRef}
+      ref={cardRef}
+      className="feature-card"
       onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`spotlight-card ${size} ${className}`}
+      style={{
+        transform,
+        animationDelay: `${delay}s`,
+        '--accent': accent,
+        '--glow-x': `${glowPos.x}%`,
+        '--glow-y': `${glowPos.y}%`,
+      } as React.CSSProperties}
     >
-      <div
-        className="spotlight-overlay"
-        style={{
-          opacity,
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(168, 85, 247, 0.15), transparent 40%)`,
-        }}
-      />
-      <div className="card-content">{children}</div>
+      <div className="card-glow" />
+      <div className="card-icon">{icon}</div>
+      <h3>{title}</h3>
+      <p>{description}</p>
     </div>
   );
 }
 
-// Mock Interface Component
-function AppMockup() {
+// Stats Counter
+function AnimatedNumber({ value, suffix = "" }: { value: string; suffix?: string }) {
   return (
-    <div className="app-mockup">
-      <div className="mockup-sidebar">
-        <div className="mockup-server active" />
-        <div className="mockup-server" />
-        <div className="mockup-server" />
-      </div>
-      <div className="mockup-channel-list">
-        <div className="mockup-header-sm" />
-        <div className="mockup-channel active" />
-        <div className="mockup-channel" />
-        <div className="mockup-channel" />
-      </div>
-      <div className="mockup-chat">
-        <div className="mockup-header-lg" />
-        <div className="mockup-messages">
-          <div className="mockup-msg msg-1" />
-          <div className="mockup-msg msg-2" />
-          <div className="mockup-msg msg-3 self" />
-        </div>
-        <div className="mockup-input" />
-      </div>
-    </div>
+    <span className="stat-number">
+      {value}<span className="stat-suffix">{suffix}</span>
+    </span>
   );
 }
-
-// Icons
-const MessageIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
-  </svg>
-);
-
-const BoltIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" />
-  </svg>
-);
-
-const GlobeIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="10" />
-    <path d="M2 12h20" />
-    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-  </svg>
-);
-
-const ShieldIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-  </svg>
-);
 
 export default function LandingPage() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="landing-page">
-      {/* Background Grid */}
-      <div className="perspective-grid-container">
-        <div className="perspective-grid" />
-        <div className="grid-fade" />
-      </div>
+      <AuroraOrb />
 
       {/* Navigation */}
-      <nav className="glass-nav">
-        <div className="nav-content">
-          <div className="nav-logo">
-            <span className="logo-spark">✦</span>
-            <span className="logo-text">Andcord</span>
+      <nav className={`nav-glass ${scrolled ? 'scrolled' : ''}`}>
+        <div className="nav-inner">
+          <Link href="/" className="nav-brand">
+            <div className="brand-icon">
+              <svg viewBox="0 0 32 32" fill="none">
+                <path d="M16 4L28 10V22L16 28L4 22V10L16 4Z" fill="url(#brand-grad)" />
+                <path d="M16 12L22 15V21L16 24L10 21V15L16 12Z" fill="white" fillOpacity="0.9" />
+                <defs>
+                  <linearGradient id="brand-grad" x1="4" y1="4" x2="28" y2="28">
+                    <stop stopColor="#a855f7" />
+                    <stop offset="1" stopColor="#6366f1" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <span className="brand-text">Andcord</span>
+          </Link>
+
+          <div className="nav-center">
+            <a href="#features" className="nav-link">Features</a>
+            <a href="#community" className="nav-link">Community</a>
+            <a href="#pricing" className="nav-link">Pricing</a>
           </div>
-          <div className="nav-links">
-            <Link href="/login" className="nav-item">Log In</Link>
-            <Link href="/register" className="nav-btn-primary">
+
+          <div className="nav-actions">
+            <Link href="/login" className="btn-text">Sign In</Link>
+            <Link href="/register" className="btn-primary">
               Get Started
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
             </Link>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="hero-section">
-        <div className="hero-container">
-          <div className="hero-text">
-            <div className="pill-badge">
-              <span className="pill-dot" />
-              <span>v2.0 is now live</span>
-            </div>
-            <h1 className="hero-headline">
-              Where the world
-              <br />
-              <span className="text-gradient">hangs out</span>
-            </h1>
-            <p className="hero-sub">
-              Experience the next generation of community.
-              Crystal clear voice, zero-latency video, and chat that actually works.
-            </p>
-            <div className="hero-actions">
-              <Link href="/register" className="btn-glow">
-                Start for free
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </Link>
-              <Link href="/login" className="btn-ghost">
-                Open in browser
-              </Link>
-            </div>
-
-            {/* Social Proof */}
-            <div className="social-proof">
-              <div className="avatars">
-                {[...Array(4)].map((_, i) => (
-                  <div key={i} className="avatar-stack" style={{ zIndex: 4 - i }} />
-                ))}
-              </div>
-              <p>Trusted by 10,000+ communities</p>
-            </div>
+      <section className="hero">
+        <div className="hero-content">
+          <div className="hero-badge">
+            <span className="badge-pulse" />
+            <span>Now with HD Voice & Video</span>
           </div>
 
-          <div className="hero-visual-3d">
-            <div className="floating-card main-interface">
-              <AppMockup />
+          <h1 className="hero-title">
+            Your Place to
+            <span className="title-highlight">
+              <span className="highlight-text">Connect</span>
+              <svg className="highlight-underline" viewBox="0 0 200 12" preserveAspectRatio="none">
+                <path d="M0 9C50 9 50 3 100 3C150 3 150 9 200 9" stroke="url(#underline-grad)" strokeWidth="4" fill="none" strokeLinecap="round" />
+                <defs>
+                  <linearGradient id="underline-grad" x1="0" y1="0" x2="200" y2="0">
+                    <stop stopColor="#a855f7" />
+                    <stop offset="1" stopColor="#06b6d4" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </span>
+          </h1>
+
+          <p className="hero-subtitle">
+            Build communities, share moments, and stay close with friends.
+            Voice, video, and text — reimagined for the way you live.
+          </p>
+
+          <div className="hero-cta">
+            <Link href="/register" className="cta-main">
+              <span>Start Your Community</span>
+              <div className="cta-shine" />
+            </Link>
+            <Link href="/login" className="cta-secondary">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+              <span>Watch Demo</span>
+            </Link>
+          </div>
+
+          <div className="hero-stats">
+            <div className="stat">
+              <AnimatedNumber value="50M" suffix="+" />
+              <span className="stat-label">Active Users</span>
             </div>
-            <div className="floating-card glass-panel-1" />
-            <div className="floating-card glass-panel-2" />
+            <div className="stat-divider" />
+            <div className="stat">
+              <AnimatedNumber value="2M" suffix="+" />
+              <span className="stat-label">Communities</span>
+            </div>
+            <div className="stat-divider" />
+            <div className="stat">
+              <AnimatedNumber value="99.9" suffix="%" />
+              <span className="stat-label">Uptime</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="hero-visual">
+          <LiveChat />
+          <div className="visual-decoration dec-1" />
+          <div className="visual-decoration dec-2" />
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="features" id="features">
+        <div className="section-header">
+          <span className="section-tag">Features</span>
+          <h2>Everything you need,<br /><span className="text-gradient">nothing you don&apos;t</span></h2>
+        </div>
+
+        <div className="features-grid">
+          <FeatureCard
+            icon={
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M12 18.5C15.5899 18.5 18.5 15.5899 18.5 12C18.5 8.41015 15.5899 5.5 12 5.5C8.41015 5.5 5.5 8.41015 5.5 12C5.5 15.5899 8.41015 18.5 12 18.5Z" />
+                <path d="M12 8V12L14.5 14.5" />
+                <path d="M12 2V4" /><path d="M12 20V22" />
+                <path d="M4 12H2" /><path d="M22 12H20" />
+              </svg>
+            }
+            title="Real-Time Everything"
+            description="Messages arrive instantly. Voice is crystal clear. Video is smooth. No lag, no waiting."
+            accent="#a855f7"
+            delay={0}
+          />
+          <FeatureCard
+            icon={
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M17 21V19C17 16.7909 15.2091 15 13 15H5C2.79086 15 1 16.7909 1 19V21" />
+                <path d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z" />
+                <path d="M23 21V19C22.9986 17.1771 21.765 15.5857 20 15.13" />
+                <path d="M16 3.13C17.7699 3.58317 19.0078 5.17799 19.0078 7.005C19.0078 8.83201 17.7699 10.4268 16 10.88" />
+              </svg>
+            }
+            title="Unlimited Communities"
+            description="Create spaces for gaming, learning, creating, or just hanging out. No limits."
+            accent="#06b6d4"
+            delay={0.1}
+          />
+          <FeatureCard
+            icon={
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" />
+                <path d="M8 14C8 14 9.5 16 12 16C14.5 16 16 14 16 14" />
+                <path d="M9 9H9.01" /><path d="M15 9H15.01" />
+              </svg>
+            }
+            title="Rich Reactions"
+            description="Express yourself with custom emojis, GIFs, stickers, and reactions."
+            accent="#f59e0b"
+            delay={0.2}
+          />
+          <FeatureCard
+            icon={
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M12 22S20 18 20 12V5L12 2L4 5V12C4 18 12 22 12 22Z" />
+                <path d="M9 12L11 14L15 10" />
+              </svg>
+            }
+            title="Private & Secure"
+            description="Your conversations stay yours. End-to-end encryption for peace of mind."
+            accent="#22c55e"
+            delay={0.3}
+          />
+        </div>
+      </section>
+
+      {/* Community Section */}
+      <section className="community-section" id="community">
+        <div className="community-content">
+          <span className="section-tag">Community</span>
+          <h2>Join millions of<br />communities worldwide</h2>
+          <p>From small friend groups to massive fan communities, Andcord brings people together around shared passions.</p>
+
+          <div className="community-avatars">
+            {[...Array(7)].map((_, i) => (
+              <div
+                key={i}
+                className="community-avatar"
+                style={{
+                  animationDelay: `${i * 0.1}s`,
+                  '--hue': `${i * 50}deg`
+                } as React.CSSProperties}
+              />
+            ))}
+            <div className="avatar-more">+50M</div>
+          </div>
+
+          <Link href="/register" className="btn-primary large">
+            Find Your Community
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+
+        <div className="community-visual">
+          <div className="floating-cards">
+            {['Gaming', 'Music', 'Art', 'Tech', 'Sports'].map((cat, i) => (
+              <div
+                key={cat}
+                className="floating-card"
+                style={{
+                  animationDelay: `${i * 0.2}s`,
+                  '--index': i
+                } as React.CSSProperties}
+              >
+                <span className="card-emoji">
+                  {['🎮', '🎵', '🎨', '💻', '⚽'][i]}
+                </span>
+                <span className="card-label">{cat}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Features Grid (Bento Box) */}
-      <section className="features-section">
-        <div className="section-header">
-          <h2>Built for <span className="text-white">everyone</span></h2>
-          <p>Whether you're a gaming, education, or art community, we have the tools you need.</p>
-        </div>
-
-        <div className="bento-grid">
-          {/* Main Feature - Wide */}
-          <SpotlightCard size="wide" className="feature-chat">
-            <div className="feature-badge"><MessageIcon /></div>
-            <h3>Real-time Chat Reimagined</h3>
-            <p>Threads, replies, and reactions that feel instant. No more loading spinners.</p>
-            <div className="mock-chat-bubble-container">
-              <div className="mock-bubble left">Hey! Did you see the update?</div>
-              <div className="mock-bubble right">Yeah, it looks insane! 🚀</div>
-            </div>
-          </SpotlightCard>
-
-          {/* Feature - Tall */}
-          <SpotlightCard size="tall" className="feature-voice">
-            <div className="feature-badge"><BoltIcon /></div>
-            <h3>Low Latency<br />Voice</h3>
-            <p>Talk as if you're in the same room. Noise suppression included.</p>
-            <div className="visual-equalizer">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="eq-bar" style={{ animationDelay: `${i * 0.1}s` }} />
-              ))}
-            </div>
-          </SpotlightCard>
-
-          {/* Feature - Normal */}
-          <SpotlightCard size="normal" className="feature-global">
-            <div className="feature-badge"><GlobeIcon /></div>
-            <h3>Global Servers</h3>
-            <p>Connect from anywhere with our edge network.</p>
-          </SpotlightCard>
-
-          {/* Feature - Normal */}
-          <SpotlightCard size="normal" className="feature-secure">
-            <div className="feature-badge"><ShieldIcon /></div>
-            <h3>Private & Secure</h3>
-            <p>Your data stays yours. End-to-end encryption.</p>
-          </SpotlightCard>
+      {/* CTA Section */}
+      <section className="cta-section">
+        <div className="cta-bg" />
+        <div className="cta-content">
+          <h2>Ready to dive in?</h2>
+          <p>Join millions of users building communities on Andcord. It&apos;s free to start.</p>
+          <Link href="/register" className="cta-main white">
+            <span>Create Your Account</span>
+            <div className="cta-shine" />
+          </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="footer-minimal">
-        <div className="footer-content">
-          <div className="footer-logo">
-            <span className="logo-text-muted">Andcord</span>
-            <span className="copyright">© 2026</span>
+      <footer className="footer">
+        <div className="footer-inner">
+          <div className="footer-brand">
+            <div className="brand-icon small">
+              <svg viewBox="0 0 32 32" fill="none">
+                <path d="M16 4L28 10V22L16 28L4 22V10L16 4Z" fill="url(#footer-grad)" />
+                <path d="M16 12L22 15V21L16 24L10 21V15L16 12Z" fill="white" fillOpacity="0.9" />
+                <defs>
+                  <linearGradient id="footer-grad" x1="4" y1="4" x2="28" y2="28">
+                    <stop stopColor="#a855f7" />
+                    <stop offset="1" stopColor="#6366f1" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <span>Andcord</span>
+          </div>
+
+          <div className="footer-links">
+            <a href="#">About</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Support</a>
+          </div>
+
+          <div className="footer-copy">
+            <span>© 2026 Andcord. All rights reserved.</span>
           </div>
         </div>
       </footer>

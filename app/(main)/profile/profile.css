@@ -110,6 +110,16 @@
 
 .avatar-wrapper {
     position: relative;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+/* Ensure button resets */
+button.profile-avatar {
+    appearance: none;
+    -webkit-appearance: none;
+    background-clip: padding-box;
 }
 
 .avatar-2xl {
@@ -136,15 +146,18 @@
 .profile-avatar {
     width: 160px;
     height: 160px;
-    border-radius: 50%;
+    border-radius: 50% !important;
     padding: 0;
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-    border: 4px solid rgba(10, 10, 15, 1);
+    border: 4px solid rgba(10, 10, 15, 1) !important;
     cursor: pointer;
     position: relative;
     overflow: hidden;
     transition: transform 0.2s;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .profile-avatar:hover {
@@ -153,9 +166,11 @@
 
 /* Force avatar content to fill container - override global .avatar styles */
 .profile-page .profile-avatar .avatar,
-.profile-page .profile-avatar .avatar-2xl,
+.profile-page .profile-avatar .avatar.avatar-2xl,
 .profile-page .profile-avatar > .avatar,
-.profile-page .profile-avatar > div {
+.profile-page .profile-avatar > div,
+.profile-page .avatar-wrapper .avatar,
+.profile-page button.profile-avatar .avatar {
     width: 100% !important;
     height: 100% !important;
     min-width: 100% !important;
@@ -170,17 +185,21 @@
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    font-size: 3.5rem !important;
+    color: rgba(255, 255, 255, 0.8) !important;
 }
 
 .profile-page .profile-avatar .avatar img,
 .profile-page .profile-avatar .avatar-2xl img,
-.profile-page .profile-avatar img {
+.profile-page .profile-avatar img,
+.profile-page button.profile-avatar img {
     width: 100% !important;
     height: 100% !important;
     min-width: 100% !important;
     min-height: 100% !important;
     object-fit: cover !important;
     border-radius: 50% !important;
+    display: block !important;
 }
 
 .avatar-overlay {

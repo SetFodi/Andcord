@@ -80,6 +80,7 @@ export default function GroupsPage() {
     const [showDropdown, setShowDropdown] = useState(false);
     const [showInviteModal, setShowInviteModal] = useState(false);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [showMembersModal, setShowMembersModal] = useState(false);
     const [friends, setFriends] = useState<Profile[]>([]);
     const [inviteSearch, setInviteSearch] = useState('');
     const [inviting, setInviting] = useState<string | null>(null);
@@ -465,9 +466,12 @@ export default function GroupsPage() {
                             </div>
                             <div className="group-details">
                                 <span className="group-title">{activeGroup.name}</span>
-                                <span className="group-member-count">
+                                <button
+                                    className="group-member-count-btn"
+                                    onClick={() => setShowMembersModal(true)}
+                                >
                                     {activeGroup.member_count} {activeGroup.member_count === 1 ? 'member' : 'members'}
-                                </span>
+                                </button>
                             </div>
                             <div className="group-actions" ref={dropdownRef}>
                                 <button
@@ -711,6 +715,52 @@ export default function GroupsPage() {
                                 onClick={handleDeleteGroup}
                             >
                                 Delete Group
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Members Modal */}
+            {showMembersModal && activeGroup && (
+                <div className="modal-backdrop" onClick={() => setShowMembersModal(false)}>
+                    <div className="modal-glass-card modal-members" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="modal-title">Group Members</h3>
+                        <p className="modal-subtitle">{activeGroup.member_count} {activeGroup.member_count === 1 ? 'member' : 'members'}</p>
+
+                        <div className="members-list">
+                            {activeGroup.members?.map((member) => (
+                                <div key={member.user_id} className="member-item">
+                                    <div className="member-avatar">
+                                        {member.user?.avatar_url ? (
+                                            // eslint-disable-next-line @next/next/no-img-element
+                                            <img src={member.user.avatar_url} alt="" />
+                                        ) : (
+                                            <span>{member.user?.display_name?.[0]?.toUpperCase() || '?'}</span>
+                                        )}
+                                    </div>
+                                    <div className="member-info">
+                                        <span className="member-name">{member.user?.display_name}</span>
+                                        <span className="member-username">@{member.user?.username}</span>
+                                    </div>
+                                    {member.role === 'owner' && (
+                                        <span className="member-badge owner-badge">Owner</span>
+                                    )}
+                                    {member.role === 'admin' && (
+                                        <span className="member-badge admin-badge">Admin</span>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="modal-actions">
+                            <button
+                                type="button"
+                                className="btn-modal-ghost"
+                                onClick={() => setShowMembersModal(false)}
+                                style={{ flex: 1 }}
+                            >
+                                Close
                             </button>
                         </div>
                     </div>
