@@ -1,12 +1,20 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { uploadFile, validateFile } from '@/lib/utils/uploadFile';
 import ImageCropper from '@/components/cropper/ImageCropper';
 import './profile.css';
 
+const BackIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M19 12H5M12 19l-7-7 7-7" />
+    </svg>
+);
+
 export default function ProfilePage() {
+    const router = useRouter();
     const { profile, updateProfile } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const [displayName, setDisplayName] = useState(profile?.display_name || '');
@@ -140,6 +148,16 @@ export default function ProfilePage() {
 
     return (
         <div className="profile-page">
+            {/* Header with Back Button */}
+            <header className="profile-page-header">
+                <button className="back-btn" onClick={() => router.back()}>
+                    <BackIcon />
+                </button>
+                <div className="header-info">
+                    <h1 className="page-title">Profile</h1>
+                </div>
+            </header>
+
             <div className="profile-container">
                 {/* Image Cropper Modal */}
                 {cropperImage && (

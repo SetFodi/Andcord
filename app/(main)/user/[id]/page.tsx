@@ -334,11 +334,13 @@ export default function UserProfilePage() {
     if (loading) {
         return (
             <>
-                <header className="page-header">
-                    <button className="btn btn-ghost btn-icon back-btn" onClick={() => router.back()}>
+                <header className="profile-page-header">
+                    <button className="back-btn" onClick={() => router.back()}>
                         <BackIcon />
                     </button>
-                    <h1 className="page-title">Profile</h1>
+                    <div className="header-info">
+                        <h1 className="page-title">Profile</h1>
+                    </div>
                 </header>
                 <div className="page-content">
                     <div className="user-profile-skeleton">
@@ -357,11 +359,13 @@ export default function UserProfilePage() {
     if (!userProfile) {
         return (
             <>
-                <header className="page-header">
-                    <button className="btn btn-ghost btn-icon back-btn" onClick={() => router.back()}>
+                <header className="profile-page-header">
+                    <button className="back-btn" onClick={() => router.back()}>
                         <BackIcon />
                     </button>
-                    <h1 className="page-title">Profile</h1>
+                    <div className="header-info">
+                        <h1 className="page-title">Profile</h1>
+                    </div>
                 </header>
                 <div className="page-content">
                     <div className="empty-state">
@@ -415,12 +419,12 @@ export default function UserProfilePage() {
     return (
         <>
             <header className="profile-page-header">
-                <button className="btn btn-ghost btn-icon back-btn" onClick={() => router.back()}>
+                <button className="back-btn" onClick={() => router.back()}>
                     <BackIcon />
                 </button>
                 <div className="header-info">
                     <h1 className="page-title">{userProfile.display_name}</h1>
-                    <span className="post-count">{stats.posts} posts</span>
+                    <span className="post-count">{stats.posts} {stats.posts === 1 ? 'post' : 'posts'}</span>
                 </div>
             </header>
 
