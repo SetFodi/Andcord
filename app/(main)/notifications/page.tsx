@@ -71,9 +71,69 @@ const DefaultBellIcon = () => (
 export default function NotificationsPage() {
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [loading, setLoading] = useState(true);
+    const [processingInvite, setProcessingInvite] = useState<string | null>(null);
 
     const { profile } = useAuth();
     const supabase = createClient();
+
+    // Accept group invite
+    const handleAcceptInvite = async (notification: Notification, e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!profile || processingInvite) return;
+
+        const data = notification.data as Record<string, string>;
+        setProcessingInvite(notification.id);
+
+        try {
+            // Add user to group
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const { error } = await (supabase as any).from('group_members').insert({
+                group_id: data.group_id,
+                user_id: profile.id,
+                role: 'member',
+            });
+
+            if (error) throw error;
+
+            // Delete the notification
+            await supabase
+                .from('notifications')
+                .delete()
+                .eq('id', notification.id);
+
+            // Remove from local state
+            setNotifications(prev => prev.filter(n => n.id !== notification.id));
+        } catch (error) {
+            console.error('Error accepting invite:', error);
+        } finally {
+            setProcessingInvite(null);
+        }
+    };
+
+    // Decline group invite
+    const handleDeclineInvite = async (notification: Notification, e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!profile || processingInvite) return;
+
+        setProcessingInvite(notification.id);
+
+        try {
+            // Just delete the notification
+            await supabase
+                .from('notifications')
+                .delete()
+                .eq('id', notification.id);
+
+            // Remove from local state
+            setNotifications(prev => prev.filter(n => n.id !== notification.id));
+        } catch (error) {
+            console.error('Error declining invite:', error);
+        } finally {
+            setProcessingInvite(null);
+        }
+    };
 
     useEffect(() => {
         const fetchNotifications = async () => {
@@ -245,6 +305,9 @@ export default function NotificationsPage() {
                             <AnimatePresence>
                                 {notifications.map((notification, index) => {
                                     const content = getNotificationContent(notification);
+                                    const isGroupInvite = notification.type === 'group_invite';
+                                    const isProcessing = processingInvite === notification.id;
+
                                     return (
                                         <motion.div
                                             key={notification.id}
@@ -257,24 +320,55 @@ export default function NotificationsPage() {
                                                 damping: 25,
                                                 delay: index * 0.04,
                                             }}
-                                            whileHover={{ x: 4 }}
+                                            whileHover={{ x: isGroupInvite ? 0 : 4 }}
                                         >
-                                            <Link
-                                                href={content.link}
-                                                className={`notification-item ${!notification.read ? 'unread' : ''}`}
-                                            >
-                                                <div className={`notification-icon ${content.iconClass}`}>{content.icon}</div>
-                                                <div className="notification-content">
-                                                    <p className="notification-title">{content.title}</p>
-                                                    {content.description && (
-                                                        <p className="notification-description">{content.description}</p>
-                                                    )}
-                                                    <span className="notification-time">
-                                                        {formatRelativeTime(notification.created_at)}
-                                                    </span>
+                                            {isGroupInvite ? (
+                                                <div className={`notification-item notification-invite ${!notification.read ? 'unread' : ''}`}>
+                                                    <div className={`notification-icon ${content.iconClass}`}>{content.icon}</div>
+                                                    <div className="notification-content">
+                                                        <p className="notification-title">{content.title}</p>
+                                                        <p className="notification-inviter">
+                                                            from {(notification.data as Record<string, string>).inviter_name}
+                                                        </p>
+                                                        <span className="notification-time">
+                                                            {formatRelativeTime(notification.created_at)}
+                                                        </span>
+                                                        <div className="invite-actions">
+                                                            <button
+                                                                className="btn-invite-accept"
+                                                                onClick={(e) => handleAcceptInvite(notification, e)}
+                                                                disabled={isProcessing}
+                                                            >
+                                                                {isProcessing ? '...' : 'Accept'}
+                                                            </button>
+                                                            <button
+                                                                className="btn-invite-decline"
+                                                                onClick={(e) => handleDeclineInvite(notification, e)}
+                                                                disabled={isProcessing}
+                                                            >
+                                                                Decline
+                                                            </button>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                {!notification.read && <div className="notification-dot" />}
-                                            </Link>
+                                            ) : (
+                                                <Link
+                                                    href={content.link}
+                                                    className={`notification-item ${!notification.read ? 'unread' : ''}`}
+                                                >
+                                                    <div className={`notification-icon ${content.iconClass}`}>{content.icon}</div>
+                                                    <div className="notification-content">
+                                                        <p className="notification-title">{content.title}</p>
+                                                        {content.description && (
+                                                            <p className="notification-description">{content.description}</p>
+                                                        )}
+                                                        <span className="notification-time">
+                                                            {formatRelativeTime(notification.created_at)}
+                                                        </span>
+                                                    </div>
+                                                    {!notification.read && <div className="notification-dot" />}
+                                                </Link>
+                                            )}
                                         </motion.div>
                                     );
                                 })}

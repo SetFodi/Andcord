@@ -16,10 +16,27 @@ const PlusIcon = () => (
     </svg>
 );
 
-const SettingsIcon = () => (
+const MoreIcon = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="3" />
-        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+        <circle cx="12" cy="12" r="1" />
+        <circle cx="19" cy="12" r="1" />
+        <circle cx="5" cy="12" r="1" />
+    </svg>
+);
+
+const UserPlusIcon = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+        <circle cx="8.5" cy="7" r="4" />
+        <line x1="20" y1="8" x2="20" y2="14" />
+        <line x1="23" y1="11" x2="17" y2="11" />
+    </svg>
+);
+
+const TrashIcon = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="3 6 5 6 21 6" />
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
     </svg>
 );
 
@@ -32,17 +49,16 @@ const GroupIcon = () => (
     </svg>
 );
 
-const CloseIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18" />
-        <line x1="6" y1="6" x2="18" y2="18" />
+const SendIcon = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
     </svg>
 );
 
-const SendIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="22" y1="2" x2="11" y2="13" />
-        <polygon points="22 2 15 22 11 13 2 9 22 2" />
+const SearchIcon = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.35-4.35" />
     </svg>
 );
 
@@ -61,10 +77,20 @@ export default function GroupsPage() {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [newGroupName, setNewGroupName] = useState('');
     const [creating, setCreating] = useState(false);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [showInviteModal, setShowInviteModal] = useState(false);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [friends, setFriends] = useState<Profile[]>([]);
+    const [inviteSearch, setInviteSearch] = useState('');
+    const [inviting, setInviting] = useState<string | null>(null);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const dropdownRef = useRef<HTMLDivElement>(null);
     const { profile } = useAuth();
     const supabase = createClient();
+
+    // Check if current user is the group owner
+    const isOwner = activeGroup?.owner_id === profile?.id;
 
     const scrollToBottom = useCallback(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -248,6 +274,122 @@ export default function GroupsPage() {
         }
     };
 
+    // Fetch friends for invite modal
+    const fetchFriends = useCallback(async () => {
+        if (!profile || !activeGroup) return;
+
+        // Get accepted friendships
+        const { data: friendships } = await supabase
+            .from('friendships')
+            .select('requester_id, addressee_id')
+            .or(`requester_id.eq.${profile.id},addressee_id.eq.${profile.id}`)
+            .eq('status', 'accepted');
+
+        if (!friendships || friendships.length === 0) {
+            setFriends([]);
+            return;
+        }
+
+        // Get friend IDs (exclude self)
+        const friendIds = friendships.map(f =>
+            f.requester_id === profile.id ? f.addressee_id : f.requester_id
+        );
+
+        // Get existing group member IDs
+        const existingMemberIds = activeGroup.members?.map(m => m.user_id) || [];
+
+        // Filter out friends who are already members
+        const eligibleFriendIds = friendIds.filter(id => !existingMemberIds.includes(id));
+
+        if (eligibleFriendIds.length === 0) {
+            setFriends([]);
+            return;
+        }
+
+        // Fetch friend profiles
+        const { data: profiles } = await supabase
+            .from('profiles')
+            .select('*')
+            .in('id', eligibleFriendIds);
+
+        setFriends(profiles || []);
+    }, [profile, activeGroup, supabase]);
+
+    // Invite friend to group (sends notification, doesn't add directly)
+    const handleInviteFriend = async (friendId: string) => {
+        if (!activeGroup || !profile || inviting) return;
+
+        setInviting(friendId);
+        try {
+            // Send group invite notification
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const { error } = await (supabase as any).from('notifications').insert({
+                user_id: friendId,
+                type: 'group_invite',
+                data: {
+                    group_id: activeGroup.id,
+                    group_name: activeGroup.name,
+                    inviter_id: profile.id,
+                    inviter_name: profile.display_name,
+                },
+            });
+
+            if (error) throw error;
+
+            // Remove invited friend from list (they've been invited)
+            setFriends(prev => prev.filter(f => f.id !== friendId));
+        } catch (error) {
+            console.error('Error sending invite:', error);
+        } finally {
+            setInviting(null);
+        }
+    };
+
+    // Delete group (owner only)
+    const handleDeleteGroup = async () => {
+        if (!activeGroup || !isOwner) return;
+
+        try {
+            const { error } = await supabase
+                .from('groups')
+                .delete()
+                .eq('id', activeGroup.id);
+
+            if (error) throw error;
+
+            setShowDeleteConfirm(false);
+            setActiveGroup(null);
+            setShowDropdown(false);
+            fetchGroups();
+        } catch (error) {
+            console.error('Error deleting group:', error);
+        }
+    };
+
+    // Open invite modal
+    const openInviteModal = () => {
+        setShowDropdown(false);
+        setShowInviteModal(true);
+        fetchFriends();
+    };
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+                setShowDropdown(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    // Filter friends by search
+    const filteredFriends = friends.filter(f =>
+        f.display_name?.toLowerCase().includes(inviteSearch.toLowerCase()) ||
+        f.username?.toLowerCase().includes(inviteSearch.toLowerCase())
+    );
+
     return (
         <div className="groups-layout">
             {/* Groups Sidebar */}
@@ -324,12 +466,38 @@ export default function GroupsPage() {
                             <div className="group-details">
                                 <span className="group-title">{activeGroup.name}</span>
                                 <span className="group-member-count">
-                                    {activeGroup.member_count} members
+                                    {activeGroup.member_count} {activeGroup.member_count === 1 ? 'member' : 'members'}
                                 </span>
                             </div>
-                            <button className="btn btn-ghost btn-icon" title="Group settings">
-                                <SettingsIcon />
-                            </button>
+                            <div className="group-actions" ref={dropdownRef}>
+                                <button
+                                    className="btn-group-menu"
+                                    onClick={() => setShowDropdown(!showDropdown)}
+                                    title="Group options"
+                                >
+                                    <MoreIcon />
+                                </button>
+                                {showDropdown && (
+                                    <div className="group-dropdown">
+                                        <button className="dropdown-item" onClick={openInviteModal}>
+                                            <UserPlusIcon />
+                                            <span>Invite Friends</span>
+                                        </button>
+                                        {isOwner && (
+                                            <button
+                                                className="dropdown-item dropdown-item-danger"
+                                                onClick={() => {
+                                                    setShowDropdown(false);
+                                                    setShowDeleteConfirm(true);
+                                                }}
+                                            >
+                                                <TrashIcon />
+                                                <span>Delete Group</span>
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                         </header>
 
                         <div className="group-messages-container">
@@ -379,10 +547,10 @@ export default function GroupsPage() {
                             />
                             <button
                                 type="submit"
-                                className="btn btn-primary btn-icon"
+                                className="btn-send"
                                 disabled={!newMessage.trim() || sending}
                             >
-                                {sending ? '...' : <SendIcon />}
+                                <SendIcon />
                             </button>
                         </form>
                     </>
@@ -444,6 +612,107 @@ export default function GroupsPage() {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Invite Friends Modal */}
+            {showInviteModal && (
+                <div className="modal-backdrop" onClick={() => setShowInviteModal(false)}>
+                    <div className="modal-glass-card modal-invite" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="modal-title">Invite Friends</h3>
+                        <p className="modal-subtitle">Add friends to {activeGroup?.name}</p>
+
+                        <div className="invite-search-box">
+                            <SearchIcon />
+                            <input
+                                type="text"
+                                className="invite-search-input"
+                                placeholder="Search friends..."
+                                value={inviteSearch}
+                                onChange={(e) => setInviteSearch(e.target.value)}
+                            />
+                        </div>
+
+                        <div className="invite-friends-list">
+                            {filteredFriends.length === 0 ? (
+                                <p className="empty-friends-text">
+                                    {friends.length === 0
+                                        ? 'No friends available to invite'
+                                        : 'No friends match your search'}
+                                </p>
+                            ) : (
+                                filteredFriends.map((friend) => (
+                                    <div key={friend.id} className="invite-friend-item">
+                                        <div className="invite-friend-avatar">
+                                            {friend.avatar_url ? (
+                                                // eslint-disable-next-line @next/next/no-img-element
+                                                <img src={friend.avatar_url} alt="" />
+                                            ) : (
+                                                <span>{friend.display_name?.[0]?.toUpperCase() || '?'}</span>
+                                            )}
+                                        </div>
+                                        <div className="invite-friend-info">
+                                            <span className="invite-friend-name">{friend.display_name}</span>
+                                            <span className="invite-friend-username">@{friend.username}</span>
+                                        </div>
+                                        <button
+                                            className="btn-invite"
+                                            onClick={() => handleInviteFriend(friend.id)}
+                                            disabled={inviting === friend.id}
+                                        >
+                                            {inviting === friend.id ? '...' : 'Invite'}
+                                        </button>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+
+                        <div className="modal-actions">
+                            <button
+                                type="button"
+                                className="btn-modal-ghost"
+                                onClick={() => {
+                                    setShowInviteModal(false);
+                                    setInviteSearch('');
+                                }}
+                                style={{ flex: 1 }}
+                            >
+                                Done
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {showDeleteConfirm && (
+                <div className="modal-backdrop" onClick={() => setShowDeleteConfirm(false)}>
+                    <div className="modal-glass-card modal-delete" onClick={(e) => e.stopPropagation()}>
+                        <div className="delete-icon-wrapper">
+                            <TrashIcon />
+                        </div>
+                        <h3 className="modal-title">Delete Group</h3>
+                        <p className="modal-description">
+                            Are you sure you want to delete <strong>{activeGroup?.name}</strong>? This action cannot be undone and all messages will be lost.
+                        </p>
+
+                        <div className="modal-actions">
+                            <button
+                                type="button"
+                                className="btn-modal-ghost"
+                                onClick={() => setShowDeleteConfirm(false)}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                className="btn-modal-danger"
+                                onClick={handleDeleteGroup}
+                            >
+                                Delete Group
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

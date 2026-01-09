@@ -234,3 +234,87 @@
     background: rgba(255, 255, 255, 0.03);
     border-radius: 6px;
 }
+
+/* ========================================
+   GROUP INVITE NOTIFICATION
+   ======================================== */
+
+.notification-invite {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.notification-invite .notification-icon {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.notification-invite .notification-content {
+    padding-left: 72px;
+    width: 100%;
+}
+
+.notification-inviter {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0;
+}
+
+.icon-group {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+}
+
+.invite-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.btn-invite-accept {
+    padding: 10px 20px;
+    border-radius: 99px;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    border: none;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.btn-invite-accept:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+}
+
+.btn-invite-accept:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-invite-decline {
+    padding: 10px 20px;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-invite-decline:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #f87171;
+}
+
+.btn-invite-decline:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
