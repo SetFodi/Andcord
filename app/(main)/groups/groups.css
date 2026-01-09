@@ -9,8 +9,9 @@
     overflow: hidden;
     gap: 0;
     padding: 0;
+    padding-bottom: 120px; /* Space for dock */
     position: relative;
-    /* Main Nav is distinct on the far left */
+    box-sizing: border-box;
 }
 
 /* Sidebar - LEFT POSITIONED */

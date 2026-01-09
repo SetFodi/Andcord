@@ -219,41 +219,25 @@ export default function GroupsPage() {
         setCreating(true);
 
         try {
-            // Create group
-            console.log('Inserting into groups table...');
+            // Create group using RPC function (bypasses RLS recursion issues)
+            console.log('Creating group via RPC function...');
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const { data: newGroup, error: groupError } = await (supabase as any)
-                .from('groups')
-                .insert({
-                    name: newGroupName.trim(),
-                    owner_id: profile.id,
-                })
-                .select()
-                .single();
+                .rpc('create_group_with_owner', {
+                    p_name: newGroupName.trim(),
+                    p_owner_id: profile.id,
+                });
 
             if (groupError) {
-                console.error('Supabase error during group insert:', groupError);
+                console.error('Supabase RPC error:', JSON.stringify(groupError, null, 2));
+                console.error('Error code:', groupError.code);
+                console.error('Error hint:', groupError.hint);
+                console.error('Error details:', groupError.details);
                 throw groupError;
             }
 
             console.log('Group created successfully:', newGroup);
             if (!newGroup) throw new Error('Failed to create group record');
-
-            // Add creator as member
-            console.log('Adding creator to group_members...');
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const { error: memberError } = await (supabase as any).from('group_members').insert({
-                group_id: (newGroup as { id: string }).id,
-                user_id: profile.id,
-                role: 'owner',
-            });
-
-            if (memberError) {
-                console.error('Supabase error during group_members insert:', memberError);
-                throw memberError;
-            }
-
-            console.log('Creator added to group_members successfully.');
             setShowCreateModal(false);
             setNewGroupName('');
             fetchGroups();
