@@ -165,3 +165,185 @@ body {
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
+
+/* ========================================
+   LIGHT THEME
+   ======================================== */
+
+[data-theme="light"] {
+  /* Backgrounds - Warm Cream */
+  --bg-void: #faf8f5;
+  --bg-cosmic: #f5f2ed;
+  --bg-nebula: #ebe6de;
+
+  /* Glass Surfaces - Soft Frost */
+  --glass-base: rgba(255, 255, 255, 0.85);
+  --glass-shine: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --glass-highlight: rgba(0, 0, 0, 0.04);
+
+  /* Primary Colors - Warm Violet */
+  --primary-glow: #7c3aed;
+  --secondary-glow: #2563eb;
+  --tertiary-glow: #db2777;
+
+  /* Text - Rich Ink */
+  --text-primary: #1a1a2e;
+  --text-secondary: rgba(26, 26, 46, 0.75);
+  --text-tertiary: rgba(26, 26, 46, 0.5);
+  --text-muted: rgba(26, 26, 46, 0.3);
+
+  /* Mapped Variables */
+  --bg-base: var(--bg-void);
+  --bg-primary: rgba(255, 255, 255, 0.9);
+  --bg-secondary: rgba(0, 0, 0, 0.02);
+  --bg-elevated: rgba(255, 255, 255, 1);
+  --bg-hover: rgba(0, 0, 0, 0.04);
+
+  --border-default: var(--glass-border);
+  --border-subtle: rgba(0, 0, 0, 0.04);
+
+  --accent: var(--primary-glow);
+  --accent-dim: rgba(124, 58, 237, 0.12);
+}
+
+[data-theme="light"] html,
+[data-theme="light"] body,
+html[data-theme="light"],
+html[data-theme="light"] body {
+  color-scheme: light;
+  background-color: #faf8f5;
+}
+
+/* Light theme scrollbar */
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Light theme cosmic background override */
+[data-theme="light"] .cosmic-bg-layer {
+  background: linear-gradient(180deg, #faf8f5 0%, #f0ebe3 100%);
+}
+
+[data-theme="light"] .starfield {
+  display: none;
+}
+
+[data-theme="light"] .nebula-cloud-1 {
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.06) 0%, transparent 60%);
+  opacity: 0.4;
+}
+
+[data-theme="light"] .nebula-cloud-2 {
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 60%);
+  opacity: 0.3;
+}
+
+[data-theme="light"] .grid-overlay {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+  opacity: 0.15;
+}
+
+/* Light theme text utilities */
+[data-theme="light"] .text-gradient {
+  background: linear-gradient(135deg, #1a1a2e 0%, var(--primary-glow) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-theme="light"] .glow-text {
+  text-shadow: none;
+  color: var(--primary-glow);
+}
+
+/* ========================================
+   COMPACT MODE
+   ======================================== */
+
+[data-compact="true"] {
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+}
+
+/* Compact: reduce main content padding */
+[data-compact="true"] .main-content {
+  padding-bottom: 90px;
+}
+
+/* Compact: tighter cards and panels */
+[data-compact="true"] .glass-panel,
+[data-compact="true"] .settings-card,
+[data-compact="true"] .post-card,
+[data-compact="true"] .friend-card,
+[data-compact="true"] .group-card,
+[data-compact="true"] .notification-card,
+[data-compact="true"] .message-bubble {
+  padding: 12px 14px;
+}
+
+/* Compact: reduce gaps and margins */
+[data-compact="true"] .settings-grid,
+[data-compact="true"] .feed-container,
+[data-compact="true"] .friends-grid,
+[data-compact="true"] .groups-grid {
+  gap: 16px;
+}
+
+/* Compact: smaller section titles */
+[data-compact="true"] .section-title,
+[data-compact="true"] .page-title {
+  margin-bottom: 10px;
+}
+
+[data-compact="true"] .page-header {
+  margin-bottom: 24px;
+}
+
+/* Compact: tighter controls */
+[data-compact="true"] .settings-control {
+  padding: 10px 0;
+}
+
+/* Compact: dock adjustments */
+[data-compact="true"] .floating-dock {
+  padding: 8px 16px;
+  gap: 4px;
+}
+
+[data-compact="true"] .dock-item {
+  padding: 8px 12px;
+  gap: 6px;
+}
+
+/* Compact: post card adjustments */
+[data-compact="true"] .post-header,
+[data-compact="true"] .post-footer {
+  padding: 10px 12px;
+}
+
+[data-compact="true"] .post-content {
+  padding: 10px 14px;
+}
+
+/* Compact: message list */
+[data-compact="true"] .message-item {
+  padding: 8px 12px;
+  gap: 10px;
+}
+
+/* Compact: sidebar */
+[data-compact="true"] .sidebar-nav {
+  gap: 2px;
+}
+
+[data-compact="true"] .nav-item {
+  padding: 8px 12px;
+}

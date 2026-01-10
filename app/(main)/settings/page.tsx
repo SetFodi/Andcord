@@ -93,17 +93,6 @@ export default function SettingsPage() {
                                 <span className="slider"></span>
                             </label>
                         </div>
-
-                        <div className="settings-control">
-                            <div className="control-info">
-                                <span className="control-label">Email Notifications</span>
-                                <p className="control-description">Get updates about your activity via email.</p>
-                            </div>
-                            <label className="switch">
-                                <input type="checkbox" defaultChecked />
-                                <span className="slider"></span>
-                            </label>
-                        </div>
                     </div>
                 </section>
 

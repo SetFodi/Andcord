@@ -156,3 +156,64 @@
         margin: 0 4px;
     }
 }
+
+/* ========================================
+   LIGHT THEME DOCK
+   ======================================== */
+
+[data-theme="light"] .dock-container {
+    background: rgba(255, 255, 255, 0.85);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.12),
+        0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .dock-container:hover {
+    box-shadow:
+        0 16px 48px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(0, 0, 0, 0.06);
+    background: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="light"] .dock-tooltip {
+    background: rgba(26, 26, 46, 0.9);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .dock-icon-wrapper {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.06);
+    color: rgba(26, 26, 46, 0.6);
+}
+
+[data-theme="light"] .dock-item.active .dock-icon-wrapper {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.12), rgba(99, 102, 241, 0.12));
+    border-color: rgba(124, 58, 237, 0.3);
+    color: var(--primary-glow);
+    box-shadow: 0 0 16px rgba(124, 58, 237, 0.2);
+}
+
+[data-theme="light"] .dock-item:hover .dock-icon-wrapper {
+    color: var(--text-primary);
+    background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .dock-dot {
+    background: var(--primary-glow);
+    box-shadow: 0 0 6px var(--primary-glow);
+}
+
+[data-theme="light"] .dock-item.danger .dock-icon-wrapper {
+    color: rgba(239, 68, 68, 0.7);
+}
+
+[data-theme="light"] .dock-item.danger:hover .dock-icon-wrapper {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.25);
+    color: #ef4444;
+}
+
+[data-theme="light"] .dock-separator {
+    background: rgba(0, 0, 0, 0.08);
+}

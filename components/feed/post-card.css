@@ -478,3 +478,159 @@
     grid-template-rows: 140px 140px;
   }
 }
+
+/* ========================================
+   LIGHT THEME
+   ======================================== */
+
+[data-theme="light"] .post-card {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .post-card:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(124, 58, 237, 0.15);
+  box-shadow:
+    0 16px 40px -15px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(124, 58, 237, 0.08);
+}
+
+[data-theme="light"] .post-card:focus-within {
+  border-color: rgba(124, 58, 237, 0.2);
+}
+
+[data-theme="light"] .avatar {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(124, 58, 237, 0.08);
+  color: rgba(26, 26, 46, 0.7);
+}
+
+[data-theme="light"] .post-author:hover .avatar {
+  border-color: rgba(124, 58, 237, 0.3);
+  box-shadow: 0 0 16px rgba(124, 58, 237, 0.15);
+}
+
+[data-theme="light"] .author-name {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .author-meta {
+  color: var(--text-tertiary);
+}
+
+[data-theme="light"] .post-menu-trigger {
+  color: var(--text-tertiary);
+}
+
+[data-theme="light"] .post-menu-trigger:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .menu-dropdown {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .menu-item {
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .menu-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .menu-item.delete:hover {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+[data-theme="light"] .post-content {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .post-media {
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .media-item {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .link-preview {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .link-preview:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .link-title {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .link-description {
+  color: var(--text-tertiary);
+}
+
+[data-theme="light"] .post-actions {
+  border-top-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .action-btn {
+  color: var(--text-tertiary);
+}
+
+[data-theme="light"] .action-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .action-btn.liked {
+  color: #db2777;
+  background: rgba(219, 39, 119, 0.08);
+}
+
+[data-theme="light"] .comments-section {
+  border-top-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .comment-input {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.08);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .comment-input:focus {
+  border-color: rgba(124, 58, 237, 0.3);
+  background: rgba(0, 0, 0, 0.02);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.08);
+}
+
+[data-theme="light"] .comment-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+[data-theme="light"] .comment-body {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="light"] .comment-author {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .comment-author:hover {
+  color: var(--primary-glow);
+}
+
+[data-theme="light"] .comment-time {
+  color: var(--text-tertiary);
+}
+
+[data-theme="light"] .comment-text {
+  color: var(--text-secondary);
+}

@@ -315,3 +315,89 @@
     font-weight: 500;
   }
 }
+
+/* ========================================
+   LIGHT THEME SIDEBAR
+   ======================================== */
+
+[data-theme="light"] .sidebar {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 16px 40px -10px rgba(0, 0, 0, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="light"] .sidebar::before {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, transparent 100%);
+}
+
+[data-theme="light"] .sidebar-logo:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .logo-text {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .sidebar-divider {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .nav-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .nav-item.active {
+  background: rgba(124, 58, 237, 0.1);
+  color: var(--text-primary);
+  border-color: rgba(124, 58, 237, 0.2);
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.08);
+}
+
+[data-theme="light"] .sidebar-footer {
+  border-top-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .user-profile:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .avatar {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: #f0ebe3;
+}
+
+[data-theme="light"] .avatar-status {
+  border-color: #fff;
+}
+
+[data-theme="light"] .user-name {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .logout-btn {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+[data-theme="light"] .logout-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+/* Light theme bottom nav */
+[data-theme="light"] .bottom-nav {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .bottom-nav-item:hover,
+[data-theme="light"] .bottom-nav-item.active {
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .bottom-nav-item.active {
+  color: var(--primary-glow);
+}
