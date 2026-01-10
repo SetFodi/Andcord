@@ -53,6 +53,14 @@ const SettingsIcon = () => (
     </svg>
 );
 
+const LogoutIcon = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+        <polyline points="16 17 21 12 16 7" />
+        <line x1="21" y1="12" x2="9" y2="12" />
+    </svg>
+);
+
 const ProfileIcon = () => (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -104,10 +112,63 @@ const DockItem = ({
     );
 };
 
+const DockButtonItem = ({
+    mouseX,
+    label,
+    icon,
+    onClick,
+    variant = 'default'
+}: {
+    mouseX: MotionValue,
+    label: string;
+    icon: React.ReactNode;
+    onClick: () => void;
+    variant?: 'default' | 'danger'
+}) => {
+    const ref = useRef<HTMLDivElement>(null);
+
+    const distance = useTransform(mouseX, (val) => {
+        const bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
+        return val - bounds.x - bounds.width / 2;
+    });
+
+    const widthSync = useTransform(distance, [-150, 0, 150], [48, 80, 48]);
+    const width = useSpring(widthSync, { mass: 0.1, stiffness: 150, damping: 12 });
+
+    return (
+        <motion.div
+            ref={ref}
+            style={{ width, height: width }}
+            className={`dock-item ${variant === 'danger' ? 'danger' : ''}`}
+        >
+            <button
+                onClick={onClick}
+                style={{
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: 0
+                }}
+            >
+                <div className="dock-tooltip">{label}</div>
+                <div className="dock-icon-wrapper">
+                    {icon}
+                </div>
+            </button>
+        </motion.div>
+    );
+};
+
 export default function Dock() {
     const mouseX = useMotionValue(Infinity);
     const pathname = usePathname();
-    const { profile } = useAuth();
+    const { profile, signOut } = useAuth();
 
     const menuItems = [
         { href: '/feed', label: 'Feed', icon: <HomeIcon /> },
@@ -163,6 +224,14 @@ export default function Dock() {
                     active: pathname === '/settings',
                     icon: <SettingsIcon />
                 }}
+            />
+
+            <DockButtonItem
+                mouseX={mouseX}
+                label="Sign Out"
+                icon={<LogoutIcon />}
+                onClick={signOut}
+                variant="danger"
             />
         </motion.div>
     );

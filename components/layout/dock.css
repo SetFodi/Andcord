@@ -116,6 +116,17 @@
     opacity: 1;
 }
 
+/* Danger variant (logout) */
+.dock-item.danger .dock-icon-wrapper {
+    color: rgba(248, 113, 113, 0.7);
+}
+
+.dock-item.danger:hover .dock-icon-wrapper {
+    background: rgba(248, 113, 113, 0.15);
+    border-color: rgba(248, 113, 113, 0.3);
+    color: #f87171;
+}
+
 /* Separator */
 .dock-separator {
     width: 1px;
