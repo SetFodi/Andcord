@@ -289,3 +289,83 @@
         font-size: 0.85rem;
     }
 }
+
+/* ========================================
+   LIGHT THEME
+   ======================================== */
+
+[data-theme="light"] .page-title {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .tabs {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .tab {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .tab:hover {
+    color: var(--text-primary);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .tab.active {
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .friend-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .friend-card:hover {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .avatar-xl {
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .friend-name {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .friend-handle {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .btn-sm {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .btn-sm:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .section-title {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .request-item {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .empty-state-icon {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .empty-state-title {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .empty-state-description {
+    color: var(--text-secondary);
+}

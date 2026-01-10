@@ -385,3 +385,90 @@ button.profile-avatar {
         width: 100%;
     }
 }
+
+/* ========================================
+   LIGHT THEME
+   ======================================== */
+
+[data-theme="light"] .profile-page-header {
+    background: rgba(255, 255, 255, 0.9);
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .back-btn {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .back-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .header-info .page-title {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .banner-wrapper {
+    background: #f0ebe3;
+}
+
+[data-theme="light"] .profile-avatar {
+    border-color: rgba(250, 248, 245, 1) !important;
+    background: linear-gradient(135deg, #f0ebe3 0%, #e5dfd5 100%);
+}
+
+[data-theme="light"] .avatar-2xl {
+    background: linear-gradient(135deg, #f0ebe3 0%, #e5dfd5 100%);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .btn-secondary {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .btn-secondary:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .profile-name {
+    color: var(--text-primary);
+    text-shadow: none;
+}
+
+[data-theme="light"] .profile-username {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .profile-bio {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .profile-metadata {
+    border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .profile-joined {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .input-label {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .profile-name-input,
+[data-theme="light"] .profile-bio-input {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .profile-name-input:focus,
+[data-theme="light"] .profile-bio-input:focus {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: var(--primary-glow);
+    box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.08);
+}

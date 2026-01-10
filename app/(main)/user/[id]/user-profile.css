@@ -589,3 +589,162 @@
         width: 100%;
     }
 }
+
+/* ========================================
+   LIGHT THEME
+   ======================================== */
+
+[data-theme="light"] .profile-page-header {
+    background: rgba(255, 255, 255, 0.9);
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .back-btn {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .back-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .header-info .page-title {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .header-info .post-count {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .profile-cover {
+    background: linear-gradient(135deg, #f0ebe3 0%, #e5dfd5 50%, #dcd5c9 100%);
+}
+
+[data-theme="light"] .profile-cover::after {
+    background: linear-gradient(to top, rgba(250, 248, 245, 1) 0%, transparent 100%);
+}
+
+[data-theme="light"] .profile-avatar {
+    border-color: rgb(250, 248, 245) !important;
+    background: linear-gradient(135deg, #f0ebe3 0%, #e5dfd5 100%);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .profile-actions .btn-outline {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .profile-actions .btn-outline:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .profile-actions .btn-secondary {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .profile-avatar-section > a.btn {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .profile-avatar-section > a.btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .display-name {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .username {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .profile-bio {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .meta-item {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .meta-item svg {
+    color: var(--text-muted);
+}
+
+[data-theme="light"] .profile-stats {
+    border-top-color: rgba(0, 0, 0, 0.06);
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .stat-value {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .stat-label {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .mutual-friends {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .mutual-avatars .avatar {
+    border-color: rgb(250, 248, 245);
+    background: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .mutual-text {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .posts-header h3 {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .view-toggle {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .view-toggle .btn {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .view-toggle .btn:hover {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .view-toggle .btn.active {
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .empty-state {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .empty-state-title {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .empty-state-description {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .skeleton {
+    background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.04) 25%,
+        rgba(0, 0, 0, 0.08) 50%,
+        rgba(0, 0, 0, 0.04) 75%
+    );
+}

@@ -240,3 +240,65 @@
     border-radius: 24px;
   }
 }
+
+/* ========================================
+   LIGHT THEME
+   ======================================== */
+
+[data-theme="light"] .post-skeleton {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .post-skeleton::before {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.03) 50%,
+    transparent 100%
+  );
+}
+
+[data-theme="light"] .skeleton-avatar {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.08), rgba(99, 102, 241, 0.04));
+}
+
+[data-theme="light"] .skeleton-name {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .skeleton-time {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .skeleton-content {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .empty-state {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .empty-state-icon {
+  background: rgba(124, 58, 237, 0.08);
+}
+
+[data-theme="light"] .empty-state-title {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .empty-state-description {
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .spinner {
+  border-color: rgba(124, 58, 237, 0.12);
+  border-top-color: var(--primary-glow);
+}
+
+[data-theme="light"] .end-of-feed {
+  color: var(--text-tertiary);
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.06);
+}

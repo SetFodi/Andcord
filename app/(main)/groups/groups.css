@@ -970,3 +970,257 @@
     border: 1px solid rgba(124, 58, 237, 0.3);
     color: #a78bfa;
 }
+
+/* ========================================
+   LIGHT THEME
+   ======================================== */
+
+[data-theme="light"] .groups-sidebar {
+    border-right-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .groups-header {
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .groups-header h2 {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .btn-new-group {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .btn-new-group:hover {
+    background: rgba(124, 58, 237, 0.1);
+    border-color: rgba(124, 58, 237, 0.25);
+}
+
+[data-theme="light"] .group-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .group-item.active {
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .group-item .avatar {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .group-name {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .group-members {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .group-chat-header {
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .group-title {
+    color: var(--text-primary);
+    text-shadow: none;
+}
+
+[data-theme="light"] .empty-state {
+    background: rgba(255, 255, 255, 0.85);
+    border-color: rgba(0, 0, 0, 0.06);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .empty-state-icon {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .empty-state-title {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .empty-state-description {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .group-message.other .message-bubble {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.06);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .message-input {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: var(--text-primary);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .message-input::placeholder {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .message-input:focus {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(124, 58, 237, 0.35);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .modal-glass-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .modal-title {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .modal-label {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .modal-input-glass {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .modal-input-glass:focus {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(124, 58, 237, 0.35);
+}
+
+[data-theme="light"] .btn-modal-ghost {
+    border-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .btn-modal-ghost:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .btn-group-menu {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .btn-group-menu:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .group-dropdown {
+    background: rgba(255, 255, 255, 0.98);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .dropdown-item {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .dropdown-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .modal-subtitle {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .invite-search-box {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .invite-search-box svg {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .invite-search-input {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .invite-search-input::placeholder {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .empty-friends-text {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .invite-friend-item {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="light"] .invite-friend-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .invite-friend-avatar {
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .invite-friend-name {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .invite-friend-username {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .modal-description {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .modal-description strong {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .member-item {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="light"] .member-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .member-avatar {
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .member-name {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .member-username {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .group-member-count {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .group-member-count-btn {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .group-member-count-btn:hover {
+    color: var(--text-secondary);
+    background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .avatar.avatar-md {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: var(--text-secondary);
+}
