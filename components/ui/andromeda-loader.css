@@ -1,192 +1,266 @@
+/* ========================================
+   ANDCORD LOADER - LIQUID AURORA
+   Creative, smooth loading experience
+   ======================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&display=swap');
+
 .andromeda-loader {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(180deg, #08080f 0%, #0d0d18 50%, #08080f 100%);
-    z-index: 99999;
-    overflow: hidden;
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #050208;
+  z-index: 99999;
+  overflow: hidden;
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
 }
 
-/* Starfield */
-.starfield {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
+/* ========================================
+   AURORA BACKGROUND
+   ======================================== */
+
+.loader-aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
-.star {
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    background: rgba(255, 255, 255, 0.6);
-    border-radius: 50%;
-    animation: starFade 4s ease-in-out infinite;
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  animation: auroraMove 8s ease-in-out infinite;
 }
 
-@keyframes starFade {
-
-    0%,
-    100% {
-        opacity: 0.2;
-    }
-
-    50% {
-        opacity: 0.8;
-    }
+.blob-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, transparent 70%);
+  top: -20%;
+  left: -10%;
 }
 
-/* Loader orb */
-.loader-orb {
-    position: relative;
-    width: 120px;
-    height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.blob-2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+  bottom: -15%;
+  right: -10%;
+  animation-delay: -4s;
+  animation-direction: reverse;
 }
 
-.orb-core {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background: radial-gradient(circle, #fff 0%, #a78bfa 40%, #7c3aed 100%);
-    border-radius: 50%;
-    box-shadow:
-        0 0 20px rgba(167, 139, 250, 0.6),
-        0 0 40px rgba(167, 139, 250, 0.3);
-    animation: corePulse 2s ease-in-out infinite;
+@keyframes auroraMove {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(30px, 20px) scale(1.1);
+  }
 }
 
-@keyframes corePulse {
+/* ========================================
+   LOGO ANIMATION
+   ======================================== */
 
-    0%,
-    100% {
-        transform: scale(1);
-        box-shadow:
-            0 0 20px rgba(167, 139, 250, 0.6),
-            0 0 40px rgba(167, 139, 250, 0.3);
-    }
-
-    50% {
-        transform: scale(1.1);
-        box-shadow:
-            0 0 30px rgba(167, 139, 250, 0.8),
-            0 0 60px rgba(167, 139, 250, 0.4);
-    }
+.loader-logo {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Rings */
-.orb-ring {
-    position: absolute;
-    border-radius: 50%;
-    border: 1px solid transparent;
-    animation: ringPulse 2s ease-in-out infinite;
+.logo-svg {
+  width: 64px;
+  height: 64px;
+  animation: logoBreath 3s ease-in-out infinite;
 }
 
-.ring-1 {
-    width: 50px;
-    height: 50px;
-    border-color: rgba(167, 139, 250, 0.4);
-    animation-delay: 0s;
+.hex-outer {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: drawHex 2s ease-out forwards, hexGlow 3s ease-in-out infinite 2s;
 }
 
-.ring-2 {
-    width: 80px;
-    height: 80px;
-    border-color: rgba(167, 139, 250, 0.25);
-    animation-delay: 0.3s;
+.hex-inner {
+  opacity: 0;
+  transform-origin: center;
+  animation: fadeScale 0.6s ease-out 1.2s forwards;
 }
 
-.ring-3 {
-    width: 110px;
-    height: 110px;
-    border-color: rgba(167, 139, 250, 0.15);
-    animation-delay: 0.6s;
+@keyframes logoBreath {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.3));
+  }
+  50% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.5));
+  }
 }
 
-@keyframes ringPulse {
-
-    0%,
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-
-    50% {
-        transform: scale(1.08);
-        opacity: 0.6;
-    }
+@keyframes drawHex {
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
-/* Brand text */
-.loader-text {
-    margin-top: 48px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
+@keyframes hexGlow {
+  0%, 100% {
+    stroke-opacity: 0.6;
+  }
+  50% {
+    stroke-opacity: 1;
+  }
+}
+
+@keyframes fadeScale {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ========================================
+   ORBITING DOTS
+   ======================================== */
+
+.orbit {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(168, 85, 247, 0.1);
+}
+
+.orbit-1 {
+  width: 90px;
+  height: 90px;
+  animation: orbitSpin 4s linear infinite;
+}
+
+.orbit-2 {
+  width: 110px;
+  height: 110px;
+  animation: orbitSpin 6s linear infinite reverse;
+}
+
+.orbit-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: linear-gradient(135deg, #a855f7, #6366f1);
+  border-radius: 50%;
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+}
+
+.orbit-2 .orbit-dot {
+  width: 4px;
+  height: 4px;
+  top: auto;
+  bottom: -2px;
+  background: linear-gradient(135deg, #6366f1, #06b6d4);
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+}
+
+@keyframes orbitSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========================================
+   BRAND TEXT
+   ======================================== */
+
+.loader-brand {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease-out 0.8s forwards;
 }
 
 .brand-name {
-    font-size: 1.5rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: #fff;
-    opacity: 0.9;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+  background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Loading dots */
-.loading-dots {
-    display: flex;
-    gap: 6px;
+.brand-line {
+  width: 120px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 99px;
+  overflow: hidden;
 }
 
-.dot {
-    width: 6px;
-    height: 6px;
-    background: rgba(167, 139, 250, 0.8);
-    border-radius: 50%;
-    animation: dotPulse 1.4s ease-in-out infinite;
+.line-progress {
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, #a855f7, #6366f1, #a855f7);
+  background-size: 200% 100%;
+  border-radius: 99px;
+  animation: progressSlide 1.5s ease-in-out infinite;
 }
 
-.dot:nth-child(1) {
-    animation-delay: 0s;
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.dot:nth-child(2) {
-    animation-delay: 0.2s;
+@keyframes progressSlide {
+  0% {
+    transform: translateX(-100%);
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 0%;
+  }
+  100% {
+    transform: translateX(300%);
+    background-position: 0% 0%;
+  }
 }
 
-.dot:nth-child(3) {
-    animation-delay: 0.4s;
-}
+/* ========================================
+   FADE OUT TRANSITION
+   ======================================== */
 
-@keyframes dotPulse {
-
-    0%,
-    80%,
-    100% {
-        transform: scale(0.8);
-        opacity: 0.4;
-    }
-
-    40% {
-        transform: scale(1.2);
-        opacity: 1;
-    }
-}
-
-/* Fade out */
 .andromeda-loader.fade-out {
-    animation: fadeOut 0.5s ease-out forwards;
+  animation: loaderFadeOut 0.5s ease-out forwards;
 }
 
-@keyframes fadeOut {
-    to {
-        opacity: 0;
-        visibility: hidden;
-    }
+@keyframes loaderFadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
 }

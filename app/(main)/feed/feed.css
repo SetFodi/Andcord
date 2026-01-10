@@ -1,151 +1,242 @@
 /* ========================================
-   FEED PAGE - COSMIC LAYOUT
+   FEED PAGE - PREMIUM STYLING
    ======================================== */
 
 .feed-container {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-    max-width: 680px;
-    margin: 0 auto;
-    /* Centered */
-    width: 100%;
-    position: relative;
-    z-index: 10;
-    padding-top: 40px;
-    /* Add some top spacing */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 680px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 10;
+  padding-top: 32px;
 }
 
-/* Posts Feed */
+/* ========================================
+   POSTS FEED
+   ======================================== */
+
 .posts-feed {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .post-wrapper {
-    /* Smooth entry */
+  will-change: transform, opacity;
 }
 
-/* Loading Skeletons - Glass Style */
+/* ========================================
+   LOADING SKELETONS - Premium Glass
+   ======================================== */
+
 .post-skeleton {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 24px;
-    padding: 24px;
-    backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 24px;
+  padding: 24px;
+  overflow: hidden;
+  position: relative;
+}
+
+.post-skeleton::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 50%,
+    transparent 100%
+  );
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+  transform: translateX(-100%);
+}
+
+@keyframes skeletonShimmer {
+  to {
+    transform: translateX(100%);
+  }
 }
 
 .skeleton-header {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 20px;
+  display: flex;
+  gap: 14px;
+  margin-bottom: 20px;
 }
 
 .skeleton-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(99, 102, 241, 0.05));
 }
 
 .skeleton-info {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
 }
 
 .skeleton-name {
-    width: 140px;
-    height: 16px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 4px;
+  width: 140px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 7px;
 }
 
 .skeleton-time {
-    width: 80px;
-    height: 12px;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 4px;
+  width: 80px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 5px;
 }
 
 .skeleton-content {
-    width: 100%;
-    height: 16px;
-    margin-bottom: 12px;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 4px;
+  width: 100%;
+  height: 14px;
+  margin-bottom: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 7px;
 }
 
 .skeleton-content.short {
-    width: 70%;
+  width: 65%;
 }
 
-/* Empty State */
+.skeleton-content:last-child {
+  margin-bottom: 0;
+}
+
+/* ========================================
+   EMPTY STATE
+   ======================================== */
+
 .empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 80px 20px;
-    text-align: center;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px dashed rgba(255, 255, 255, 0.1);
-    border-radius: 24px;
-    backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  border-radius: 28px;
+  animation: emptyFadeIn 0.5s ease-out;
+}
+
+@keyframes emptyFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .empty-state-icon {
-    font-size: 48px;
-    margin-bottom: 16px;
-    opacity: 0.5;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  margin-bottom: 20px;
+  background: rgba(168, 85, 247, 0.1);
+  border-radius: 24px;
+  animation: iconFloat 3s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
 .empty-state-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #fff;
-    margin-bottom: 8px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
 }
 
 .empty-state-description {
-    color: var(--text-secondary);
-    max-width: 300px;
+  color: rgba(255, 255, 255, 0.5);
+  max-width: 280px;
+  line-height: 1.5;
 }
 
-/* Load More */
+/* ========================================
+   LOAD MORE & SPINNER
+   ======================================== */
+
 .load-more-trigger {
-    display: flex;
-    justify-content: center;
-    padding: 40px;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  min-height: 100px;
+}
+
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .spinner {
-    width: 30px;
-    height: 30px;
-    border: 3px solid rgba(168, 85, 247, 0.1);
-    border-left-color: var(--primary-glow);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgba(168, 85, 247, 0.15);
+  border-top-color: #a855f7;
+  border-radius: 50%;
+  animation: spinnerRotate 0.8s linear infinite;
+}
+
+@keyframes spinnerRotate {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .end-of-feed {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 99px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.9rem;
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 99px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
+/* ========================================
+   RESPONSIVE
+   ======================================== */
 
 @media (max-width: 768px) {
-    .feed-container {
-        padding: 0 16px;
-    }
+  .feed-container {
+    padding: 0 16px;
+    padding-top: 24px;
+    gap: 20px;
+  }
+
+  .posts-feed {
+    gap: 16px;
+  }
+
+  .post-skeleton {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .empty-state {
+    padding: 60px 20px;
+    border-radius: 24px;
+  }
 }
