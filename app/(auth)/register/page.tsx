@@ -6,6 +6,25 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import '../auth.css';
 
+const BrandIcon = () => (
+    <svg viewBox="0 0 32 32" fill="none" className="logo-icon">
+        <path d="M16 4L28 10V22L16 28L4 22V10L16 4Z" fill="url(#brand-grad-reg)" />
+        <path d="M16 12L22 15V21L16 24L10 21V15L16 12Z" fill="white" fillOpacity="0.9" />
+        <defs>
+            <linearGradient id="brand-grad-reg" x1="4" y1="4" x2="28" y2="28">
+                <stop stopColor="#a855f7" />
+                <stop offset="1" stopColor="#6366f1" />
+            </linearGradient>
+        </defs>
+    </svg>
+);
+
+const CheckIcon = () => (
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <polyline points="20 6 9 17 4 12" />
+    </svg>
+);
+
 export default function RegisterPage() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -50,154 +69,121 @@ export default function RegisterPage() {
         setSuccess(true);
         setTimeout(() => {
             router.push(`/login?email=${encodeURIComponent(email)}`);
-        }, 5000);
+        }, 4000);
     };
 
     return (
         <div className="auth-container">
-            {/* Background Layers */}
-            <div className="starfield" />
-            <div className="perspective-grid-container">
-                <div className="perspective-grid" />
-                <div className="grid-fade" />
-            </div>
-            <div className="cosmic-elements">
-                <div className="planet-main" style={{ top: 'auto', bottom: '-100px', right: 'auto', left: '-100px', background: 'radial-gradient(circle at 30% 30%, transparent 40%, rgba(0,0,0,0.8)), radial-gradient(circle at 70% 60%, #db2777 0%, transparent 60%), conic-gradient(from 0deg, #831843, #be185d, #831843)' }}>
-                    <div className="planet-ring" style={{ width: '150%', height: '150%', transform: 'translate(-50%, -50%) rotateX(60deg) rotateY(-20deg)' }} />
-                </div>
-                <div className="purple-nebula" style={{ top: '-20%', right: '-10%', left: 'auto', background: 'radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%)' }} />
-                <div className="shooting-star" style={{ top: '10%' }} />
-                <div className="shooting-star" style={{ top: '40%', animationDelay: '2s' }} />
+            {/* Aurora Background */}
+            <div className="aurora-bg">
+                <div className="aurora-orb orb-1" />
+                <div className="aurora-orb orb-2" />
             </div>
 
             <div className="auth-wrapper">
-                <div className="auth-card-glass">
-                    {/* Left Panel - Branding */}
-                    <div className="auth-branding">
-                        <div className="branding-content">
-                            <div className="logo-wrapper">
-                                <span className="logo-icon">✦</span>
-                                <span className="logo-text">Andcord</span>
-                            </div>
-                            <div className="branding-hero">
-                                <h1>
-                                    Join the
-                                    <br />
-                                    <span className="text-gradient" style={{ backgroundImage: 'linear-gradient(135deg, #fff 0%, #ec4899 100%)' }}>Starfleet.</span>
-                                </h1>
-                                <p>
-                                    Claim your coordinates in the verse. Build your base, find your squad.
-                                </p>
-                            </div>
-                        </div>
+                <div className="auth-card">
+                    {/* Logo */}
+                    <div className="auth-logo">
+                        <BrandIcon />
+                        <span className="logo-text">Andcord</span>
                     </div>
 
-                    {/* Right Panel - Form */}
-                    <div className="auth-form-panel">
-                        {success ? (
-                            <div className="auth-success" style={{ textAlign: 'center', width: '100%' }}>
-                                <div className="auth-success-icon" style={{
-                                    width: '80px', height: '80px', margin: '0 auto 24px',
-                                    background: 'rgba(34,197,94,0.1)', color: '#22c55e',
-                                    borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center'
-                                }}>
-                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>
-                                </div>
-                                <h2>Signal Recieved!</h2>
-                                <p style={{ color: 'rgba(255,255,255,0.6)', marginTop: '12px' }}>
-                                    We've sent a verification link to <strong>{email}</strong>.
-                                </p>
-                                <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)', marginTop: '30px' }}>
-                                    Warping to login...
-                                </p>
+                    {success ? (
+                        <div className="auth-success">
+                            <div className="success-icon">
+                                <CheckIcon />
                             </div>
-                        ) : (
-                            <>
-                                <div className="auth-header">
-                                    <h2>Sign Up</h2>
-                                    <p>Already have an account? <Link href="/login">Log In</Link></p>
+                            <h2>Check your email</h2>
+                            <p>
+                                We&apos;ve sent a verification link to<br />
+                                <strong>{email}</strong>
+                            </p>
+                            <p className="redirect-text">Redirecting to login...</p>
+                        </div>
+                    ) : (
+                        <>
+                            {/* Header */}
+                            <div className="auth-header">
+                                <h1>Create your account</h1>
+                                <p>Join Andcord and connect with friends</p>
+                            </div>
+
+                            {/* Form */}
+                            <form className="auth-form" onSubmit={handleSubmit}>
+                                {error && <div className="auth-error">{error}</div>}
+
+                                <div className="form-group">
+                                    <label className="form-label" htmlFor="username">Username</label>
+                                    <input
+                                        id="username"
+                                        type="text"
+                                        className="form-input"
+                                        placeholder="Choose a username"
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value.toLowerCase())}
+                                        required
+                                    />
                                 </div>
 
-                                <form className="auth-form" onSubmit={handleSubmit}>
-                                    {error && <div className="auth-error">{error}</div>}
+                                <div className="form-group">
+                                    <label className="form-label" htmlFor="email">Email</label>
+                                    <input
+                                        id="email"
+                                        type="email"
+                                        className="form-input"
+                                        placeholder="you@example.com"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        required
+                                    />
+                                </div>
 
-                                    <div className="form-group">
-                                        <label className="form-label" htmlFor="username">Username</label>
+                                <div className="form-group">
+                                    <label className="form-label" htmlFor="password">Password</label>
+                                    <div className="input-wrapper">
                                         <input
-                                            id="username"
-                                            type="text"
-                                            className="form-input"
-                                            placeholder="Choose a callsign"
-                                            value={username}
-                                            onChange={(e) => setUsername(e.target.value.toLowerCase())}
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="form-group">
-                                        <label className="form-label" htmlFor="email">Email</label>
-                                        <input
-                                            id="email"
-                                            type="email"
-                                            className="form-input"
-                                            placeholder="name@example.com"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="form-group">
-                                        <label className="form-label" htmlFor="password">Password</label>
-                                        <div className="password-wrapper" style={{ position: 'relative' }}>
-                                            <input
-                                                id="password"
-                                                type={showPassword ? 'text' : 'password'}
-                                                className="form-input"
-                                                placeholder="Create a password"
-                                                value={password}
-                                                onChange={(e) => setPassword(e.target.value)}
-                                                required
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={() => setShowPassword(!showPassword)}
-                                                style={{
-                                                    position: 'absolute',
-                                                    right: '12px',
-                                                    top: '50%',
-                                                    transform: 'translateY(-50%)',
-                                                    background: 'none',
-                                                    border: 'none',
-                                                    color: 'rgba(255,255,255,0.4)',
-                                                    cursor: 'pointer'
-                                                }}
-                                            >
-                                                {showPassword ? 'Hide' : 'Show'}
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <label className="form-label" htmlFor="confirmPassword">Confirm Password</label>
-                                        <input
-                                            id="confirmPassword"
+                                            id="password"
                                             type={showPassword ? 'text' : 'password'}
                                             className="form-input"
-                                            placeholder="Confirm password"
-                                            value={confirmPassword}
-                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                            placeholder="Create a password"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
                                             required
                                         />
+                                        <button
+                                            type="button"
+                                            className="input-toggle"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                        >
+                                            {showPassword ? 'Hide' : 'Show'}
+                                        </button>
                                     </div>
+                                </div>
 
-                                    <button type="submit" className="auth-button" disabled={loading}>
-                                        {loading ? 'Initializing...' : 'Join Andcord'}
-                                    </button>
-                                </form>
-                            </>
-                        )}
-                    </div>
+                                <div className="form-group">
+                                    <label className="form-label" htmlFor="confirmPassword">Confirm Password</label>
+                                    <input
+                                        id="confirmPassword"
+                                        type={showPassword ? 'text' : 'password'}
+                                        className="form-input"
+                                        placeholder="Confirm your password"
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                        required
+                                    />
+                                </div>
+
+                                <button type="submit" className="auth-button" disabled={loading}>
+                                    {loading ? 'Creating account...' : 'Create Account'}
+                                </button>
+                            </form>
+
+                            {/* Footer */}
+                            <div className="auth-footer">
+                                <p>Already have an account? <Link href="/login">Sign in</Link></p>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         </div>

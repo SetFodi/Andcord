@@ -122,14 +122,6 @@ function FeatureCard({
   );
 }
 
-// Stats Counter
-function AnimatedNumber({ value, suffix = "" }: { value: string; suffix?: string }) {
-  return (
-    <span className="stat-number">
-      {value}<span className="stat-suffix">{suffix}</span>
-    </span>
-  );
-}
 
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
@@ -166,7 +158,6 @@ export default function LandingPage() {
           <div className="nav-center">
             <a href="#features" className="nav-link">Features</a>
             <a href="#community" className="nav-link">Community</a>
-            <a href="#pricing" className="nav-link">Pricing</a>
           </div>
 
           <div className="nav-actions">
@@ -223,22 +214,6 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          <div className="hero-stats">
-            <div className="stat">
-              <AnimatedNumber value="50M" suffix="+" />
-              <span className="stat-label">Active Users</span>
-            </div>
-            <div className="stat-divider" />
-            <div className="stat">
-              <AnimatedNumber value="2M" suffix="+" />
-              <span className="stat-label">Communities</span>
-            </div>
-            <div className="stat-divider" />
-            <div className="stat">
-              <AnimatedNumber value="99.9" suffix="%" />
-              <span className="stat-label">Uptime</span>
-            </div>
-          </div>
         </div>
 
         <div className="hero-visual">
@@ -316,25 +291,11 @@ export default function LandingPage() {
       <section className="community-section" id="community">
         <div className="community-content">
           <span className="section-tag">Community</span>
-          <h2>Join millions of<br />communities worldwide</h2>
-          <p>From small friend groups to massive fan communities, Andcord brings people together around shared passions.</p>
-
-          <div className="community-avatars">
-            {[...Array(7)].map((_, i) => (
-              <div
-                key={i}
-                className="community-avatar"
-                style={{
-                  animationDelay: `${i * 0.1}s`,
-                  '--hue': `${i * 50}deg`
-                } as React.CSSProperties}
-              />
-            ))}
-            <div className="avatar-more">+50M</div>
-          </div>
+          <h2>Your space,<br />your people</h2>
+          <p>Create private spaces for your friend groups. Chat, share, and stay connected with the people who matter most.</p>
 
           <Link href="/register" className="btn-primary large">
-            Find Your Community
+            Start Your Group
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
@@ -367,7 +328,7 @@ export default function LandingPage() {
         <div className="cta-bg" />
         <div className="cta-content">
           <h2>Ready to dive in?</h2>
-          <p>Join millions of users building communities on Andcord. It&apos;s free to start.</p>
+          <p>Create your account and start connecting with your friends today.</p>
           <Link href="/register" className="cta-main white">
             <span>Create Your Account</span>
             <div className="cta-shine" />

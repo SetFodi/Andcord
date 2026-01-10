@@ -7,6 +7,19 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import AndromedaLoader from '@/components/ui/AndromedaLoader';
 import '../auth.css';
 
+const BrandIcon = () => (
+    <svg viewBox="0 0 32 32" fill="none" className="logo-icon">
+        <path d="M16 4L28 10V22L16 28L4 22V10L16 4Z" fill="url(#brand-grad)" />
+        <path d="M16 12L22 15V21L16 24L10 21V15L16 12Z" fill="white" fillOpacity="0.9" />
+        <defs>
+            <linearGradient id="brand-grad" x1="4" y1="4" x2="28" y2="28">
+                <stop stopColor="#a855f7" />
+                <stop offset="1" stopColor="#6366f1" />
+            </linearGradient>
+        </defs>
+    </svg>
+);
+
 function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -43,103 +56,73 @@ function LoginForm() {
 
     return (
         <div className="auth-container">
-            {/* Background Layers */}
-            <div className="starfield" />
-            <div className="perspective-grid-container">
-                <div className="perspective-grid" />
-                <div className="grid-fade" />
-            </div>
-            <div className="cosmic-elements">
-                <div className="planet-main">
-                    <div className="planet-ring" />
-                </div>
-                <div className="purple-nebula" />
-                <div className="shooting-star" />
-                <div className="shooting-star" />
+            {/* Aurora Background */}
+            <div className="aurora-bg">
+                <div className="aurora-orb orb-1" />
+                <div className="aurora-orb orb-2" />
             </div>
 
             <div className="auth-wrapper">
-                <div className="auth-card-glass">
-                    {/* Left Panel - Branding */}
-                    <div className="auth-branding">
-                        <div className="branding-content">
-                            <div className="logo-wrapper">
-                                <span className="logo-icon">✦</span>
-                                <span className="logo-text">Andcord</span>
-                            </div>
-                            <div className="branding-hero">
-                                <h1>
-                                    Welcome back,
-                                    <br />
-                                    <span className="text-gradient">Space Cowboy.</span>
-                                </h1>
-                                <p>
-                                    Your crew is waiting. Reconnect with your community across the galaxy.
-                                </p>
-                            </div>
-                        </div>
+                <div className="auth-card">
+                    {/* Logo */}
+                    <div className="auth-logo">
+                        <BrandIcon />
+                        <span className="logo-text">Andcord</span>
                     </div>
 
-                    {/* Right Panel - Form */}
-                    <div className="auth-form-panel">
-                        <div className="auth-header">
-                            <h2>Log In</h2>
-                            <p>
-                                New here? <Link href="/register">Create an account</Link>
-                            </p>
+                    {/* Header */}
+                    <div className="auth-header">
+                        <h1>Welcome back</h1>
+                        <p>Sign in to continue to Andcord</p>
+                    </div>
+
+                    {/* Form */}
+                    <form className="auth-form" onSubmit={handleSubmit}>
+                        {error && <div className="auth-error">{error}</div>}
+
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="email">Email</label>
+                            <input
+                                id="email"
+                                type="email"
+                                className="form-input"
+                                placeholder="you@example.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
                         </div>
 
-                        <form className="auth-form" onSubmit={handleSubmit}>
-                            {error && <div className="auth-error">{error}</div>}
-
-                            <div className="form-group">
-                                <label className="form-label" htmlFor="email">Email</label>
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="password">Password</label>
+                            <div className="input-wrapper">
                                 <input
-                                    id="email"
-                                    type="email"
+                                    id="password"
+                                    type={showPassword ? 'text' : 'password'}
                                     className="form-input"
-                                    placeholder="name@example.com"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="Enter your password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                     required
                                 />
+                                <button
+                                    type="button"
+                                    className="input-toggle"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? 'Hide' : 'Show'}
+                                </button>
                             </div>
+                        </div>
 
-                            <div className="form-group">
-                                <label className="form-label" htmlFor="password">Password</label>
-                                <div className="password-wrapper" style={{ position: 'relative' }}>
-                                    <input
-                                        id="password"
-                                        type={showPassword ? 'text' : 'password'}
-                                        className="form-input"
-                                        placeholder="Enter your password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        required
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        style={{
-                                            position: 'absolute',
-                                            right: '12px',
-                                            top: '50%',
-                                            transform: 'translateY(-50%)',
-                                            background: 'none',
-                                            border: 'none',
-                                            color: 'rgba(255,255,255,0.4)',
-                                            cursor: 'pointer'
-                                        }}
-                                    >
-                                        {showPassword ? 'Hide' : 'Show'}
-                                    </button>
-                                </div>
-                            </div>
+                        <button type="submit" className="auth-button" disabled={loading}>
+                            {loading ? 'Signing in...' : 'Sign In'}
+                        </button>
+                    </form>
 
-                            <button type="submit" className="auth-button" disabled={loading}>
-                                {loading ? 'Signing in...' : 'Sign In'}
-                            </button>
-                        </form>
+                    {/* Footer */}
+                    <div className="auth-footer">
+                        <p>Don&apos;t have an account? <Link href="/register">Create one</Link></p>
                     </div>
                 </div>
             </div>
@@ -149,7 +132,7 @@ function LoginForm() {
 
 export default function LoginPage() {
     return (
-        <Suspense fallback={<AndromedaLoader message="Loading..." />}>
+        <Suspense fallback={<AndromedaLoader />}>
             <LoginForm />
         </Suspense>
     );
