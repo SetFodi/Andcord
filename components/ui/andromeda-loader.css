@@ -264,3 +264,77 @@
     visibility: hidden;
   }
 }
+
+/* ========================================
+   LIGHT THEME
+   ======================================== */
+
+[data-theme="light"] .andromeda-loader {
+  background: #faf8f5;
+}
+
+[data-theme="light"] .blob-1 {
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, transparent 70%);
+}
+
+[data-theme="light"] .blob-2 {
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+}
+
+[data-theme="light"] .hex-outer {
+  stroke: #7c3aed;
+}
+
+[data-theme="light"] .hex-inner {
+  fill: #7c3aed;
+}
+
+[data-theme="light"] .orbit {
+  border-color: rgba(124, 58, 237, 0.15);
+}
+
+[data-theme="light"] .orbit-dot {
+  background: linear-gradient(135deg, #7c3aed, #6366f1);
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);
+}
+
+[data-theme="light"] .orbit-2 .orbit-dot {
+  background: linear-gradient(135deg, #6366f1, #0891b2);
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.35);
+}
+
+[data-theme="light"] .brand-name {
+  color: #1a1a2e;
+  background: linear-gradient(135deg, #1a1a2e 0%, rgba(26, 26, 46, 0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme="light"] .brand-line {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .line-progress {
+  background: linear-gradient(90deg, #7c3aed, #6366f1, #7c3aed);
+  background-size: 200% 100%;
+}
+
+[data-theme="light"] .logo-svg {
+  filter: drop-shadow(0 0 15px rgba(124, 58, 237, 0.2));
+}
+
+@keyframes logoBreathLight {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 15px rgba(124, 58, 237, 0.2));
+  }
+  50% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 25px rgba(124, 58, 237, 0.35));
+  }
+}
+
+[data-theme="light"] .logo-svg {
+  animation: logoBreathLight 3s ease-in-out infinite;
+}

@@ -252,3 +252,82 @@
 .animate-scaleIn {
     animation: scaleIn 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+
+/* ========================================
+   LIGHT THEME
+   ======================================== */
+
+[data-theme="light"] .search-modal-overlay {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="light"] .search-modal-content {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="light"] .modal-header {
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .search-bar-modern {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .search-bar-modern:focus-within {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(124, 58, 237, 0.4);
+    box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.08), inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .search-icon-fixed {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .modal-search-input {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .modal-search-input::placeholder {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .modal-close-btn {
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .modal-close-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .modal-info-text {
+    background: rgba(0, 0, 0, 0.02);
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .modal-result-item:hover {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .avatar-lg {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .result-name {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .result-handle {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .modal-empty-state {
+    color: var(--text-tertiary);
+}

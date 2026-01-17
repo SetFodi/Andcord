@@ -19,8 +19,8 @@
 .conversations-sidebar {
   order: 0;
   width: 320px;
-  background: rgba(10, 10, 18, 0.4);
-  backdrop-filter: blur(20px);
+  background: transparent;
+  backdrop-filter: none;
   border-right: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: column;
@@ -305,8 +305,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 20px 32px;
-  background: rgba(10, 10, 18, 0.5);
-  backdrop-filter: blur(20px);
+  background: transparent;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -614,8 +613,7 @@
 
 .message-form {
   padding: 20px 32px;
-  background: rgba(10, 10, 18, 0.5);
-  backdrop-filter: blur(20px);
+  background: transparent;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   align-items: flex-end;
@@ -846,7 +844,7 @@
    ======================================== */
 
 [data-theme="light"] .conversations-sidebar {
-  background: rgba(255, 255, 255, 0.8);
+  background: transparent;
   border-right-color: rgba(0, 0, 0, 0.06);
 }
 
@@ -914,7 +912,8 @@
 }
 
 [data-theme="light"] .chat-header {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px);
   border-bottom-color: rgba(0, 0, 0, 0.06);
 }
 
@@ -980,7 +979,8 @@
 }
 
 [data-theme="light"] .message-form {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px);
   border-top-color: rgba(0, 0, 0, 0.06);
 }
 

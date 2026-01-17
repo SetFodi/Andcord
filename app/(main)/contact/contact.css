@@ -156,3 +156,58 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ========================================
+   LIGHT THEME
+   ======================================== */
+
+[data-theme="light"] .contact-card {
+    background: rgba(255, 255, 255, 0.85);
+    border-color: rgba(0, 0, 0, 0.06);
+    box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .contact-icon-large {
+    color: #7c3aed;
+    background: rgba(124, 58, 237, 0.08);
+    border-color: rgba(124, 58, 237, 0.15);
+    box-shadow: 0 0 16px rgba(124, 58, 237, 0.12);
+}
+
+[data-theme="light"] .contact-header h3 {
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .form-group label {
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .form-input,
+[data-theme="light"] .form-select,
+[data-theme="light"] .form-textarea {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .form-input:focus,
+[data-theme="light"] .form-select:focus,
+[data-theme="light"] .form-textarea:focus {
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.1);
+    background: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="light"] .form-input::placeholder,
+[data-theme="light"] .form-textarea::placeholder {
+    color: var(--text-tertiary);
+}
+
+[data-theme="light"] .submit-btn {
+    background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
+}
+
+[data-theme="light"] .submit-btn:hover {
+    box-shadow: 0 8px 20px rgba(124, 58, 237, 0.35);
+}
